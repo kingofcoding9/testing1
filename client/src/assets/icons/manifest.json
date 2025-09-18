@@ -1,0 +1,4562 @@
+[
+  {
+    "filename": "website icons/acacia_chest_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/acacia_chest_boat.png",
+    "size": 376
+  },
+  {
+    "filename": "website icons/acacia_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/acacia_hanging_sign.png",
+    "size": 234
+  },
+  {
+    "filename": "website icons/amethyst_shard.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/amethyst_shard.png",
+    "size": 199
+  },
+  {
+    "filename": "website icons/angler_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/angler_pottery_sherd.png",
+    "size": 389
+  },
+  {
+    "filename": "website icons/anvil-arrow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/anvil-arrow.png",
+    "size": 166
+  },
+  {
+    "filename": "website icons/anvil-crossout.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/anvil-crossout.png",
+    "size": 168
+  },
+  {
+    "filename": "website icons/anvil-hammer.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/anvil-hammer.png",
+    "size": 221
+  },
+  {
+    "filename": "website icons/apple.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/apple.png",
+    "size": 257
+  },
+  {
+    "filename": "website icons/apple_golden.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/apple_golden.png",
+    "size": 258
+  },
+  {
+    "filename": "website icons/archer_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/archer_pottery_sherd.png",
+    "size": 234
+  },
+  {
+    "filename": "website icons/armadillo_scute.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/armadillo_scute.png",
+    "size": 271
+  },
+  {
+    "filename": "website icons/armor_stand.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/armor_stand.png",
+    "size": 226
+  },
+  {
+    "filename": "website icons/arms_up_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/arms_up_pottery_sherd.png",
+    "size": 256
+  },
+  {
+    "filename": "website icons/arrow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/arrow.png",
+    "size": 177
+  },
+  {
+    "filename": "website icons/arrowLeft.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/arrowLeft.png",
+    "size": 1139
+  },
+  {
+    "filename": "website icons/arrow_large.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/arrow_large.png",
+    "size": 157
+  },
+  {
+    "filename": "website icons/auto_save.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/auto_save.png",
+    "size": 942
+  },
+  {
+    "filename": "website icons/bad_omen_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bad_omen_effect.png",
+    "size": 484
+  },
+  {
+    "filename": "website icons/bamboo.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bamboo.png",
+    "size": 338
+  },
+  {
+    "filename": "website icons/bamboo_chest_raft.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bamboo_chest_raft.png",
+    "size": 656
+  },
+  {
+    "filename": "website icons/bamboo_door.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bamboo_door.png",
+    "size": 442
+  },
+  {
+    "filename": "website icons/bamboo_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bamboo_hanging_sign.png",
+    "size": 501
+  },
+  {
+    "filename": "website icons/bamboo_raft.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bamboo_raft.png",
+    "size": 614
+  },
+  {
+    "filename": "website icons/bamboo_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bamboo_sign.png",
+    "size": 459
+  },
+  {
+    "filename": "website icons/banner_pattern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/banner_pattern.png",
+    "size": 377
+  },
+  {
+    "filename": "website icons/base.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/base.png",
+    "size": 97
+  },
+  {
+    "filename": "website icons/basePress.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/basePress.png",
+    "size": 96
+  },
+  {
+    "filename": "website icons/bed_black.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_black.png",
+    "size": 358
+  },
+  {
+    "filename": "website icons/bed_blue.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_blue.png",
+    "size": 429
+  },
+  {
+    "filename": "website icons/bed_brown.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_brown.png",
+    "size": 441
+  },
+  {
+    "filename": "website icons/bed_cyan.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_cyan.png",
+    "size": 421
+  },
+  {
+    "filename": "website icons/bed_gray.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_gray.png",
+    "size": 405
+  },
+  {
+    "filename": "website icons/bed_green.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_green.png",
+    "size": 447
+  },
+  {
+    "filename": "website icons/bed_light_blue.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_light_blue.png",
+    "size": 435
+  },
+  {
+    "filename": "website icons/bed_lime.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_lime.png",
+    "size": 451
+  },
+  {
+    "filename": "website icons/bed_magenta.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_magenta.png",
+    "size": 448
+  },
+  {
+    "filename": "website icons/bed_orange.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_orange.png",
+    "size": 451
+  },
+  {
+    "filename": "website icons/bed_pink.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_pink.png",
+    "size": 416
+  },
+  {
+    "filename": "website icons/bed_purple.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_purple.png",
+    "size": 434
+  },
+  {
+    "filename": "website icons/bed_red.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_red.png",
+    "size": 412
+  },
+  {
+    "filename": "website icons/bed_silver.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_silver.png",
+    "size": 397
+  },
+  {
+    "filename": "website icons/bed_white.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_white.png",
+    "size": 391
+  },
+  {
+    "filename": "website icons/bed_yellow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bed_yellow.png",
+    "size": 423
+  },
+  {
+    "filename": "website icons/beef_cooked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/beef_cooked.png",
+    "size": 246
+  },
+  {
+    "filename": "website icons/beef_raw.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/beef_raw.png",
+    "size": 241
+  },
+  {
+    "filename": "website icons/beetroot.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/beetroot.png",
+    "size": 202
+  },
+  {
+    "filename": "website icons/beetroot_soup.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/beetroot_soup.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/birch_chest_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/birch_chest_boat.png",
+    "size": 397
+  },
+  {
+    "filename": "website icons/birch_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/birch_hanging_sign.png",
+    "size": 239
+  },
+  {
+    "filename": "website icons/black_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/black_candle.png",
+    "size": 199
+  },
+  {
+    "filename": "website icons/blade_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/blade_pottery_sherd.png",
+    "size": 370
+  },
+  {
+    "filename": "website icons/blaze_powder.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/blaze_powder.png",
+    "size": 307
+  },
+  {
+    "filename": "website icons/blaze_rod.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/blaze_rod.png",
+    "size": 197
+  },
+  {
+    "filename": "website icons/blindness_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/blindness_effect.png",
+    "size": 307
+  },
+  {
+    "filename": "website icons/blue_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/blue_candle.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/boat.png",
+    "size": 204
+  },
+  {
+    "filename": "website icons/boat_acacia.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/boat_acacia.png",
+    "size": 343
+  },
+  {
+    "filename": "website icons/boat_birch.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/boat_birch.png",
+    "size": 358
+  },
+  {
+    "filename": "website icons/boat_darkoak.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/boat_darkoak.png",
+    "size": 356
+  },
+  {
+    "filename": "website icons/boat_dark_oak.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/boat_dark_oak.png",
+    "size": 579
+  },
+  {
+    "filename": "website icons/boat_jungle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/boat_jungle.png",
+    "size": 350
+  },
+  {
+    "filename": "website icons/boat_oak.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/boat_oak.png",
+    "size": 356
+  },
+  {
+    "filename": "website icons/boat_spruce.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/boat_spruce.png",
+    "size": 349
+  },
+  {
+    "filename": "website icons/bolt_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bolt_armor_trim_smithing_template.png",
+    "size": 271
+  },
+  {
+    "filename": "website icons/bone.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bone.png",
+    "size": 197
+  },
+  {
+    "filename": "website icons/book_enchanted.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/book_enchanted.png",
+    "size": 305
+  },
+  {
+    "filename": "website icons/book_normal.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/book_normal.png",
+    "size": 241
+  },
+  {
+    "filename": "website icons/book_portfolio.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/book_portfolio.png",
+    "size": 242
+  },
+  {
+    "filename": "website icons/book_writable.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/book_writable.png",
+    "size": 307
+  },
+  {
+    "filename": "website icons/book_written.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/book_written.png",
+    "size": 248
+  },
+  {
+    "filename": "website icons/bordure_indented_banner_pattern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bordure_indented_banner_pattern.png",
+    "size": 205
+  },
+  {
+    "filename": "website icons/bowl.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bowl.png",
+    "size": 192
+  },
+  {
+    "filename": "website icons/bow_pulling_0.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bow_pulling_0.png",
+    "size": 241
+  },
+  {
+    "filename": "website icons/bow_pulling_1.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bow_pulling_1.png",
+    "size": 246
+  },
+  {
+    "filename": "website icons/bow_pulling_2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bow_pulling_2.png",
+    "size": 232
+  },
+  {
+    "filename": "website icons/bow_standby.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bow_standby.png",
+    "size": 192
+  },
+  {
+    "filename": "website icons/bread.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bread.png",
+    "size": 234
+  },
+  {
+    "filename": "website icons/breeze_rod.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/breeze_rod.png",
+    "size": 146
+  },
+  {
+    "filename": "website icons/brewer_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/brewer_pottery_sherd.png",
+    "size": 398
+  },
+  {
+    "filename": "website icons/brewing_stand.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/brewing_stand.png",
+    "size": 232
+  },
+  {
+    "filename": "website icons/brick.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/brick.png",
+    "size": 220
+  },
+  {
+    "filename": "website icons/broken_elytra.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/broken_elytra.png",
+    "size": 232
+  },
+  {
+    "filename": "website icons/brown_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/brown_candle.png",
+    "size": 199
+  },
+  {
+    "filename": "website icons/brush.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/brush.png",
+    "size": 394
+  },
+  {
+    "filename": "website icons/bucket_axolotl.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bucket_axolotl.png",
+    "size": 282
+  },
+  {
+    "filename": "website icons/bucket_cod.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bucket_cod.png",
+    "size": 307
+  },
+  {
+    "filename": "website icons/bucket_empty.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bucket_empty.png",
+    "size": 223
+  },
+  {
+    "filename": "website icons/bucket_lava.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bucket_lava.png",
+    "size": 259
+  },
+  {
+    "filename": "website icons/bucket_milk.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bucket_milk.png",
+    "size": 235
+  },
+  {
+    "filename": "website icons/bucket_powder_snow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bucket_powder_snow.png",
+    "size": 228
+  },
+  {
+    "filename": "website icons/bucket_pufferfish.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bucket_pufferfish.png",
+    "size": 386
+  },
+  {
+    "filename": "website icons/bucket_salmon.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bucket_salmon.png",
+    "size": 332
+  },
+  {
+    "filename": "website icons/bucket_tadpole.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bucket_tadpole.png",
+    "size": 242
+  },
+  {
+    "filename": "website icons/bucket_tropical.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bucket_tropical.png",
+    "size": 314
+  },
+  {
+    "filename": "website icons/bucket_water.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bucket_water.png",
+    "size": 262
+  },
+  {
+    "filename": "website icons/bundle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle.png",
+    "size": 206
+  },
+  {
+    "filename": "website icons/bundle_black.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_black.png",
+    "size": 1307
+  },
+  {
+    "filename": "website icons/bundle_black_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_black_open.png",
+    "size": 1313
+  },
+  {
+    "filename": "website icons/bundle_black_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_black_open_back.png",
+    "size": 1146
+  },
+  {
+    "filename": "website icons/bundle_black_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_black_open_front.png",
+    "size": 1273
+  },
+  {
+    "filename": "website icons/bundle_blue.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_blue.png",
+    "size": 1310
+  },
+  {
+    "filename": "website icons/bundle_blue_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_blue_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_blue_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_blue_open_back.png",
+    "size": 1145
+  },
+  {
+    "filename": "website icons/bundle_blue_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_blue_open_front.png",
+    "size": 1282
+  },
+  {
+    "filename": "website icons/bundle_brown.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_brown.png",
+    "size": 1321
+  },
+  {
+    "filename": "website icons/bundle_brown_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_brown_open.png",
+    "size": 1331
+  },
+  {
+    "filename": "website icons/bundle_brown_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_brown_open_back.png",
+    "size": 1151
+  },
+  {
+    "filename": "website icons/bundle_brown_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_brown_open_front.png",
+    "size": 1282
+  },
+  {
+    "filename": "website icons/bundle_cyan.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_cyan.png",
+    "size": 1307
+  },
+  {
+    "filename": "website icons/bundle_cyan_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_cyan_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_cyan_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_cyan_open_back.png",
+    "size": 1144
+  },
+  {
+    "filename": "website icons/bundle_cyan_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_cyan_open_front.png",
+    "size": 1276
+  },
+  {
+    "filename": "website icons/bundle_gray.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_gray.png",
+    "size": 1307
+  },
+  {
+    "filename": "website icons/bundle_gray_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_gray_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_gray_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_gray_open_back.png",
+    "size": 1140
+  },
+  {
+    "filename": "website icons/bundle_gray_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_gray_open_front.png",
+    "size": 1275
+  },
+  {
+    "filename": "website icons/bundle_green.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_green.png",
+    "size": 1312
+  },
+  {
+    "filename": "website icons/bundle_green_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_green_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_green_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_green_open_back.png",
+    "size": 1141
+  },
+  {
+    "filename": "website icons/bundle_green_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_green_open_front.png",
+    "size": 1284
+  },
+  {
+    "filename": "website icons/bundle_light_blue.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_light_blue.png",
+    "size": 1316
+  },
+  {
+    "filename": "website icons/bundle_light_blue_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_light_blue_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_light_blue_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_light_blue_open_back.png",
+    "size": 1149
+  },
+  {
+    "filename": "website icons/bundle_light_blue_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_light_blue_open_front.png",
+    "size": 1286
+  },
+  {
+    "filename": "website icons/bundle_light_gray.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_light_gray.png",
+    "size": 1309
+  },
+  {
+    "filename": "website icons/bundle_light_gray_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_light_gray_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_light_gray_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_light_gray_open_back.png",
+    "size": 1140
+  },
+  {
+    "filename": "website icons/bundle_light_gray_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_light_gray_open_front.png",
+    "size": 1277
+  },
+  {
+    "filename": "website icons/bundle_lime.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_lime.png",
+    "size": 1314
+  },
+  {
+    "filename": "website icons/bundle_lime_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_lime_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_lime_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_lime_open_back.png",
+    "size": 1146
+  },
+  {
+    "filename": "website icons/bundle_lime_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_lime_open_front.png",
+    "size": 1284
+  },
+  {
+    "filename": "website icons/bundle_magenta.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_magenta.png",
+    "size": 1308
+  },
+  {
+    "filename": "website icons/bundle_magenta_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_magenta_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_magenta_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_magenta_open_back.png",
+    "size": 1146
+  },
+  {
+    "filename": "website icons/bundle_magenta_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_magenta_open_front.png",
+    "size": 1290
+  },
+  {
+    "filename": "website icons/bundle_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_open.png",
+    "size": 1198
+  },
+  {
+    "filename": "website icons/bundle_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_open_back.png",
+    "size": 1146
+  },
+  {
+    "filename": "website icons/bundle_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_open_front.png",
+    "size": 1273
+  },
+  {
+    "filename": "website icons/bundle_orange.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_orange.png",
+    "size": 1316
+  },
+  {
+    "filename": "website icons/bundle_orange_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_orange_open.png",
+    "size": 1330
+  },
+  {
+    "filename": "website icons/bundle_orange_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_orange_open_back.png",
+    "size": 1145
+  },
+  {
+    "filename": "website icons/bundle_orange_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_orange_open_front.png",
+    "size": 1287
+  },
+  {
+    "filename": "website icons/bundle_pink.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_pink.png",
+    "size": 206
+  },
+  {
+    "filename": "website icons/bundle_pink_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_pink_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_pink_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_pink_open_back.png",
+    "size": 1105
+  },
+  {
+    "filename": "website icons/bundle_pink_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_pink_open_front.png",
+    "size": 1291
+  },
+  {
+    "filename": "website icons/bundle_purple.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_purple.png",
+    "size": 1317
+  },
+  {
+    "filename": "website icons/bundle_purple_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_purple_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_purple_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_purple_open_back.png",
+    "size": 1148
+  },
+  {
+    "filename": "website icons/bundle_purple_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_purple_open_front.png",
+    "size": 1290
+  },
+  {
+    "filename": "website icons/bundle_red.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_red.png",
+    "size": 1334
+  },
+  {
+    "filename": "website icons/bundle_red_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_red_open.png",
+    "size": 1334
+  },
+  {
+    "filename": "website icons/bundle_red_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_red_open_back.png",
+    "size": 1152
+  },
+  {
+    "filename": "website icons/bundle_red_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_red_open_front.png",
+    "size": 1270
+  },
+  {
+    "filename": "website icons/bundle_white.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_white.png",
+    "size": 1295
+  },
+  {
+    "filename": "website icons/bundle_white_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_white_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_white_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_white_open_back.png",
+    "size": 1147
+  },
+  {
+    "filename": "website icons/bundle_white_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_white_open_front.png",
+    "size": 1270
+  },
+  {
+    "filename": "website icons/bundle_yellow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_yellow.png",
+    "size": 1311
+  },
+  {
+    "filename": "website icons/bundle_yellow_open.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_yellow_open.png",
+    "size": 1306
+  },
+  {
+    "filename": "website icons/bundle_yellow_open_back.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_yellow_open_back.png",
+    "size": 1144
+  },
+  {
+    "filename": "website icons/bundle_yellow_open_front.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/bundle_yellow_open_front.png",
+    "size": 1275
+  },
+  {
+    "filename": "website icons/burn_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/burn_pottery_sherd.png",
+    "size": 375
+  },
+  {
+    "filename": "website icons/buttonNew.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/buttonNew.png",
+    "size": 91
+  },
+  {
+    "filename": "website icons/ButtonWithBorder.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ButtonWithBorder.png",
+    "size": 108
+  },
+  {
+    "filename": "website icons/ButtonWithBorderHover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ButtonWithBorderHover.png",
+    "size": 104
+  },
+  {
+    "filename": "website icons/ButtonWithBorderPressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ButtonWithBorderPressed.png",
+    "size": 109
+  },
+  {
+    "filename": "website icons/ButtonWithBorderPressedNoHover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ButtonWithBorderPressedNoHover.png",
+    "size": 109
+  },
+  {
+    "filename": "website icons/cake.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/cake.png",
+    "size": 324
+  },
+  {
+    "filename": "website icons/campfire.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/campfire.png",
+    "size": 254
+  },
+  {
+    "filename": "website icons/candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/candle.png",
+    "size": 201
+  },
+  {
+    "filename": "website icons/carrot.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/carrot.png",
+    "size": 248
+  },
+  {
+    "filename": "website icons/carrot_golden.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/carrot_golden.png",
+    "size": 248
+  },
+  {
+    "filename": "website icons/carrot_on_a_stick.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/carrot_on_a_stick.png",
+    "size": 239
+  },
+  {
+    "filename": "website icons/cauldron.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/cauldron.png",
+    "size": 242
+  },
+  {
+    "filename": "website icons/chain.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chain.png",
+    "size": 177
+  },
+  {
+    "filename": "website icons/chainmail_boots.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chainmail_boots.png",
+    "size": 201
+  },
+  {
+    "filename": "website icons/chainmail_chestplate.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chainmail_chestplate.png",
+    "size": 231
+  },
+  {
+    "filename": "website icons/chainmail_helmet.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chainmail_helmet.png",
+    "size": 181
+  },
+  {
+    "filename": "website icons/chainmail_leggings.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chainmail_leggings.png",
+    "size": 199
+  },
+  {
+    "filename": "website icons/chalkboard_large.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chalkboard_large.png",
+    "size": 512
+  },
+  {
+    "filename": "website icons/chalkboard_medium.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chalkboard_medium.png",
+    "size": 376
+  },
+  {
+    "filename": "website icons/chalkboard_small.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chalkboard_small.png",
+    "size": 285
+  },
+  {
+    "filename": "website icons/charcoal.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/charcoal.png",
+    "size": 273
+  },
+  {
+    "filename": "website icons/check.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/check.png",
+    "size": 149
+  },
+  {
+    "filename": "website icons/check1.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/check1.png",
+    "size": 151
+  },
+  {
+    "filename": "website icons/check2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/check2.png",
+    "size": 158
+  },
+  {
+    "filename": "website icons/checkboxFilled.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkboxFilled.png",
+    "size": 192
+  },
+  {
+    "filename": "website icons/checkboxFilledWhiteBorder.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkboxFilledWhiteBorder.png",
+    "size": 1178
+  },
+  {
+    "filename": "website icons/checkboxFilledYellow_WhiteBorder.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkboxFilledYellow_WhiteBorder.png",
+    "size": 1152
+  },
+  {
+    "filename": "website icons/checkboxFilled_hover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkboxFilled_hover.png",
+    "size": 1177
+  },
+  {
+    "filename": "website icons/checkboxUnFilled_hover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkboxUnFilled_hover.png",
+    "size": 1140
+  },
+  {
+    "filename": "website icons/checkboxUnFilled_WhiteBorder.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkboxUnFilled_WhiteBorder.png",
+    "size": 1140
+  },
+  {
+    "filename": "website icons/checkbox_checked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_checked.png",
+    "size": 192
+  },
+  {
+    "filename": "website icons/checkbox_checked_disabled.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_checked_disabled.png",
+    "size": 1178
+  },
+  {
+    "filename": "website icons/checkbox_checked_hover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_checked_hover.png",
+    "size": 1177
+  },
+  {
+    "filename": "website icons/checkbox_checked_WhiteBorder.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_checked_WhiteBorder.png",
+    "size": 1178
+  },
+  {
+    "filename": "website icons/checkbox_checked_WhiteBorder_disabled.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_checked_WhiteBorder_disabled.png",
+    "size": 173
+  },
+  {
+    "filename": "website icons/checkbox_filled.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_filled.png",
+    "size": 125
+  },
+  {
+    "filename": "website icons/checkbox_filled_WhiteBorder.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_filled_WhiteBorder.png",
+    "size": 1152
+  },
+  {
+    "filename": "website icons/checkbox_filled_WhiteBorder_disabled.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_filled_WhiteBorder_disabled.png",
+    "size": 125
+  },
+  {
+    "filename": "website icons/checkbox_unchecked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_unchecked.png",
+    "size": 113
+  },
+  {
+    "filename": "website icons/checkbox_unchecked_disabled.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_unchecked_disabled.png",
+    "size": 1140
+  },
+  {
+    "filename": "website icons/checkbox_unchecked_hover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_unchecked_hover.png",
+    "size": 1140
+  },
+  {
+    "filename": "website icons/checkbox_unchecked_WhiteBorder.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_unchecked_WhiteBorder.png",
+    "size": 103
+  },
+  {
+    "filename": "website icons/checkbox_unchecked_WhiteBorder_disabled.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkbox_unchecked_WhiteBorder_disabled.png",
+    "size": 106
+  },
+  {
+    "filename": "website icons/checkDisabled.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkDisabled.png",
+    "size": 149
+  },
+  {
+    "filename": "website icons/checkHover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/checkHover.png",
+    "size": 152
+  },
+  {
+    "filename": "website icons/cherry_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/cherry_boat.png",
+    "size": 902
+  },
+  {
+    "filename": "website icons/cherry_chest_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/cherry_chest_boat.png",
+    "size": 319
+  },
+  {
+    "filename": "website icons/cherry_door.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/cherry_door.png",
+    "size": 234
+  },
+  {
+    "filename": "website icons/cherry_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/cherry_hanging_sign.png",
+    "size": 764
+  },
+  {
+    "filename": "website icons/cherry_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/cherry_sign.png",
+    "size": 725
+  },
+  {
+    "filename": "website icons/chicken_cooked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chicken_cooked.png",
+    "size": 272
+  },
+  {
+    "filename": "website icons/chicken_raw.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chicken_raw.png",
+    "size": 269
+  },
+  {
+    "filename": "website icons/chorus_fruit.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chorus_fruit.png",
+    "size": 250
+  },
+  {
+    "filename": "website icons/chorus_fruit_popped.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/chorus_fruit_popped.png",
+    "size": 246
+  },
+  {
+    "filename": "website icons/clay_ball.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/clay_ball.png",
+    "size": 225
+  },
+  {
+    "filename": "website icons/clock_item.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/clock_item.png",
+    "size": 463
+  },
+  {
+    "filename": "website icons/clouds.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/clouds.png",
+    "size": 216
+  },
+  {
+    "filename": "website icons/coal.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/coal.png",
+    "size": 252
+  },
+  {
+    "filename": "website icons/coast_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/coast_armor_trim_smithing_template.png",
+    "size": 340
+  },
+  {
+    "filename": "website icons/comparator.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/comparator.png",
+    "size": 231
+  },
+  {
+    "filename": "website icons/compass_atlas.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/compass_atlas.png",
+    "size": 1381
+  },
+  {
+    "filename": "website icons/compass_item.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/compass_item.png",
+    "size": 378
+  },
+  {
+    "filename": "website icons/cookie.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/cookie.png",
+    "size": 255
+  },
+  {
+    "filename": "website icons/copper_door.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/copper_door.png",
+    "size": 175
+  },
+  {
+    "filename": "website icons/copper_ingot.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/copper_ingot.png",
+    "size": 218
+  },
+  {
+    "filename": "website icons/creeper_banner_pattern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/creeper_banner_pattern.png",
+    "size": 365
+  },
+  {
+    "filename": "website icons/crimson_door.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/crimson_door.png",
+    "size": 140
+  },
+  {
+    "filename": "website icons/crimson_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/crimson_hanging_sign.png",
+    "size": 239
+  },
+  {
+    "filename": "website icons/crossbow_arrow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/crossbow_arrow.png",
+    "size": 597
+  },
+  {
+    "filename": "website icons/crossbow_firework.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/crossbow_firework.png",
+    "size": 376
+  },
+  {
+    "filename": "website icons/crossbow_pulling_0.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/crossbow_pulling_0.png",
+    "size": 624
+  },
+  {
+    "filename": "website icons/crossbow_pulling_1.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/crossbow_pulling_1.png",
+    "size": 632
+  },
+  {
+    "filename": "website icons/crossbow_pulling_2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/crossbow_pulling_2.png",
+    "size": 589
+  },
+  {
+    "filename": "website icons/crossbow_standby.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/crossbow_standby.png",
+    "size": 599
+  },
+  {
+    "filename": "website icons/cyan_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/cyan_candle.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/danger_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/danger_pottery_sherd.png",
+    "size": 404
+  },
+  {
+    "filename": "website icons/dark.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dark.png",
+    "size": 137
+  },
+  {
+    "filename": "website icons/DarkButtonNoStroke.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/DarkButtonNoStroke.png",
+    "size": 120
+  },
+  {
+    "filename": "website icons/DarkButtonStroke.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/DarkButtonStroke.png",
+    "size": 144
+  },
+  {
+    "filename": "website icons/DarkButtonThin.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/DarkButtonThin.png",
+    "size": 110
+  },
+  {
+    "filename": "website icons/DarkButtonThinStroke1.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/DarkButtonThinStroke1.png",
+    "size": 126
+  },
+  {
+    "filename": "website icons/darkhover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/darkhover.png",
+    "size": 132
+  },
+  {
+    "filename": "website icons/darkpressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/darkpressed.png",
+    "size": 132
+  },
+  {
+    "filename": "website icons/darkpressednohover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/darkpressednohover.png",
+    "size": 137
+  },
+  {
+    "filename": "website icons/dark_oak_chest_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dark_oak_chest_boat.png",
+    "size": 393
+  },
+  {
+    "filename": "website icons/dark_oak_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dark_oak_hanging_sign.png",
+    "size": 239
+  },
+  {
+    "filename": "website icons/dialog-background-atlas.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dialog-background-atlas.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/diamond.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/diamond.png",
+    "size": 256
+  },
+  {
+    "filename": "website icons/diamond_axe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/diamond_axe.png",
+    "size": 178
+  },
+  {
+    "filename": "website icons/diamond_boots.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/diamond_boots.png",
+    "size": 175
+  },
+  {
+    "filename": "website icons/diamond_chestplate.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/diamond_chestplate.png",
+    "size": 202
+  },
+  {
+    "filename": "website icons/diamond_helmet.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/diamond_helmet.png",
+    "size": 165
+  },
+  {
+    "filename": "website icons/diamond_hoe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/diamond_hoe.png",
+    "size": 161
+  },
+  {
+    "filename": "website icons/diamond_horse_armor.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/diamond_horse_armor.png",
+    "size": 223
+  },
+  {
+    "filename": "website icons/diamond_leggings.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/diamond_leggings.png",
+    "size": 177
+  },
+  {
+    "filename": "website icons/diamond_pickaxe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/diamond_pickaxe.png",
+    "size": 180
+  },
+  {
+    "filename": "website icons/diamond_shovel.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/diamond_shovel.png",
+    "size": 171
+  },
+  {
+    "filename": "website icons/diamond_sword.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/diamond_sword.png",
+    "size": 198
+  },
+  {
+    "filename": "website icons/disc_fragment_5.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/disc_fragment_5.png",
+    "size": 142
+  },
+  {
+    "filename": "website icons/dismount.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dismount.png",
+    "size": 219
+  },
+  {
+    "filename": "website icons/dismount_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dismount_pressed.png",
+    "size": 224
+  },
+  {
+    "filename": "website icons/door_acacia.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/door_acacia.png",
+    "size": 135
+  },
+  {
+    "filename": "website icons/door_birch.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/door_birch.png",
+    "size": 166
+  },
+  {
+    "filename": "website icons/door_dark_oak.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/door_dark_oak.png",
+    "size": 148
+  },
+  {
+    "filename": "website icons/door_iron.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/door_iron.png",
+    "size": 153
+  },
+  {
+    "filename": "website icons/door_jungle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/door_jungle.png",
+    "size": 183
+  },
+  {
+    "filename": "website icons/door_spruce.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/door_spruce.png",
+    "size": 145
+  },
+  {
+    "filename": "website icons/door_wood.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/door_wood.png",
+    "size": 154
+  },
+  {
+    "filename": "website icons/Dot1.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Dot1.png",
+    "size": 136
+  },
+  {
+    "filename": "website icons/Dot2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Dot2.png",
+    "size": 139
+  },
+  {
+    "filename": "website icons/Dot3.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Dot3.png",
+    "size": 135
+  },
+  {
+    "filename": "website icons/double_side_transparent.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/double_side_transparent.png",
+    "size": 263
+  },
+  {
+    "filename": "website icons/down.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/down.png",
+    "size": 289
+  },
+  {
+    "filename": "website icons/DownArrow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/DownArrow.png",
+    "size": 143
+  },
+  {
+    "filename": "website icons/down_left.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/down_left.png",
+    "size": 198
+  },
+  {
+    "filename": "website icons/down_left_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/down_left_pressed.png",
+    "size": 198
+  },
+  {
+    "filename": "website icons/down_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/down_pressed.png",
+    "size": 252
+  },
+  {
+    "filename": "website icons/down_right.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/down_right.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/down_right_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/down_right_pressed.png",
+    "size": 196
+  },
+  {
+    "filename": "website icons/dragons_breath.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dragons_breath.png",
+    "size": 236
+  },
+  {
+    "filename": "website icons/dragon_fireball.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dragon_fireball.png",
+    "size": 242
+  },
+  {
+    "filename": "website icons/dried_kelp.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dried_kelp.png",
+    "size": 244
+  },
+  {
+    "filename": "website icons/dune_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dune_armor_trim_smithing_template.png",
+    "size": 560
+  },
+  {
+    "filename": "website icons/dye_powder_black.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_black.png",
+    "size": 199
+  },
+  {
+    "filename": "website icons/dye_powder_black_new.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_black_new.png",
+    "size": 275
+  },
+  {
+    "filename": "website icons/dye_powder_blue.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_blue.png",
+    "size": 231
+  },
+  {
+    "filename": "website icons/dye_powder_blue_new.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_blue_new.png",
+    "size": 362
+  },
+  {
+    "filename": "website icons/dye_powder_brown.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_brown.png",
+    "size": 198
+  },
+  {
+    "filename": "website icons/dye_powder_brown_new.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_brown_new.png",
+    "size": 311
+  },
+  {
+    "filename": "website icons/dye_powder_cyan.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_cyan.png",
+    "size": 236
+  },
+  {
+    "filename": "website icons/dye_powder_glow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_glow.png",
+    "size": 182
+  },
+  {
+    "filename": "website icons/dye_powder_gray.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_gray.png",
+    "size": 211
+  },
+  {
+    "filename": "website icons/dye_powder_green.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_green.png",
+    "size": 219
+  },
+  {
+    "filename": "website icons/dye_powder_light_blue.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_light_blue.png",
+    "size": 207
+  },
+  {
+    "filename": "website icons/dye_powder_lime.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_lime.png",
+    "size": 207
+  },
+  {
+    "filename": "website icons/dye_powder_magenta.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_magenta.png",
+    "size": 209
+  },
+  {
+    "filename": "website icons/dye_powder_orange.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_orange.png",
+    "size": 224
+  },
+  {
+    "filename": "website icons/dye_powder_pink.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_pink.png",
+    "size": 210
+  },
+  {
+    "filename": "website icons/dye_powder_purple.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_purple.png",
+    "size": 209
+  },
+  {
+    "filename": "website icons/dye_powder_red.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_red.png",
+    "size": 223
+  },
+  {
+    "filename": "website icons/dye_powder_silver.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_silver.png",
+    "size": 217
+  },
+  {
+    "filename": "website icons/dye_powder_white.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_white.png",
+    "size": 248
+  },
+  {
+    "filename": "website icons/dye_powder_white_new.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_white_new.png",
+    "size": 328
+  },
+  {
+    "filename": "website icons/dye_powder_yellow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/dye_powder_yellow.png",
+    "size": 224
+  },
+  {
+    "filename": "website icons/echo_shard.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/echo_shard.png",
+    "size": 372
+  },
+  {
+    "filename": "website icons/egg.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg.png",
+    "size": 196
+  },
+  {
+    "filename": "website icons/egg_agent.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_agent.png",
+    "size": 505
+  },
+  {
+    "filename": "website icons/egg_bat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_bat.png",
+    "size": 321
+  },
+  {
+    "filename": "website icons/egg_bee.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_bee.png",
+    "size": 532
+  },
+  {
+    "filename": "website icons/egg_blaze.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_blaze.png",
+    "size": 392
+  },
+  {
+    "filename": "website icons/egg_cat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_cat.png",
+    "size": 436
+  },
+  {
+    "filename": "website icons/egg_cave_spider.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_cave_spider.png",
+    "size": 354
+  },
+  {
+    "filename": "website icons/egg_chicken.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_chicken.png",
+    "size": 335
+  },
+  {
+    "filename": "website icons/egg_clownfish.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_clownfish.png",
+    "size": 423
+  },
+  {
+    "filename": "website icons/egg_cod.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_cod.png",
+    "size": 421
+  },
+  {
+    "filename": "website icons/egg_cow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_cow.png",
+    "size": 358
+  },
+  {
+    "filename": "website icons/egg_creeper.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_creeper.png",
+    "size": 268
+  },
+  {
+    "filename": "website icons/egg_dolphin.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_dolphin.png",
+    "size": 397
+  },
+  {
+    "filename": "website icons/egg_donkey.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_donkey.png",
+    "size": 373
+  },
+  {
+    "filename": "website icons/egg_drowned.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_drowned.png",
+    "size": 415
+  },
+  {
+    "filename": "website icons/egg_elderguardian.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_elderguardian.png",
+    "size": 404
+  },
+  {
+    "filename": "website icons/egg_enderman.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_enderman.png",
+    "size": 239
+  },
+  {
+    "filename": "website icons/egg_endermite.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_endermite.png",
+    "size": 306
+  },
+  {
+    "filename": "website icons/egg_evoker.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_evoker.png",
+    "size": 365
+  },
+  {
+    "filename": "website icons/egg_fish.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_fish.png",
+    "size": 421
+  },
+  {
+    "filename": "website icons/egg_fox.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_fox.png",
+    "size": 407
+  },
+  {
+    "filename": "website icons/egg_ghast.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_ghast.png",
+    "size": 367
+  },
+  {
+    "filename": "website icons/egg_glow_squid.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_glow_squid.png",
+    "size": 422
+  },
+  {
+    "filename": "website icons/egg_guardian.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_guardian.png",
+    "size": 387
+  },
+  {
+    "filename": "website icons/egg_horse.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_horse.png",
+    "size": 384
+  },
+  {
+    "filename": "website icons/egg_husk.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_husk.png",
+    "size": 393
+  },
+  {
+    "filename": "website icons/egg_lava_slime.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_lava_slime.png",
+    "size": 317
+  },
+  {
+    "filename": "website icons/egg_llama.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_llama.png",
+    "size": 409
+  },
+  {
+    "filename": "website icons/egg_mask.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_mask.png",
+    "size": 350
+  },
+  {
+    "filename": "website icons/egg_mule.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_mule.png",
+    "size": 303
+  },
+  {
+    "filename": "website icons/egg_mushroomcow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_mushroomcow.png",
+    "size": 348
+  },
+  {
+    "filename": "website icons/egg_npc.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_npc.png",
+    "size": 435
+  },
+  {
+    "filename": "website icons/egg_null.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_null.png",
+    "size": 370
+  },
+  {
+    "filename": "website icons/egg_ocelot.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_ocelot.png",
+    "size": 386
+  },
+  {
+    "filename": "website icons/egg_panda.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_panda.png",
+    "size": 341
+  },
+  {
+    "filename": "website icons/egg_parrot.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_parrot.png",
+    "size": 355
+  },
+  {
+    "filename": "website icons/egg_phantom.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_phantom.png",
+    "size": 398
+  },
+  {
+    "filename": "website icons/egg_pig.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_pig.png",
+    "size": 384
+  },
+  {
+    "filename": "website icons/egg_pigzombie.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_pigzombie.png",
+    "size": 368
+  },
+  {
+    "filename": "website icons/egg_pillager.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_pillager.png",
+    "size": 443
+  },
+  {
+    "filename": "website icons/egg_polarbear.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_polarbear.png",
+    "size": 423
+  },
+  {
+    "filename": "website icons/egg_pufferfish.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_pufferfish.png",
+    "size": 414
+  },
+  {
+    "filename": "website icons/egg_rabbit.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_rabbit.png",
+    "size": 368
+  },
+  {
+    "filename": "website icons/egg_ravager.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_ravager.png",
+    "size": 350
+  },
+  {
+    "filename": "website icons/egg_salmon.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_salmon.png",
+    "size": 384
+  },
+  {
+    "filename": "website icons/egg_sheep.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_sheep.png",
+    "size": 375
+  },
+  {
+    "filename": "website icons/egg_shulker.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_shulker.png",
+    "size": 383
+  },
+  {
+    "filename": "website icons/egg_silverfish.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_silverfish.png",
+    "size": 332
+  },
+  {
+    "filename": "website icons/egg_skeleton.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_skeleton.png",
+    "size": 336
+  },
+  {
+    "filename": "website icons/egg_skeletonhorse.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_skeletonhorse.png",
+    "size": 382
+  },
+  {
+    "filename": "website icons/egg_slime.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_slime.png",
+    "size": 378
+  },
+  {
+    "filename": "website icons/egg_spider.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_spider.png",
+    "size": 337
+  },
+  {
+    "filename": "website icons/egg_squid.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_squid.png",
+    "size": 373
+  },
+  {
+    "filename": "website icons/egg_stray.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_stray.png",
+    "size": 396
+  },
+  {
+    "filename": "website icons/egg_turtle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_turtle.png",
+    "size": 381
+  },
+  {
+    "filename": "website icons/egg_vex.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_vex.png",
+    "size": 424
+  },
+  {
+    "filename": "website icons/egg_villager.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_villager.png",
+    "size": 393
+  },
+  {
+    "filename": "website icons/egg_vindicator.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_vindicator.png",
+    "size": 397
+  },
+  {
+    "filename": "website icons/egg_wanderingtrader.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_wanderingtrader.png",
+    "size": 425
+  },
+  {
+    "filename": "website icons/egg_witch.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_witch.png",
+    "size": 335
+  },
+  {
+    "filename": "website icons/egg_wither.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_wither.png",
+    "size": 313
+  },
+  {
+    "filename": "website icons/egg_wolf.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_wolf.png",
+    "size": 379
+  },
+  {
+    "filename": "website icons/egg_zombie.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_zombie.png",
+    "size": 357
+  },
+  {
+    "filename": "website icons/egg_zombiehorse.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_zombiehorse.png",
+    "size": 415
+  },
+  {
+    "filename": "website icons/egg_zombievillager.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/egg_zombievillager.png",
+    "size": 396
+  },
+  {
+    "filename": "website icons/elytra.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/elytra.png",
+    "size": 241
+  },
+  {
+    "filename": "website icons/emerald.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/emerald.png",
+    "size": 214
+  },
+  {
+    "filename": "website icons/empty_armor_slot_boots.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/empty_armor_slot_boots.png",
+    "size": 140
+  },
+  {
+    "filename": "website icons/empty_armor_slot_chestplate.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/empty_armor_slot_chestplate.png",
+    "size": 141
+  },
+  {
+    "filename": "website icons/empty_armor_slot_helmet.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/empty_armor_slot_helmet.png",
+    "size": 139
+  },
+  {
+    "filename": "website icons/empty_armor_slot_leggings.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/empty_armor_slot_leggings.png",
+    "size": 148
+  },
+  {
+    "filename": "website icons/empty_armor_slot_shield.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/empty_armor_slot_shield.png",
+    "size": 195
+  },
+  {
+    "filename": "website icons/enchanting_table.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/enchanting_table.png",
+    "size": 1758
+  },
+  {
+    "filename": "website icons/ender_eye.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ender_eye.png",
+    "size": 264
+  },
+  {
+    "filename": "website icons/ender_pearl.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ender_pearl.png",
+    "size": 255
+  },
+  {
+    "filename": "website icons/end_crystal.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/end_crystal.png",
+    "size": 281
+  },
+  {
+    "filename": "website icons/EventBars.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/EventBars.png",
+    "size": 222
+  },
+  {
+    "filename": "website icons/experience_bottle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/experience_bottle.png",
+    "size": 269
+  },
+  {
+    "filename": "website icons/explorer_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/explorer_pottery_sherd.png",
+    "size": 417
+  },
+  {
+    "filename": "website icons/exposed_copper_door.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/exposed_copper_door.png",
+    "size": 196
+  },
+  {
+    "filename": "website icons/eye_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/eye_armor_trim_smithing_template.png",
+    "size": 271
+  },
+  {
+    "filename": "website icons/feather.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/feather.png",
+    "size": 183
+  },
+  {
+    "filename": "website icons/field_masoned_banner_pattern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/field_masoned_banner_pattern.png",
+    "size": 214
+  },
+  {
+    "filename": "website icons/fireball.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/fireball.png",
+    "size": 271
+  },
+  {
+    "filename": "website icons/fireworks.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/fireworks.png",
+    "size": 196
+  },
+  {
+    "filename": "website icons/fire_resistance_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/fire_resistance_effect.png",
+    "size": 514
+  },
+  {
+    "filename": "website icons/fishing_rod_cast.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/fishing_rod_cast.png",
+    "size": 179
+  },
+  {
+    "filename": "website icons/fishing_rod_uncast.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/fishing_rod_uncast.png",
+    "size": 213
+  },
+  {
+    "filename": "website icons/fish_clownfish_raw.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/fish_clownfish_raw.png",
+    "size": 514
+  },
+  {
+    "filename": "website icons/fish_cooked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/fish_cooked.png",
+    "size": 439
+  },
+  {
+    "filename": "website icons/fish_pufferfish_raw.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/fish_pufferfish_raw.png",
+    "size": 687
+  },
+  {
+    "filename": "website icons/fish_raw.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/fish_raw.png",
+    "size": 449
+  },
+  {
+    "filename": "website icons/fish_salmon_cooked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/fish_salmon_cooked.png",
+    "size": 504
+  },
+  {
+    "filename": "website icons/fish_salmon_raw.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/fish_salmon_raw.png",
+    "size": 498
+  },
+  {
+    "filename": "website icons/flint.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/flint.png",
+    "size": 227
+  },
+  {
+    "filename": "website icons/flint_and_steel.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/flint_and_steel.png",
+    "size": 242
+  },
+  {
+    "filename": "website icons/flower_banner_pattern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/flower_banner_pattern.png",
+    "size": 415
+  },
+  {
+    "filename": "website icons/flower_pot.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/flower_pot.png",
+    "size": 248
+  },
+  {
+    "filename": "website icons/flow_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/flow_armor_trim_smithing_template.png",
+    "size": 251
+  },
+  {
+    "filename": "website icons/flow_banner_pattern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/flow_banner_pattern.png",
+    "size": 393
+  },
+  {
+    "filename": "website icons/flow_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/flow_pottery_sherd.png",
+    "size": 220
+  },
+  {
+    "filename": "website icons/flyingascend.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/flyingascend.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/flyingascend_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/flyingascend_pressed.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/flyingdescend.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/flyingdescend.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/flyingdescend_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/flyingdescend_pressed.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/focusBorder.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/focusBorder.png",
+    "size": 106
+  },
+  {
+    "filename": "website icons/Friends.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Friends.png",
+    "size": 472
+  },
+  {
+    "filename": "website icons/friend_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/friend_pottery_sherd.png",
+    "size": 393
+  },
+  {
+    "filename": "website icons/ghast_tear.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ghast_tear.png",
+    "size": 163
+  },
+  {
+    "filename": "website icons/globe_banner_pattern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/globe_banner_pattern.png",
+    "size": 394
+  },
+  {
+    "filename": "website icons/glowstone_dust.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/glowstone_dust.png",
+    "size": 220
+  },
+  {
+    "filename": "website icons/glow_berries.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/glow_berries.png",
+    "size": 266
+  },
+  {
+    "filename": "website icons/glow_item_frame.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/glow_item_frame.png",
+    "size": 292
+  },
+  {
+    "filename": "website icons/glyph_atlas.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/glyph_atlas.png",
+    "size": 1856
+  },
+  {
+    "filename": "website icons/glyph_color_atlas.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/glyph_color_atlas.png",
+    "size": 1930
+  },
+  {
+    "filename": "website icons/goat_horn.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/goat_horn.png",
+    "size": 235
+  },
+  {
+    "filename": "website icons/gold_axe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_axe.png",
+    "size": 210
+  },
+  {
+    "filename": "website icons/gold_boots.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_boots.png",
+    "size": 198
+  },
+  {
+    "filename": "website icons/gold_chestplate.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_chestplate.png",
+    "size": 241
+  },
+  {
+    "filename": "website icons/gold_helmet.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_helmet.png",
+    "size": 187
+  },
+  {
+    "filename": "website icons/gold_hoe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_hoe.png",
+    "size": 162
+  },
+  {
+    "filename": "website icons/gold_horse_armor.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_horse_armor.png",
+    "size": 224
+  },
+  {
+    "filename": "website icons/gold_ingot.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_ingot.png",
+    "size": 232
+  },
+  {
+    "filename": "website icons/gold_leggings.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_leggings.png",
+    "size": 203
+  },
+  {
+    "filename": "website icons/gold_nugget.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_nugget.png",
+    "size": 165
+  },
+  {
+    "filename": "website icons/gold_pickaxe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_pickaxe.png",
+    "size": 180
+  },
+  {
+    "filename": "website icons/gold_shovel.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_shovel.png",
+    "size": 188
+  },
+  {
+    "filename": "website icons/gold_sword.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gold_sword.png",
+    "size": 225
+  },
+  {
+    "filename": "website icons/gray_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gray_candle.png",
+    "size": 199
+  },
+  {
+    "filename": "website icons/GreenBG.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/GreenBG.png",
+    "size": 119
+  },
+  {
+    "filename": "website icons/green_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/green_candle.png",
+    "size": 198
+  },
+  {
+    "filename": "website icons/grey_button_default.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/grey_button_default.png",
+    "size": 97
+  },
+  {
+    "filename": "website icons/grey_button_hover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/grey_button_hover.png",
+    "size": 101
+  },
+  {
+    "filename": "website icons/grey_button_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/grey_button_pressed.png",
+    "size": 99
+  },
+  {
+    "filename": "website icons/gui.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gui.png",
+    "size": 30919
+  },
+  {
+    "filename": "website icons/gui2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gui2.png",
+    "size": 11571
+  },
+  {
+    "filename": "website icons/gunpowder.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/gunpowder.png",
+    "size": 213
+  },
+  {
+    "filename": "website icons/guster_banner_pattern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/guster_banner_pattern.png",
+    "size": 382
+  },
+  {
+    "filename": "website icons/guster_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/guster_pottery_sherd.png",
+    "size": 220
+  },
+  {
+    "filename": "website icons/hanging_roots.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/hanging_roots.png",
+    "size": 320
+  },
+  {
+    "filename": "website icons/haste_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/haste_effect.png",
+    "size": 410
+  },
+  {
+    "filename": "website icons/heartbreak_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/heartbreak_pottery_sherd.png",
+    "size": 402
+  },
+  {
+    "filename": "website icons/heartofthesea_closed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/heartofthesea_closed.png",
+    "size": 356
+  },
+  {
+    "filename": "website icons/heart_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/heart_pottery_sherd.png",
+    "size": 371
+  },
+  {
+    "filename": "website icons/hoglin_meat_cooked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/hoglin_meat_cooked.png",
+    "size": 267
+  },
+  {
+    "filename": "website icons/hoglin_meat_raw.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/hoglin_meat_raw.png",
+    "size": 262
+  },
+  {
+    "filename": "website icons/honeycomb.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/honeycomb.png",
+    "size": 228
+  },
+  {
+    "filename": "website icons/honey_bottle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/honey_bottle.png",
+    "size": 236
+  },
+  {
+    "filename": "website icons/hopper.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/hopper.png",
+    "size": 228
+  },
+  {
+    "filename": "website icons/host_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/host_armor_trim_smithing_template.png",
+    "size": 429
+  },
+  {
+    "filename": "website icons/hover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/hover.png",
+    "size": 101
+  },
+  {
+    "filename": "website icons/HoverButtonThinNewBevel.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/HoverButtonThinNewBevel.png",
+    "size": 114
+  },
+  {
+    "filename": "website icons/HoverButtonThinNewBevel2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/HoverButtonThinNewBevel2.png",
+    "size": 113
+  },
+  {
+    "filename": "website icons/HoverButtonThinNewBevel3.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/HoverButtonThinNewBevel3.png",
+    "size": 113
+  },
+  {
+    "filename": "website icons/HoverButtonThinNewBevel4.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/HoverButtonThinNewBevel4.png",
+    "size": 128
+  },
+  {
+    "filename": "website icons/HoverButtonThinStroke.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/HoverButtonThinStroke.png",
+    "size": 123
+  },
+  {
+    "filename": "website icons/hoverPress.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/hoverPress.png",
+    "size": 99
+  },
+  {
+    "filename": "website icons/howl_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/howl_pottery_sherd.png",
+    "size": 365
+  },
+  {
+    "filename": "website icons/hunger_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/hunger_effect.png",
+    "size": 605
+  },
+  {
+    "filename": "website icons/icons.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/icons.png",
+    "size": 7088
+  },
+  {
+    "filename": "website icons/imagelesshoverbg.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/imagelesshoverbg.png",
+    "size": 116
+  },
+  {
+    "filename": "website icons/Indent.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Indent.png",
+    "size": 115
+  },
+  {
+    "filename": "website icons/Indent2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Indent2.png",
+    "size": 122
+  },
+  {
+    "filename": "website icons/invisibility_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/invisibility_effect.png",
+    "size": 396
+  },
+  {
+    "filename": "website icons/iron_axe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_axe.png",
+    "size": 207
+  },
+  {
+    "filename": "website icons/iron_boots.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_boots.png",
+    "size": 196
+  },
+  {
+    "filename": "website icons/iron_chestplate.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_chestplate.png",
+    "size": 228
+  },
+  {
+    "filename": "website icons/iron_helmet.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_helmet.png",
+    "size": 186
+  },
+  {
+    "filename": "website icons/iron_hoe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_hoe.png",
+    "size": 179
+  },
+  {
+    "filename": "website icons/iron_horse_armor.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_horse_armor.png",
+    "size": 244
+  },
+  {
+    "filename": "website icons/iron_ingot.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_ingot.png",
+    "size": 218
+  },
+  {
+    "filename": "website icons/iron_leggings.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_leggings.png",
+    "size": 201
+  },
+  {
+    "filename": "website icons/iron_nugget.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_nugget.png",
+    "size": 188
+  },
+  {
+    "filename": "website icons/iron_pickaxe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_pickaxe.png",
+    "size": 216
+  },
+  {
+    "filename": "website icons/iron_shovel.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_shovel.png",
+    "size": 184
+  },
+  {
+    "filename": "website icons/iron_sword.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/iron_sword.png",
+    "size": 225
+  },
+  {
+    "filename": "website icons/item_frame.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/item_frame.png",
+    "size": 279
+  },
+  {
+    "filename": "website icons/jump.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/jump.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/jump_boost_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/jump_boost_effect.png",
+    "size": 434
+  },
+  {
+    "filename": "website icons/jump_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/jump_pressed.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/jungle_chest_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/jungle_chest_boat.png",
+    "size": 389
+  },
+  {
+    "filename": "website icons/jungle_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/jungle_hanging_sign.png",
+    "size": 240
+  },
+  {
+    "filename": "website icons/kelp.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/kelp.png",
+    "size": 293
+  },
+  {
+    "filename": "website icons/Language16.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Language16.png",
+    "size": 577
+  },
+  {
+    "filename": "website icons/Language18.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Language18.png",
+    "size": 613
+  },
+  {
+    "filename": "website icons/lantern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/lantern.png",
+    "size": 169
+  },
+  {
+    "filename": "website icons/large_button.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/large_button.png",
+    "size": 274
+  },
+  {
+    "filename": "website icons/large_button_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/large_button_pressed.png",
+    "size": 290
+  },
+  {
+    "filename": "website icons/lead.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/lead.png",
+    "size": 216
+  },
+  {
+    "filename": "website icons/leather.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/leather.png",
+    "size": 251
+  },
+  {
+    "filename": "website icons/leather_chestplate.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/leather_chestplate.png",
+    "size": 236
+  },
+  {
+    "filename": "website icons/left.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/left.png",
+    "size": 287
+  },
+  {
+    "filename": "website icons/LeftArrow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/LeftArrow.png",
+    "size": 150
+  },
+  {
+    "filename": "website icons/LeftTabFront.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/LeftTabFront.png",
+    "size": 121
+  },
+  {
+    "filename": "website icons/left_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/left_pressed.png",
+    "size": 259
+  },
+  {
+    "filename": "website icons/lever.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/lever.png",
+    "size": 136
+  },
+  {
+    "filename": "website icons/levitation_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/levitation_effect.png",
+    "size": 276
+  },
+  {
+    "filename": "website icons/light.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light.png",
+    "size": 131
+  },
+  {
+    "filename": "website icons/lighthover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/lighthover.png",
+    "size": 118
+  },
+  {
+    "filename": "website icons/lightpressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/lightpressed.png",
+    "size": 131
+  },
+  {
+    "filename": "website icons/lightpressednohover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/lightpressednohover.png",
+    "size": 118
+  },
+  {
+    "filename": "website icons/light_block_0.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_0.png",
+    "size": 275
+  },
+  {
+    "filename": "website icons/light_block_1.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_1.png",
+    "size": 332
+  },
+  {
+    "filename": "website icons/light_block_10.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_10.png",
+    "size": 426
+  },
+  {
+    "filename": "website icons/light_block_11.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_11.png",
+    "size": 414
+  },
+  {
+    "filename": "website icons/light_block_12.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_12.png",
+    "size": 430
+  },
+  {
+    "filename": "website icons/light_block_13.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_13.png",
+    "size": 418
+  },
+  {
+    "filename": "website icons/light_block_14.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_14.png",
+    "size": 417
+  },
+  {
+    "filename": "website icons/light_block_15.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_15.png",
+    "size": 426
+  },
+  {
+    "filename": "website icons/light_block_2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_2.png",
+    "size": 380
+  },
+  {
+    "filename": "website icons/light_block_3.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_3.png",
+    "size": 407
+  },
+  {
+    "filename": "website icons/light_block_4.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_4.png",
+    "size": 424
+  },
+  {
+    "filename": "website icons/light_block_5.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_5.png",
+    "size": 420
+  },
+  {
+    "filename": "website icons/light_block_6.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_6.png",
+    "size": 407
+  },
+  {
+    "filename": "website icons/light_block_7.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_7.png",
+    "size": 399
+  },
+  {
+    "filename": "website icons/light_block_8.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_8.png",
+    "size": 398
+  },
+  {
+    "filename": "website icons/light_block_9.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_block_9.png",
+    "size": 402
+  },
+  {
+    "filename": "website icons/light_blue_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_blue_candle.png",
+    "size": 202
+  },
+  {
+    "filename": "website icons/light_gray_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/light_gray_candle.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/lime_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/lime_candle.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/Local.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Local.png",
+    "size": 270
+  },
+  {
+    "filename": "website icons/lodestonecompass_atlas.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/lodestonecompass_atlas.png",
+    "size": 731
+  },
+  {
+    "filename": "website icons/lodestonecompass_item.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/lodestonecompass_item.png",
+    "size": 235
+  },
+  {
+    "filename": "website icons/mace.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mace.png",
+    "size": 542
+  },
+  {
+    "filename": "website icons/magenta_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/magenta_candle.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/magma_cream.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/magma_cream.png",
+    "size": 275
+  },
+  {
+    "filename": "website icons/MainBanners.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/MainBanners.png",
+    "size": 80
+  },
+  {
+    "filename": "website icons/mangrove_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mangrove_boat.png",
+    "size": 347
+  },
+  {
+    "filename": "website icons/mangrove_chest_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mangrove_chest_boat.png",
+    "size": 379
+  },
+  {
+    "filename": "website icons/mangrove_door.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mangrove_door.png",
+    "size": 222
+  },
+  {
+    "filename": "website icons/mangrove_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mangrove_hanging_sign.png",
+    "size": 239
+  },
+  {
+    "filename": "website icons/mangrove_propagule.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mangrove_propagule.png",
+    "size": 175
+  },
+  {
+    "filename": "website icons/mangrove_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mangrove_sign.png",
+    "size": 211
+  },
+  {
+    "filename": "website icons/map_empty.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/map_empty.png",
+    "size": 206
+  },
+  {
+    "filename": "website icons/map_filled.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/map_filled.png",
+    "size": 227
+  },
+  {
+    "filename": "website icons/map_locked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/map_locked.png",
+    "size": 421
+  },
+  {
+    "filename": "website icons/map_mansion.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/map_mansion.png",
+    "size": 227
+  },
+  {
+    "filename": "website icons/map_monument.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/map_monument.png",
+    "size": 227
+  },
+  {
+    "filename": "website icons/map_nautilus.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/map_nautilus.png",
+    "size": 227
+  },
+  {
+    "filename": "website icons/map_trial_chambers.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/map_trial_chambers.png",
+    "size": 220
+  },
+  {
+    "filename": "website icons/melon.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/melon.png",
+    "size": 254
+  },
+  {
+    "filename": "website icons/melon_speckled.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/melon_speckled.png",
+    "size": 287
+  },
+  {
+    "filename": "website icons/MiddleTabFront.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/MiddleTabFront.png",
+    "size": 126
+  },
+  {
+    "filename": "website icons/minecart_chest.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/minecart_chest.png",
+    "size": 338
+  },
+  {
+    "filename": "website icons/minecart_command_block.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/minecart_command_block.png",
+    "size": 333
+  },
+  {
+    "filename": "website icons/minecart_furnace.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/minecart_furnace.png",
+    "size": 322
+  },
+  {
+    "filename": "website icons/minecart_hopper.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/minecart_hopper.png",
+    "size": 294
+  },
+  {
+    "filename": "website icons/minecart_normal.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/minecart_normal.png",
+    "size": 275
+  },
+  {
+    "filename": "website icons/minecart_tnt.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/minecart_tnt.png",
+    "size": 316
+  },
+  {
+    "filename": "website icons/miner_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/miner_pottery_sherd.png",
+    "size": 390
+  },
+  {
+    "filename": "website icons/mining_fatigue_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mining_fatigue_effect.png",
+    "size": 419
+  },
+  {
+    "filename": "website icons/mojang_banner_pattern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mojang_banner_pattern.png",
+    "size": 378
+  },
+  {
+    "filename": "website icons/mourner_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mourner_pottery_sherd.png",
+    "size": 424
+  },
+  {
+    "filename": "website icons/mushroom_stew.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mushroom_stew.png",
+    "size": 204
+  },
+  {
+    "filename": "website icons/music_disc_creator.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/music_disc_creator.png",
+    "size": 215
+  },
+  {
+    "filename": "website icons/music_disc_creator_music_box.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/music_disc_creator_music_box.png",
+    "size": 208
+  },
+  {
+    "filename": "website icons/music_disc_precipice.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/music_disc_precipice.png",
+    "size": 232
+  },
+  {
+    "filename": "website icons/music_disc_relic.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/music_disc_relic.png",
+    "size": 218
+  },
+  {
+    "filename": "website icons/mutton_cooked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mutton_cooked.png",
+    "size": 255
+  },
+  {
+    "filename": "website icons/mutton_raw.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/mutton_raw.png",
+    "size": 257
+  },
+  {
+    "filename": "website icons/name_tag.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/name_tag.png",
+    "size": 241
+  },
+  {
+    "filename": "website icons/nausea_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/nausea_effect.png",
+    "size": 546
+  },
+  {
+    "filename": "website icons/nautilus.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/nautilus.png",
+    "size": 514
+  },
+  {
+    "filename": "website icons/netherbrick.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherbrick.png",
+    "size": 242
+  },
+  {
+    "filename": "website icons/netherite_axe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_axe.png",
+    "size": 184
+  },
+  {
+    "filename": "website icons/netherite_boots.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_boots.png",
+    "size": 173
+  },
+  {
+    "filename": "website icons/netherite_chestplate.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_chestplate.png",
+    "size": 216
+  },
+  {
+    "filename": "website icons/netherite_helmet.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_helmet.png",
+    "size": 169
+  },
+  {
+    "filename": "website icons/netherite_hoe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_hoe.png",
+    "size": 167
+  },
+  {
+    "filename": "website icons/netherite_ingot.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_ingot.png",
+    "size": 222
+  },
+  {
+    "filename": "website icons/netherite_leggings.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_leggings.png",
+    "size": 177
+  },
+  {
+    "filename": "website icons/netherite_pickaxe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_pickaxe.png",
+    "size": 188
+  },
+  {
+    "filename": "website icons/netherite_scrap.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_scrap.png",
+    "size": 199
+  },
+  {
+    "filename": "website icons/netherite_shovel.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_shovel.png",
+    "size": 180
+  },
+  {
+    "filename": "website icons/netherite_sword.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_sword.png",
+    "size": 210
+  },
+  {
+    "filename": "website icons/netherite_upgrade_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/netherite_upgrade_smithing_template.png",
+    "size": 237
+  },
+  {
+    "filename": "website icons/nether_sprouts.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/nether_sprouts.png",
+    "size": 1744
+  },
+  {
+    "filename": "website icons/nether_star.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/nether_star.png",
+    "size": 227
+  },
+  {
+    "filename": "website icons/nether_wart.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/nether_wart.png",
+    "size": 180
+  },
+  {
+    "filename": "website icons/night_vision_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/night_vision_effect.png",
+    "size": 296
+  },
+  {
+    "filename": "website icons/NormalButtonThinNewBevel.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/NormalButtonThinNewBevel.png",
+    "size": 106
+  },
+  {
+    "filename": "website icons/oak_chest_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/oak_chest_boat.png",
+    "size": 391
+  },
+  {
+    "filename": "website icons/oak_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/oak_hanging_sign.png",
+    "size": 235
+  },
+  {
+    "filename": "website icons/offlineLight.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/offlineLight.png",
+    "size": 137
+  },
+  {
+    "filename": "website icons/ominous_bottle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ominous_bottle.png",
+    "size": 195
+  },
+  {
+    "filename": "website icons/ominous_trial_key.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ominous_trial_key.png",
+    "size": 244
+  },
+  {
+    "filename": "website icons/orange_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/orange_candle.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/oxidized_copper_door.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/oxidized_copper_door.png",
+    "size": 192
+  },
+  {
+    "filename": "website icons/PaintBrush.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/PaintBrush.png",
+    "size": 450
+  },
+  {
+    "filename": "website icons/painting.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/painting.png",
+    "size": 232
+  },
+  {
+    "filename": "website icons/pale_oak_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/pale_oak_boat.png",
+    "size": 259
+  },
+  {
+    "filename": "website icons/pale_oak_chest_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/pale_oak_chest_boat.png",
+    "size": 307
+  },
+  {
+    "filename": "website icons/pale_oak_door.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/pale_oak_door.png",
+    "size": 177
+  },
+  {
+    "filename": "website icons/pale_oak_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/pale_oak_hanging_sign.png",
+    "size": 234
+  },
+  {
+    "filename": "website icons/pale_oak_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/pale_oak_sign.png",
+    "size": 193
+  },
+  {
+    "filename": "website icons/paper.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/paper.png",
+    "size": 205
+  },
+  {
+    "filename": "website icons/phantom_membrane.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/phantom_membrane.png",
+    "size": 290
+  },
+  {
+    "filename": "website icons/piglin_banner_pattern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/piglin_banner_pattern.png",
+    "size": 381
+  },
+  {
+    "filename": "website icons/pink_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/pink_candle.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/pink_petals.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/pink_petals.png",
+    "size": 778
+  },
+  {
+    "filename": "website icons/pitcher_pod.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/pitcher_pod.png",
+    "size": 417
+  },
+  {
+    "filename": "website icons/plenty_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/plenty_pottery_sherd.png",
+    "size": 401
+  },
+  {
+    "filename": "website icons/poison_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/poison_effect.png",
+    "size": 554
+  },
+  {
+    "filename": "website icons/porkchop_cooked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/porkchop_cooked.png",
+    "size": 249
+  },
+  {
+    "filename": "website icons/porkchop_raw.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/porkchop_raw.png",
+    "size": 250
+  },
+  {
+    "filename": "website icons/potato.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potato.png",
+    "size": 229
+  },
+  {
+    "filename": "website icons/potato_baked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potato_baked.png",
+    "size": 248
+  },
+  {
+    "filename": "website icons/potato_poisonous.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potato_poisonous.png",
+    "size": 284
+  },
+  {
+    "filename": "website icons/potion_bottle_absorption.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_absorption.png",
+    "size": 298
+  },
+  {
+    "filename": "website icons/potion_bottle_blindness.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_blindness.png",
+    "size": 346
+  },
+  {
+    "filename": "website icons/potion_bottle_confusion.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_confusion.png",
+    "size": 297
+  },
+  {
+    "filename": "website icons/potion_bottle_damageBoost.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_damageBoost.png",
+    "size": 349
+  },
+  {
+    "filename": "website icons/potion_bottle_digSlowdown.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_digSlowdown.png",
+    "size": 297
+  },
+  {
+    "filename": "website icons/potion_bottle_digSpeed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_digSpeed.png",
+    "size": 300
+  },
+  {
+    "filename": "website icons/potion_bottle_drinkable.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_drinkable.png",
+    "size": 355
+  },
+  {
+    "filename": "website icons/potion_bottle_empty.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_empty.png",
+    "size": 194
+  },
+  {
+    "filename": "website icons/potion_bottle_fireResistance.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_fireResistance.png",
+    "size": 356
+  },
+  {
+    "filename": "website icons/potion_bottle_harm.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_harm.png",
+    "size": 365
+  },
+  {
+    "filename": "website icons/potion_bottle_heal.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_heal.png",
+    "size": 350
+  },
+  {
+    "filename": "website icons/potion_bottle_healthBoost.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_healthBoost.png",
+    "size": 298
+  },
+  {
+    "filename": "website icons/potion_bottle_hunger.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_hunger.png",
+    "size": 297
+  },
+  {
+    "filename": "website icons/potion_bottle_infested.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_infested.png",
+    "size": 375
+  },
+  {
+    "filename": "website icons/potion_bottle_invisibility.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_invisibility.png",
+    "size": 366
+  },
+  {
+    "filename": "website icons/potion_bottle_jump.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_jump.png",
+    "size": 371
+  },
+  {
+    "filename": "website icons/potion_bottle_levitation.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_levitation.png",
+    "size": 357
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering.png",
+    "size": 305
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_damageBoost.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_damageBoost.png",
+    "size": 298
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_empty.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_empty.png",
+    "size": 170
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_fireResistance.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_fireResistance.png",
+    "size": 306
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_harm.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_harm.png",
+    "size": 317
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_heal.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_heal.png",
+    "size": 294
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_infested.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_infested.png",
+    "size": 328
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_invisibility.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_invisibility.png",
+    "size": 329
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_jump.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_jump.png",
+    "size": 324
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_luck.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_luck.png",
+    "size": 305
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_moveSlowdown.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_moveSlowdown.png",
+    "size": 324
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_moveSpeed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_moveSpeed.png",
+    "size": 294
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_nightVision.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_nightVision.png",
+    "size": 331
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_oozing.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_oozing.png",
+    "size": 327
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_poison.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_poison.png",
+    "size": 312
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_regeneration.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_regeneration.png",
+    "size": 330
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_slowFall.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_slowFall.png",
+    "size": 330
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_turtleMaster.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_turtleMaster.png",
+    "size": 322
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_waterBreathing.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_waterBreathing.png",
+    "size": 326
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_weakness.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_weakness.png",
+    "size": 290
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_weaving.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_weaving.png",
+    "size": 310
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_windCharged.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_windCharged.png",
+    "size": 330
+  },
+  {
+    "filename": "website icons/potion_bottle_lingering_wither.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_lingering_wither.png",
+    "size": 310
+  },
+  {
+    "filename": "website icons/potion_bottle_moveSlowdown.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_moveSlowdown.png",
+    "size": 370
+  },
+  {
+    "filename": "website icons/potion_bottle_moveSpeed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_moveSpeed.png",
+    "size": 369
+  },
+  {
+    "filename": "website icons/potion_bottle_nightVision.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_nightVision.png",
+    "size": 375
+  },
+  {
+    "filename": "website icons/potion_bottle_oozing.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_oozing.png",
+    "size": 373
+  },
+  {
+    "filename": "website icons/potion_bottle_poison.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_poison.png",
+    "size": 380
+  },
+  {
+    "filename": "website icons/potion_bottle_regeneration.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_regeneration.png",
+    "size": 375
+  },
+  {
+    "filename": "website icons/potion_bottle_resistance.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_resistance.png",
+    "size": 356
+  },
+  {
+    "filename": "website icons/potion_bottle_saturation.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_saturation.png",
+    "size": 350
+  },
+  {
+    "filename": "website icons/potion_bottle_slowFall.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_slowFall.png",
+    "size": 371
+  },
+  {
+    "filename": "website icons/potion_bottle_splash.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash.png",
+    "size": 343
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_absorption.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_absorption.png",
+    "size": 293
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_blindness.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_blindness.png",
+    "size": 324
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_confusion.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_confusion.png",
+    "size": 292
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_damageBoost.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_damageBoost.png",
+    "size": 335
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_digSlowdown.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_digSlowdown.png",
+    "size": 292
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_digSpeed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_digSpeed.png",
+    "size": 295
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_fireResistance.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_fireResistance.png",
+    "size": 335
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_harm.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_harm.png",
+    "size": 349
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_heal.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_heal.png",
+    "size": 325
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_healthBoost.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_healthBoost.png",
+    "size": 294
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_hunger.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_hunger.png",
+    "size": 293
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_infested.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_infested.png",
+    "size": 362
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_invisibility.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_invisibility.png",
+    "size": 358
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_jump.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_jump.png",
+    "size": 357
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_levitation.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_levitation.png",
+    "size": 357
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_moveSlowdown.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_moveSlowdown.png",
+    "size": 363
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_moveSpeed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_moveSpeed.png",
+    "size": 336
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_nightVision.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_nightVision.png",
+    "size": 371
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_oozing.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_oozing.png",
+    "size": 359
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_poison.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_poison.png",
+    "size": 355
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_regeneration.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_regeneration.png",
+    "size": 369
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_resistance.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_resistance.png",
+    "size": 335
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_saturation.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_saturation.png",
+    "size": 325
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_slowFall.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_slowFall.png",
+    "size": 362
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_turtleMaster.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_turtleMaster.png",
+    "size": 360
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_waterBreathing.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_waterBreathing.png",
+    "size": 367
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_weakness.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_weakness.png",
+    "size": 324
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_weaving.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_weaving.png",
+    "size": 341
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_windCharged.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_windCharged.png",
+    "size": 362
+  },
+  {
+    "filename": "website icons/potion_bottle_splash_wither.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_splash_wither.png",
+    "size": 342
+  },
+  {
+    "filename": "website icons/potion_bottle_turtleMaster.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_turtleMaster.png",
+    "size": 370
+  },
+  {
+    "filename": "website icons/potion_bottle_waterBreathing.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_waterBreathing.png",
+    "size": 373
+  },
+  {
+    "filename": "website icons/potion_bottle_weakness.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_weakness.png",
+    "size": 346
+  },
+  {
+    "filename": "website icons/potion_bottle_weaving.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_weaving.png",
+    "size": 360
+  },
+  {
+    "filename": "website icons/potion_bottle_windCharged.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_windCharged.png",
+    "size": 371
+  },
+  {
+    "filename": "website icons/potion_bottle_wither.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_bottle_wither.png",
+    "size": 365
+  },
+  {
+    "filename": "website icons/potion_overlay.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/potion_overlay.png",
+    "size": 133
+  },
+  {
+    "filename": "website icons/PressedButtonThinStroke.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/PressedButtonThinStroke.png",
+    "size": 121
+  },
+  {
+    "filename": "website icons/prismarine_crystals.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/prismarine_crystals.png",
+    "size": 203
+  },
+  {
+    "filename": "website icons/prismarine_shard.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/prismarine_shard.png",
+    "size": 232
+  },
+  {
+    "filename": "website icons/prize_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/prize_pottery_sherd.png",
+    "size": 258
+  },
+  {
+    "filename": "website icons/Propeller2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Propeller2.png",
+    "size": 206
+  },
+  {
+    "filename": "website icons/pumpkin_pie.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/pumpkin_pie.png",
+    "size": 254
+  },
+  {
+    "filename": "website icons/purple_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/purple_candle.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/quartz.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/quartz.png",
+    "size": 297
+  },
+  {
+    "filename": "website icons/quiver.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/quiver.png",
+    "size": 179
+  },
+  {
+    "filename": "website icons/rabbit_cooked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/rabbit_cooked.png",
+    "size": 268
+  },
+  {
+    "filename": "website icons/rabbit_foot.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/rabbit_foot.png",
+    "size": 214
+  },
+  {
+    "filename": "website icons/rabbit_hide.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/rabbit_hide.png",
+    "size": 233
+  },
+  {
+    "filename": "website icons/rabbit_raw.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/rabbit_raw.png",
+    "size": 266
+  },
+  {
+    "filename": "website icons/rabbit_stew.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/rabbit_stew.png",
+    "size": 250
+  },
+  {
+    "filename": "website icons/radio_checked.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/radio_checked.png",
+    "size": 149
+  },
+  {
+    "filename": "website icons/radio_checked_hover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/radio_checked_hover.png",
+    "size": 152
+  },
+  {
+    "filename": "website icons/radio_off.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/radio_off.png",
+    "size": 129
+  },
+  {
+    "filename": "website icons/radio_off_hover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/radio_off_hover.png",
+    "size": 126
+  },
+  {
+    "filename": "website icons/raiser_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/raiser_armor_trim_smithing_template.png",
+    "size": 225
+  },
+  {
+    "filename": "website icons/raw_copper.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/raw_copper.png",
+    "size": 576
+  },
+  {
+    "filename": "website icons/raw_gold.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/raw_gold.png",
+    "size": 401
+  },
+  {
+    "filename": "website icons/raw_iron.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/raw_iron.png",
+    "size": 480
+  },
+  {
+    "filename": "website icons/Realms.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Realms.png",
+    "size": 223
+  },
+  {
+    "filename": "website icons/RealmsArt.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/RealmsArt.png",
+    "size": 390705
+  },
+  {
+    "filename": "website icons/realms_toggle_off.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/realms_toggle_off.png",
+    "size": 82
+  },
+  {
+    "filename": "website icons/realms_toggle_on.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/realms_toggle_on.png",
+    "size": 105
+  },
+  {
+    "filename": "website icons/record_11.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_11.png",
+    "size": 229
+  },
+  {
+    "filename": "website icons/record_13.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_13.png",
+    "size": 207
+  },
+  {
+    "filename": "website icons/record_5.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_5.png",
+    "size": 220
+  },
+  {
+    "filename": "website icons/record_blocks.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_blocks.png",
+    "size": 208
+  },
+  {
+    "filename": "website icons/record_cat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_cat.png",
+    "size": 214
+  },
+  {
+    "filename": "website icons/record_chirp.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_chirp.png",
+    "size": 213
+  },
+  {
+    "filename": "website icons/record_far.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_far.png",
+    "size": 211
+  },
+  {
+    "filename": "website icons/record_mall.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_mall.png",
+    "size": 214
+  },
+  {
+    "filename": "website icons/record_mellohi.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_mellohi.png",
+    "size": 209
+  },
+  {
+    "filename": "website icons/record_otherside.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_otherside.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/record_pigstep.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_pigstep.png",
+    "size": 333
+  },
+  {
+    "filename": "website icons/record_stal.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_stal.png",
+    "size": 205
+  },
+  {
+    "filename": "website icons/record_strad.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_strad.png",
+    "size": 203
+  },
+  {
+    "filename": "website icons/record_wait.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_wait.png",
+    "size": 221
+  },
+  {
+    "filename": "website icons/record_ward.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/record_ward.png",
+    "size": 215
+  },
+  {
+    "filename": "website icons/recovery_compass_atlas.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/recovery_compass_atlas.png",
+    "size": 4317
+  },
+  {
+    "filename": "website icons/recovery_compass_item.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/recovery_compass_item.png",
+    "size": 4802
+  },
+  {
+    "filename": "website icons/redstone_dust.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/redstone_dust.png",
+    "size": 214
+  },
+  {
+    "filename": "website icons/red_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/red_candle.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/reeds.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/reeds.png",
+    "size": 378
+  },
+  {
+    "filename": "website icons/regeneration_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/regeneration_effect.png",
+    "size": 329
+  },
+  {
+    "filename": "website icons/repeater.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/repeater.png",
+    "size": 222
+  },
+  {
+    "filename": "website icons/resin_brick.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/resin_brick.png",
+    "size": 229
+  },
+  {
+    "filename": "website icons/resin_clump.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/resin_clump.png",
+    "size": 227
+  },
+  {
+    "filename": "website icons/resistance_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/resistance_effect.png",
+    "size": 433
+  },
+  {
+    "filename": "website icons/rib_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/rib_armor_trim_smithing_template.png",
+    "size": 279
+  },
+  {
+    "filename": "website icons/right.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/right.png",
+    "size": 291
+  },
+  {
+    "filename": "website icons/RightArrow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/RightArrow.png",
+    "size": 148
+  },
+  {
+    "filename": "website icons/RightTabFront.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/RightTabFront.png",
+    "size": 119
+  },
+  {
+    "filename": "website icons/right_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/right_pressed.png",
+    "size": 255
+  },
+  {
+    "filename": "website icons/rotten_flesh.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/rotten_flesh.png",
+    "size": 271
+  },
+  {
+    "filename": "website icons/ruby.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ruby.png",
+    "size": 463
+  },
+  {
+    "filename": "website icons/saddle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/saddle.png",
+    "size": 232
+  },
+  {
+    "filename": "website icons/scrape_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/scrape_pottery_sherd.png",
+    "size": 223
+  },
+  {
+    "filename": "website icons/ScrollGutter.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ScrollGutter.png",
+    "size": 86
+  },
+  {
+    "filename": "website icons/sea_pickle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sea_pickle.png",
+    "size": 274
+  },
+  {
+    "filename": "website icons/seeds_beetroot.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/seeds_beetroot.png",
+    "size": 149
+  },
+  {
+    "filename": "website icons/seeds_melon.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/seeds_melon.png",
+    "size": 147
+  },
+  {
+    "filename": "website icons/seeds_pumpkin.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/seeds_pumpkin.png",
+    "size": 159
+  },
+  {
+    "filename": "website icons/seeds_wheat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/seeds_wheat.png",
+    "size": 171
+  },
+  {
+    "filename": "website icons/sentry_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sentry_armor_trim_smithing_template.png",
+    "size": 414
+  },
+  {
+    "filename": "website icons/shaper_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/shaper_armor_trim_smithing_template.png",
+    "size": 387
+  },
+  {
+    "filename": "website icons/share.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/share.png",
+    "size": 150
+  },
+  {
+    "filename": "website icons/sheaf_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sheaf_pottery_sherd.png",
+    "size": 400
+  },
+  {
+    "filename": "website icons/shears.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/shears.png",
+    "size": 224
+  },
+  {
+    "filename": "website icons/shelter_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/shelter_pottery_sherd.png",
+    "size": 374
+  },
+  {
+    "filename": "website icons/shulker_shell.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/shulker_shell.png",
+    "size": 235
+  },
+  {
+    "filename": "website icons/sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sign.png",
+    "size": 202
+  },
+  {
+    "filename": "website icons/sign_acacia.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sign_acacia.png",
+    "size": 206
+  },
+  {
+    "filename": "website icons/sign_birch.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sign_birch.png",
+    "size": 217
+  },
+  {
+    "filename": "website icons/sign_crimson.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sign_crimson.png",
+    "size": 210
+  },
+  {
+    "filename": "website icons/sign_darkoak.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sign_darkoak.png",
+    "size": 206
+  },
+  {
+    "filename": "website icons/sign_jungle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sign_jungle.png",
+    "size": 221
+  },
+  {
+    "filename": "website icons/sign_spruce.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sign_spruce.png",
+    "size": 205
+  },
+  {
+    "filename": "website icons/sign_warped.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sign_warped.png",
+    "size": 218
+  },
+  {
+    "filename": "website icons/silence_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/silence_armor_trim_smithing_template.png",
+    "size": 303
+  },
+  {
+    "filename": "website icons/skull_banner_pattern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/skull_banner_pattern.png",
+    "size": 399
+  },
+  {
+    "filename": "website icons/skull_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/skull_pottery_sherd.png",
+    "size": 254
+  },
+  {
+    "filename": "website icons/slimeball.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/slimeball.png",
+    "size": 245
+  },
+  {
+    "filename": "website icons/slowness_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/slowness_effect.png",
+    "size": 303
+  },
+  {
+    "filename": "website icons/sneak.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sneak.png",
+    "size": 291
+  },
+  {
+    "filename": "website icons/sneak_dpad.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sneak_dpad.png",
+    "size": 242
+  },
+  {
+    "filename": "website icons/sneak_dpad_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sneak_dpad_pressed.png",
+    "size": 245
+  },
+  {
+    "filename": "website icons/sneak_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sneak_pressed.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/sniffer_egg.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sniffer_egg.png",
+    "size": 311
+  },
+  {
+    "filename": "website icons/snort_pottery_sherd.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/snort_pottery_sherd.png",
+    "size": 398
+  },
+  {
+    "filename": "website icons/snout_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/snout_armor_trim_smithing_template.png",
+    "size": 263
+  },
+  {
+    "filename": "website icons/snowball.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/snowball.png",
+    "size": 223
+  },
+  {
+    "filename": "website icons/soul_campfire.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/soul_campfire.png",
+    "size": 263
+  },
+  {
+    "filename": "website icons/soul_lantern.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/soul_lantern.png",
+    "size": 263
+  },
+  {
+    "filename": "website icons/space.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/space.png",
+    "size": 129
+  },
+  {
+    "filename": "website icons/spaceDisabled.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spaceDisabled.png",
+    "size": 129
+  },
+  {
+    "filename": "website icons/spaceHover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spaceHover.png",
+    "size": 126
+  },
+  {
+    "filename": "website icons/spawn_egg.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spawn_egg.png",
+    "size": 270
+  },
+  {
+    "filename": "website icons/spawn_egg_overlay.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spawn_egg_overlay.png",
+    "size": 402
+  },
+  {
+    "filename": "website icons/speed_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/speed_effect.png",
+    "size": 329
+  },
+  {
+    "filename": "website icons/spider_eye.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spider_eye.png",
+    "size": 188
+  },
+  {
+    "filename": "website icons/spider_eye_fermented.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spider_eye_fermented.png",
+    "size": 215
+  },
+  {
+    "filename": "website icons/spire_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spire_armor_trim_smithing_template.png",
+    "size": 259
+  },
+  {
+    "filename": "website icons/spritesheet.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spritesheet.png",
+    "size": 14194
+  },
+  {
+    "filename": "website icons/spritesheet2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spritesheet2.png",
+    "size": 1124
+  },
+  {
+    "filename": "website icons/spruce_chest_boat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spruce_chest_boat.png",
+    "size": 380
+  },
+  {
+    "filename": "website icons/spruce_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spruce_hanging_sign.png",
+    "size": 239
+  },
+  {
+    "filename": "website icons/spyglass.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/spyglass.png",
+    "size": 218
+  },
+  {
+    "filename": "website icons/stick.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/stick.png",
+    "size": 165
+  },
+  {
+    "filename": "website icons/stone_axe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/stone_axe.png",
+    "size": 209
+  },
+  {
+    "filename": "website icons/stone_hoe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/stone_hoe.png",
+    "size": 158
+  },
+  {
+    "filename": "website icons/stone_pickaxe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/stone_pickaxe.png",
+    "size": 218
+  },
+  {
+    "filename": "website icons/stone_shovel.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/stone_shovel.png",
+    "size": 188
+  },
+  {
+    "filename": "website icons/stone_sword.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/stone_sword.png",
+    "size": 225
+  },
+  {
+    "filename": "website icons/strength_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/strength_effect.png",
+    "size": 341
+  },
+  {
+    "filename": "website icons/string.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/string.png",
+    "size": 208
+  },
+  {
+    "filename": "website icons/sugar.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sugar.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/suspicious_stew.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/suspicious_stew.png",
+    "size": 199
+  },
+  {
+    "filename": "website icons/sweet_berries.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/sweet_berries.png",
+    "size": 233
+  },
+  {
+    "filename": "website icons/TabBack.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/TabBack.png",
+    "size": 108
+  },
+  {
+    "filename": "website icons/TabBackDarker.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/TabBackDarker.png",
+    "size": 116
+  },
+  {
+    "filename": "website icons/TabBackInGame.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/TabBackInGame.png",
+    "size": 129
+  },
+  {
+    "filename": "website icons/TabBackInGameLeftMost.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/TabBackInGameLeftMost.png",
+    "size": 135
+  },
+  {
+    "filename": "website icons/TabFront.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/TabFront.png",
+    "size": 111
+  },
+  {
+    "filename": "website icons/TabFrontInGame.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/TabFrontInGame.png",
+    "size": 149
+  },
+  {
+    "filename": "website icons/TabFrontInGameLeftMost.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/TabFrontInGameLeftMost.png",
+    "size": 138
+  },
+  {
+    "filename": "website icons/tide_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tide_armor_trim_smithing_template.png",
+    "size": 275
+  },
+  {
+    "filename": "website icons/tipped_arrow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow.png",
+    "size": 197
+  },
+  {
+    "filename": "website icons/tipped_arrow_base.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_base.png",
+    "size": 155
+  },
+  {
+    "filename": "website icons/tipped_arrow_fireres.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_fireres.png",
+    "size": 270
+  },
+  {
+    "filename": "website icons/tipped_arrow_harm.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_harm.png",
+    "size": 280
+  },
+  {
+    "filename": "website icons/tipped_arrow_head.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_head.png",
+    "size": 183
+  },
+  {
+    "filename": "website icons/tipped_arrow_healing.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_healing.png",
+    "size": 288
+  },
+  {
+    "filename": "website icons/tipped_arrow_infested.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_infested.png",
+    "size": 280
+  },
+  {
+    "filename": "website icons/tipped_arrow_invisibility.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_invisibility.png",
+    "size": 259
+  },
+  {
+    "filename": "website icons/tipped_arrow_leaping.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_leaping.png",
+    "size": 272
+  },
+  {
+    "filename": "website icons/tipped_arrow_luck.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_luck.png",
+    "size": 303
+  },
+  {
+    "filename": "website icons/tipped_arrow_nightvision.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_nightvision.png",
+    "size": 272
+  },
+  {
+    "filename": "website icons/tipped_arrow_oozing.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_oozing.png",
+    "size": 271
+  },
+  {
+    "filename": "website icons/tipped_arrow_poison.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_poison.png",
+    "size": 280
+  },
+  {
+    "filename": "website icons/tipped_arrow_regen.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_regen.png",
+    "size": 271
+  },
+  {
+    "filename": "website icons/tipped_arrow_slow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_slow.png",
+    "size": 271
+  },
+  {
+    "filename": "website icons/tipped_arrow_slowfalling.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_slowfalling.png",
+    "size": 276
+  },
+  {
+    "filename": "website icons/tipped_arrow_strength.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_strength.png",
+    "size": 264
+  },
+  {
+    "filename": "website icons/tipped_arrow_swift.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_swift.png",
+    "size": 272
+  },
+  {
+    "filename": "website icons/tipped_arrow_turtlemaster.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_turtlemaster.png",
+    "size": 363
+  },
+  {
+    "filename": "website icons/tipped_arrow_waterbreathing.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_waterbreathing.png",
+    "size": 272
+  },
+  {
+    "filename": "website icons/tipped_arrow_weakness.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_weakness.png",
+    "size": 295
+  },
+  {
+    "filename": "website icons/tipped_arrow_weaving.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_weaving.png",
+    "size": 312
+  },
+  {
+    "filename": "website icons/tipped_arrow_windCharged.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_windCharged.png",
+    "size": 272
+  },
+  {
+    "filename": "website icons/tipped_arrow_wither.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/tipped_arrow_wither.png",
+    "size": 282
+  },
+  {
+    "filename": "website icons/TopBar.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/TopBar.png",
+    "size": 137
+  },
+  {
+    "filename": "website icons/torchflower_seeds.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/torchflower_seeds.png",
+    "size": 358
+  },
+  {
+    "filename": "website icons/totem.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/totem.png",
+    "size": 255
+  },
+  {
+    "filename": "website icons/touchgui.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/touchgui.png",
+    "size": 13201
+  },
+  {
+    "filename": "website icons/touchgui2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/touchgui2.png",
+    "size": 3050
+  },
+  {
+    "filename": "website icons/trash.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/trash.png",
+    "size": 205
+  },
+  {
+    "filename": "website icons/trial_key.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/trial_key.png",
+    "size": 220
+  },
+  {
+    "filename": "website icons/trident.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/trident.png",
+    "size": 246
+  },
+  {
+    "filename": "website icons/turtle_egg.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/turtle_egg.png",
+    "size": 405
+  },
+  {
+    "filename": "website icons/turtle_helmet.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/turtle_helmet.png",
+    "size": 248
+  },
+  {
+    "filename": "website icons/turtle_shell_piece.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/turtle_shell_piece.png",
+    "size": 199
+  },
+  {
+    "filename": "website icons/undo.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/undo.png",
+    "size": 131
+  },
+  {
+    "filename": "website icons/up.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/up.png",
+    "size": 284
+  },
+  {
+    "filename": "website icons/UpArrow.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/UpArrow.png",
+    "size": 149
+  },
+  {
+    "filename": "website icons/up_left.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/up_left.png",
+    "size": 197
+  },
+  {
+    "filename": "website icons/up_left_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/up_left_pressed.png",
+    "size": 196
+  },
+  {
+    "filename": "website icons/up_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/up_pressed.png",
+    "size": 314
+  },
+  {
+    "filename": "website icons/up_right.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/up_right.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/up_right_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/up_right_pressed.png",
+    "size": 200
+  },
+  {
+    "filename": "website icons/vex_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/vex_armor_trim_smithing_template.png",
+    "size": 270
+  },
+  {
+    "filename": "website icons/viewCollapsed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/viewCollapsed.png",
+    "size": 1840
+  },
+  {
+    "filename": "website icons/viewExpanded.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/viewExpanded.png",
+    "size": 1622
+  },
+  {
+    "filename": "website icons/villagebell.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/villagebell.png",
+    "size": 358
+  },
+  {
+    "filename": "website icons/village_hero_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/village_hero_effect.png",
+    "size": 389
+  },
+  {
+    "filename": "website icons/ward_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/ward_armor_trim_smithing_template.png",
+    "size": 268
+  },
+  {
+    "filename": "website icons/warped_door.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/warped_door.png",
+    "size": 205
+  },
+  {
+    "filename": "website icons/warped_fungus_on_a_stick.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/warped_fungus_on_a_stick.png",
+    "size": 2119
+  },
+  {
+    "filename": "website icons/warped_hanging_sign.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/warped_hanging_sign.png",
+    "size": 239
+  },
+  {
+    "filename": "website icons/watch_atlas.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/watch_atlas.png",
+    "size": 3857
+  },
+  {
+    "filename": "website icons/waterascend.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/waterascend.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/waterascend_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/waterascend_pressed.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/waterdescend.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/waterdescend.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/waterdescend_pressed.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/waterdescend_pressed.png",
+    "size": 696
+  },
+  {
+    "filename": "website icons/water_breathing_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/water_breathing_effect.png",
+    "size": 401
+  },
+  {
+    "filename": "website icons/wayfinder_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/wayfinder_armor_trim_smithing_template.png",
+    "size": 228
+  },
+  {
+    "filename": "website icons/weakness_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/weakness_effect.png",
+    "size": 326
+  },
+  {
+    "filename": "website icons/weathered_copper_door.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/weathered_copper_door.png",
+    "size": 191
+  },
+  {
+    "filename": "website icons/wheat.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/wheat.png",
+    "size": 255
+  },
+  {
+    "filename": "website icons/WhiteBorder.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/WhiteBorder.png",
+    "size": 76
+  },
+  {
+    "filename": "website icons/white_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/white_candle.png",
+    "size": 182
+  },
+  {
+    "filename": "website icons/wild_armor_trim_smithing_template.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/wild_armor_trim_smithing_template.png",
+    "size": 301
+  },
+  {
+    "filename": "website icons/wind_charge.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/wind_charge.png",
+    "size": 221
+  },
+  {
+    "filename": "website icons/wither_effect.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/wither_effect.png",
+    "size": 575
+  },
+  {
+    "filename": "website icons/wolf_armor.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/wolf_armor.png",
+    "size": 350
+  },
+  {
+    "filename": "website icons/wood_axe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/wood_axe.png",
+    "size": 209
+  },
+  {
+    "filename": "website icons/wood_hoe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/wood_hoe.png",
+    "size": 155
+  },
+  {
+    "filename": "website icons/wood_pickaxe.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/wood_pickaxe.png",
+    "size": 174
+  },
+  {
+    "filename": "website icons/wood_shovel.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/wood_shovel.png",
+    "size": 187
+  },
+  {
+    "filename": "website icons/wood_sword.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/wood_sword.png",
+    "size": 225
+  },
+  {
+    "filename": "website icons/Wrenches2.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/Wrenches2.png",
+    "size": 162
+  },
+  {
+    "filename": "website icons/X.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/X.png",
+    "size": 111
+  },
+  {
+    "filename": "website icons/XHover.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/XHover.png",
+    "size": 110
+  },
+  {
+    "filename": "website icons/XPress.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/XPress.png",
+    "size": 111
+  },
+  {
+    "filename": "website icons/yellowStrikethru.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/yellowStrikethru.png",
+    "size": 126
+  },
+  {
+    "filename": "website icons/yellow_candle.png",
+    "path": "/home/runner/workspace/client/src/assets/icons/website icons/yellow_candle.png",
+    "size": 202
+  }
+]

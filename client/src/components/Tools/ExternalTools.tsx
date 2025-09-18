@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { ExternalLink, Loader2, AlertTriangle, RefreshCw, Maximize2, Info, X } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
+import { getIconPath } from "@/assets/icons";
 import { useCollapsible } from "@/hooks/useCollapsible";
 import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { Button } from "@/components/ui/button";
@@ -42,7 +44,7 @@ const externalTools: ExternalTool[] = [
       'Bedrock Format Export',
       'Model Optimization'
     ],
-    icon: '🧊',
+    icon: 'blockbench',
     category: 'modeling'
   },
   {
@@ -57,7 +59,7 @@ const externalTools: ExternalTool[] = [
       'Error Detection',
       'Version Control'
     ],
-    icon: '🌉',
+    icon: 'bridgeCore',
     category: 'editing'
   },
   {
@@ -72,7 +74,7 @@ const externalTools: ExternalTool[] = [
       'Export to Bedrock',
       'Effect Library'
     ],
-    icon: '❄️',
+    icon: 'snowstorm',
     category: 'effects'
   }
 ];
@@ -245,7 +247,11 @@ export default function ExternalTools() {
     <div className="mb-4 p-3 sm:p-4 bg-muted/50 rounded-lg border">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
         <div className="flex items-start space-x-3 min-w-0 flex-1">
-          <span className="text-xl sm:text-2xl flex-shrink-0">{tool.icon}</span>
+          <Icon 
+            name={getIconPath(tool.icon as keyof typeof import("@/assets/icons").iconMap)} 
+            size="xl" 
+            className="flex-shrink-0"
+          />
           <div className="min-w-0 flex-1">
             <h3 className="font-semibold text-foreground text-sm sm:text-base">{tool.name}</h3>
             <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{tool.description}</p>
@@ -340,7 +346,10 @@ export default function ExternalTools() {
                 data-testid={`tab-${tool.id}`}
               >
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <span className="text-sm sm:text-base">{tool.icon}</span>
+                  <Icon 
+                    name={getIconPath(tool.icon as keyof typeof import("@/assets/icons").iconMap)} 
+                    size="base" 
+                  />
                   <span className="text-xs sm:text-sm font-medium truncate">{tool.name}</span>
                 </div>
                 <div className="flex items-center gap-1">
@@ -378,7 +387,10 @@ export default function ExternalTools() {
                     <div className="h-full flex flex-col">
                       <div className="flex items-center justify-between p-3 sm:p-4 bg-background/95 backdrop-blur-sm border-b">
                         <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
-                          <span className="text-xl sm:text-2xl">{tool.icon}</span>
+                          <Icon 
+                            name={getIconPath(tool.icon as keyof typeof import("@/assets/icons").iconMap)} 
+                            size="xl" 
+                          />
                           <div className="min-w-0">
                             <h3 className="font-semibold text-foreground text-sm sm:text-base truncate">{tool.name}</h3>
                             <p className="text-xs sm:text-sm text-muted-foreground">Fullscreen Mode</p>
@@ -427,7 +439,10 @@ export default function ExternalTools() {
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                           <div className="min-w-0 flex-1">
                             <CardTitle className="flex items-center space-x-2 text-sm sm:text-base">
-                              <span className="text-base sm:text-lg">{tool.icon}</span>
+                              <Icon 
+                                name={getIconPath(tool.icon as keyof typeof import("@/assets/icons").iconMap)} 
+                                size="lg" 
+                              />
                               <span className="truncate">{tool.name}</span>
                             </CardTitle>
                             <CardDescription className="text-xs sm:text-sm">

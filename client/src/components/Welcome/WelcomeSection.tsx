@@ -1,6 +1,8 @@
 import { Play, BookOpen, ArrowRight, MessageCircle, Globe, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Icon } from "@/components/ui/Icon";
+import { getIconPath } from "@/assets/icons";
 
 interface WelcomeSectionProps {
   onNavigate: (section: string) => void;
@@ -9,42 +11,42 @@ interface WelcomeSectionProps {
 export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
   const features = [
     {
-      icon: "🐉",
+      icon: "entityBuilder",
       title: "Entity Builder",
       description: "Create custom mobs and NPCs with behaviors, animations, and AI components.",
       section: "builder-entity",
       bgColor: "bg-primary"
     },
     {
-      icon: "🧱",
+      icon: "blockBuilder",
       title: "Block Builder", 
       description: "Design custom blocks with unique properties, textures, and behaviors.",
       section: "builder-block",
       bgColor: "bg-accent"
     },
     {
-      icon: "🎨",
+      icon: "textureCreator",
       title: "Texture Creator",
       description: "Advanced 2D texture editor with layers, custom brushes, and filters.",
       section: "texture-creator",
       bgColor: "bg-primary"
     },
     {
-      icon: "💻",
+      icon: "scriptStudio",
       title: "Script Studio",
       description: "Interactive script builder with full Minecraft API explorer and code generation.",
       section: "script-studio",
       bgColor: "bg-accent"
     },
     {
-      icon: "📚",
+      icon: "documentation",
       title: "Documentation",
       description: "Comprehensive guides and references validated against official Minecraft docs.",
       section: "docs-concepts",
       bgColor: "bg-primary"
     },
     {
-      icon: "📦",
+      icon: "addonPackager",
       title: "Addon Packager",
       description: "Export complete addon packs with proper folder structure and manifests.",
       section: "addon-packager",
@@ -94,7 +96,11 @@ export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
               <CardContent className="pt-6">
                 <div className="flex items-center mb-4">
                   <div className={`w-10 h-10 ${feature.bgColor} rounded-lg flex items-center justify-center mr-3`}>
-                    <span className="text-xl">{feature.icon}</span>
+                    <Icon 
+                      name={getIconPath(feature.icon as keyof typeof import("@/assets/icons").iconMap)} 
+                      size="lg"
+                      className="filter brightness-0 invert"
+                    />
                   </div>
                   <h3 className="text-lg font-semibold text-foreground">{feature.title}</h3>
                 </div>

@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Undo, Redo, Download, Plus, Trash2, Eye, EyeOff, Grid, Save, Upload, Move, ChevronUp, ChevronDown, Settings, Palette } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
+import { getIconPath } from "@/assets/icons";
 import { useCollapsible } from "@/hooks/useCollapsible";
 import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { Button } from "@/components/ui/button";
@@ -202,14 +204,14 @@ export default function TextureCreator() {
   };
 
   const tools = [
-    { id: 'brush' as CanvasTool, icon: '🖌️', name: 'Brush' },
-    { id: 'pencil' as CanvasTool, icon: '✏️', name: 'Pencil' },
-    { id: 'eraser' as CanvasTool, icon: '🧽', name: 'Eraser' },
-    { id: 'fill' as CanvasTool, icon: '🪣', name: 'Fill' },
-    { id: 'rectangle' as CanvasTool, icon: '⬛', name: 'Rectangle' },
-    { id: 'circle' as CanvasTool, icon: '⭕', name: 'Circle' },
-    { id: 'line' as CanvasTool, icon: '📏', name: 'Line' },
-    { id: 'select' as CanvasTool, icon: '👆', name: 'Select' },
+    { id: 'brush' as CanvasTool, iconName: 'brush', name: 'Brush' },
+    { id: 'pencil' as CanvasTool, iconName: 'pencil', name: 'Pencil' },
+    { id: 'eraser' as CanvasTool, iconName: 'eraser', name: 'Eraser' },
+    { id: 'fill' as CanvasTool, iconName: 'fill', name: 'Fill' },
+    { id: 'rectangle' as CanvasTool, iconName: 'rectangle', name: 'Rectangle' },
+    { id: 'circle' as CanvasTool, iconName: 'circle', name: 'Circle' },
+    { id: 'line' as CanvasTool, iconName: 'line', name: 'Line' },
+    { id: 'select' as CanvasTool, iconName: 'select', name: 'Select' },
   ];
 
   const minecraftPalette = [
@@ -314,7 +316,11 @@ export default function TextureCreator() {
                     onClick={() => setSelectedTool(tool.id)}
                     data-testid={`tool-${tool.id}`}
                   >
-                    <span className="text-lg mb-1">{tool.icon}</span>
+                    <Icon 
+                      name={getIconPath(tool.iconName as keyof typeof import("@/assets/icons").iconMap)} 
+                      size="base" 
+                      className="mb-1"
+                    />
                     <span className="text-xs">{tool.name}</span>
                   </button>
                 ))}
@@ -336,7 +342,11 @@ export default function TextureCreator() {
                     onClick={() => setSelectedTool(tool.id)}
                     data-testid={`tool-${tool.id}`}
                   >
-                    <span className="text-lg mb-1">{tool.icon}</span>
+                    <Icon 
+                      name={getIconPath(tool.iconName as keyof typeof import("@/assets/icons").iconMap)} 
+                      size="base" 
+                      className="mb-1"
+                    />
                     <span className="text-xs">{tool.name}</span>
                   </button>
                 ))}

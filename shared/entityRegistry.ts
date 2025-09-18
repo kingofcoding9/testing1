@@ -1050,43 +1050,43 @@ export const entityCategories = {
   'Core': {
     name: 'Core Components',
     description: 'Essential components that define basic entity properties',
-    icon: '⚙️',
+    icon: 'anvil-hammer.png',
     subcategories: ['Attributes', 'Physics', 'Visual', 'Behavior']
   },
   'Movement': {
     name: 'Movement & Navigation',
     description: 'Components controlling entity movement and pathfinding',
-    icon: '🏃',
+    icon: 'leather_boots.png',
     subcategories: ['Basic', 'Advanced', 'Navigation', 'Jump', 'Environmental']
   },
   'Behavior': {
     name: 'AI Behaviors',
     description: 'AI goals and behavioral patterns for entities',
-    icon: '🧠',
+    icon: 'brain_coral.png',
     subcategories: ['Movement', 'Social', 'Defensive', 'Survival', 'Idle', 'Family']
   },
   'Interaction': {
     name: 'Player Interaction',
     description: 'Components enabling player interaction with entities',
-    icon: '🤝',
+    icon: 'golden_carrot.png',
     subcategories: ['Social', 'Breeding', 'Transportation', 'Trading']
   },
   'Environment': {
     name: 'Environment & Sensors',
     description: 'Components for environmental awareness and adaptation',
-    icon: '🌍',
+    icon: 'grass.png',
     subcategories: ['Survival', 'Sensors', 'Timing']
   },
   'Visual': {
     name: 'Visual & Audio',
     description: 'Components controlling appearance and sound',
-    icon: '🎨',
+    icon: 'brush.png',
     subcategories: ['Appearance', 'Animation', 'Sound']
   },
   'Utility': {
     name: 'Utility & Management',
     description: 'Utility components for entity management',
-    icon: '🔧',
+    icon: 'anvil-crossout.png',
     subcategories: ['Identity', 'Spawning', 'Age', 'Emotional', 'Special']
   }
 };

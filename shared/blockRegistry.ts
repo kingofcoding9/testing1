@@ -617,67 +617,67 @@ export const blockCategories = {
   'Core': {
     name: 'Core Components',
     description: 'Essential components defining basic block properties',
-    icon: '🧱',
+    icon: 'brick.png',
     subcategories: ['Destructibility', 'Identity']
   },
   'Visual': {
     name: 'Visual & Geometry',
     description: 'Components controlling block appearance and shape',
-    icon: '🎨',
+    icon: 'brush.png',
     subcategories: ['Materials', 'Geometry', 'Appearance']
   },
   'Physics': {
     name: 'Physics & Collision',
     description: 'Components controlling physical properties and collision',
-    icon: '⚛️',
+    icon: 'nether_star.png',
     subcategories: ['Collision', 'Selection', 'Movement']
   },
   'Lighting': {
     name: 'Lighting',
     description: 'Components controlling light emission and absorption',
-    icon: '💡',
+    icon: 'glowstone_dust.png',
     subcategories: ['Emission', 'Absorption']
   },
   'Environment': {
     name: 'Environmental',
     description: 'Components for environmental interactions',
-    icon: '🌍',
+    icon: 'grass.png',
     subcategories: ['Fire', 'Air', 'Weather']
   },
   'Interaction': {
     name: 'Player Interaction',
     description: 'Components for player interaction and UI',
-    icon: '🤝',
+    icon: 'golden_carrot.png',
     subcategories: ['Identity', 'Inventory', 'Visual', 'Interface']
   },
   'Transformation': {
     name: 'Transformation & Timing',
     description: 'Components for block state changes and ticking',
-    icon: '🔄',
+    icon: 'clock_item.png',
     subcategories: ['State', 'Timing']
   },
   'Redstone': {
     name: 'Redstone',
     description: 'Components for redstone interactions',
-    icon: '🔴',
+    icon: 'redstone_dust.png',
     subcategories: ['Conductivity', 'Power']
   },
   'Placement': {
     name: 'Placement',
     description: 'Components controlling block placement rules',
-    icon: '📐',
+    icon: 'compass_item.png',
     subcategories: ['Restrictions', 'Conditions']
   },
   'Loot': {
     name: 'Loot & Drops',
     description: 'Components controlling item drops',
-    icon: '💎',
+    icon: 'diamond.png',
     subcategories: ['Drops', 'Harvest']
   },
   'States': {
     name: 'Block States',
     description: 'Components for block state definitions',
-    icon: '🔢',
+    icon: 'comparator.png',
     subcategories: ['Properties', 'Variants']
   }
 };
