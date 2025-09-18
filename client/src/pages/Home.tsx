@@ -22,6 +22,7 @@ import ScriptingDocs from "@/components/Documentation/ScriptingDocs";
 import InteractiveTutorial from "@/components/Tutorial/InteractiveTutorial";
 import QuickStart from "@/components/Tutorial/QuickStart";
 import WelcomeSection from "@/components/Welcome/WelcomeSection";
+import CommunitySection from "@/components/Community/CommunitySection";
 
 type Section = 
   | 'welcome'
@@ -44,7 +45,9 @@ type Section =
   | 'script-studio'
   | 'addon-packager'
   | 'validator'
-  | 'external-tools';
+  | 'external-tools'
+  | 'community'
+  | 'omni-science';
 
 export default function Home() {
   const [currentSection, setCurrentSection] = useState<Section>('welcome');
@@ -98,6 +101,10 @@ export default function Home() {
         return <JSONValidator />;
       case 'external-tools':
         return <ExternalTools />;
+      case 'community':
+        return <CommunitySection />;
+      case 'omni-science':
+        return <CommunitySection />;
       default:
         return <WelcomeSection onNavigate={handleNavigate} />;
     }

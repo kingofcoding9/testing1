@@ -1,4 +1,4 @@
-import { Play, BookOpen, ArrowRight } from "lucide-react";
+import { Play, BookOpen, ArrowRight, MessageCircle, Globe, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -113,6 +113,66 @@ export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Community Section */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-bold text-foreground mb-4 text-center">Join Our Community</h3>
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Discord Card */}
+            <Card className="bg-card border border-border hover:border-[#5865F2] transition-colors cursor-pointer group">
+              <CardContent className="pt-6">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-[#5865F2] rounded-lg flex items-center justify-center mr-4">
+                    <MessageCircle className="text-white" size={24} />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground">Discord Community</h3>
+                </div>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Connect with other creators, get help with projects, and stay updated with the latest news from Omni-Science.
+                </p>
+                <button 
+                  className="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center justify-center"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open('https://discord.gg/xMy34mQCJ3', '_blank', 'noopener,noreferrer');
+                  }}
+                  data-testid="button-discord-external"
+                >
+                  <MessageCircle className="mr-2" size={18} />
+                  Join Discord
+                  <ExternalLink className="ml-2" size={16} />
+                </button>
+              </CardContent>
+            </Card>
+
+            {/* Omni-Science Card */}
+            <Card className="bg-card border border-border hover:border-primary transition-colors cursor-pointer group">
+              <CardContent className="pt-6">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mr-4">
+                    <Globe className="text-primary-foreground" size={24} />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground">Omni-Science</h3>
+                </div>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Explore our educational platform with science content, interactive learning materials, and comprehensive resources.
+                </p>
+                <button 
+                  className="w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground px-4 py-2 rounded-md font-medium transition-colors flex items-center justify-center"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open('https://sites.google.com/view/omni-science-/home?authuser=0', '_blank', 'noopener,noreferrer');
+                  }}
+                  data-testid="button-omniscience-external"
+                >
+                  <Globe className="mr-2" size={18} />
+                  Visit Omni-Science
+                  <ExternalLink className="ml-2" size={16} />
+                </button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Quick Stats */}

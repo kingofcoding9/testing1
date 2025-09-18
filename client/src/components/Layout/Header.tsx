@@ -1,5 +1,7 @@
-import { Download, Save } from "lucide-react";
+import { Download, Save, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
+import omniScienceLogo from "@assets/omni-science_1758171429429.png";
 
 interface HeaderProps {
   currentSection: string;
@@ -89,28 +91,60 @@ const sectionTitles: Record<string, { title: string; subtitle: string }> = {
   'external-tools': {
     title: 'External Tools',
     subtitle: 'Professional integrated tools for complete Minecraft development workflow'
+  },
+  'community': {
+    title: 'Community Hub',
+    subtitle: 'Connect with the Omni-Science community and access resources'
+  },
+  'omni-science': {
+    title: 'Omni-Science',
+    subtitle: 'Visit our educational platform and learn about our mission'
   }
 };
 
 export default function Header({ currentSection }: HeaderProps) {
   const sectionInfo = sectionTitles[currentSection] || sectionTitles.welcome;
+  const [, setLocation] = useLocation();
+
+  const handleLogoClick = () => {
+    setLocation('/');
+  };
 
   return (
-    <header className="bg-card border-b border-border p-4" data-testid="header">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-semibold text-foreground" data-testid="page-title">
-            {sectionInfo.title}
-          </h2>
-          <p className="text-sm text-muted-foreground" data-testid="page-subtitle">
-            {sectionInfo.subtitle}
-          </p>
+    <header className="bg-card border-b border-border" data-testid="header">
+      {/* Top row with logo and main title */}
+      <div className="flex items-center justify-between p-4 pb-2">
+        <div className="flex items-center space-x-4">
+          <button 
+            onClick={handleLogoClick}
+            className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer group"
+            data-testid="logo-home-button"
+            aria-label="Go to home page"
+          >
+            <img 
+              src={omniScienceLogo} 
+              alt="Omni-Science Logo" 
+              className="h-12 w-auto sm:h-14 md:h-16 transition-transform group-hover:scale-105"
+              data-testid="omni-science-logo"
+            />
+            <div className="hidden sm:block">
+              <h1 className="text-xl md:text-2xl font-bold text-foreground leading-tight">
+                Omni-Science
+              </h1>
+              <p className="text-sm text-muted-foreground -mt-1">
+                Minecraft Bedrock Creator Suite
+              </p>
+            </div>
+          </button>
         </div>
+        
+        {/* Action buttons */}
         <div className="flex items-center space-x-3">
           <Button 
             variant="secondary" 
             size="sm"
             data-testid="button-export"
+            className="hidden sm:flex"
           >
             <Download className="mr-2" size={16} />
             Export Project
@@ -120,8 +154,36 @@ export default function Header({ currentSection }: HeaderProps) {
             data-testid="button-save"
           >
             <Save className="mr-2" size={16} />
-            Save Progress
+            <span className="hidden sm:inline">Save Progress</span>
+            <span className="sm:hidden">Save</span>
           </Button>
+        </div>
+      </div>
+      
+      {/* Bottom row with current section info and credits */}
+      <div className="flex items-center justify-between px-4 pb-3 pt-1">
+        <div className="flex-1">
+          <h2 className="text-lg font-semibold text-foreground" data-testid="page-title">
+            {sectionInfo.title}
+          </h2>
+          <p className="text-sm text-muted-foreground" data-testid="page-subtitle">
+            {sectionInfo.subtitle}
+          </p>
+        </div>
+        
+        {/* Credits - visible on larger screens */}
+        <div className="hidden lg:flex flex-col text-right text-xs text-muted-foreground">
+          <span data-testid="creator-credit">Created by king_of_coding</span>
+          <span data-testid="ownership-credit" className="font-medium">Owned by Omni-Science</span>
+        </div>
+      </div>
+      
+      {/* Mobile credits row */}
+      <div className="lg:hidden px-4 pb-2 flex justify-center">
+        <div className="text-xs text-muted-foreground text-center">
+          <span data-testid="creator-credit-mobile">Created by king_of_coding</span>
+          <span className="mx-2">•</span>
+          <span data-testid="ownership-credit-mobile" className="font-medium">Owned by Omni-Science</span>
         </div>
       </div>
     </header>

@@ -1,4 +1,4 @@
-import { BookOpen, Box, Crown, Eye, Gem, Hammer, Mountain, MapPin, Shovel, PaintbrushVertical, Terminal, Archive, CheckCircle, Home, GraduationCap, Rocket, ExternalLink } from "lucide-react";
+import { BookOpen, Box, Crown, Eye, Gem, Hammer, Mountain, MapPin, Shovel, PaintbrushVertical, Terminal, Archive, CheckCircle, Home, GraduationCap, Rocket, ExternalLink, Users, MessageCircle, Globe } from "lucide-react";
 
 interface SidebarProps {
   currentSection: string;
@@ -48,6 +48,13 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
         { id: 'addon-packager', icon: Archive, label: 'Addon Packager' },
         { id: 'validator', icon: CheckCircle, label: 'JSON Validator' },
         { id: 'external-tools', icon: ExternalLink, label: 'External Tools' },
+      ]
+    },
+    {
+      title: "Community",
+      items: [
+        { id: 'community', icon: Users, label: 'Community Hub' },
+        { id: 'omni-science', icon: Globe, label: 'Omni-Science' },
       ]
     }
   ];
