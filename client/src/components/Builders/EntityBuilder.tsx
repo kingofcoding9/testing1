@@ -306,6 +306,14 @@ export default function EntityBuilder() {
     };
   };
 
+  // Tab label functions
+  const getComponentsTabLabel = () => {
+    const enabledCount = components.filter(c => c.enabled).length;
+    return `Components (${enabledCount})`;
+  };
+
+  const getAdvancedTabLabel = () => "Advanced";
+
   // Components display in categories
   const renderComponentsByCategory = () => (
     <div className="space-y-3">

@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, Minimize2, Maximize2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Minimize2, Maximize2, Box, Home } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect } from "react";
 import { useCollapsible } from "@/hooks/useCollapsible";
