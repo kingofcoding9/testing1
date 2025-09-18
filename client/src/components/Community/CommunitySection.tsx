@@ -40,8 +40,7 @@ export default function CommunitySection() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-6">
-                Connect with other creators, get help with your projects, share your creations, 
-                and stay updated with the latest news and updates from the Omni-Science community.
+                From a parasitic apocalypse Minecraft server to developing Steam games of the future, join the fun and support us in our journey!
               </p>
               
               <div className="space-y-3 mb-6">
