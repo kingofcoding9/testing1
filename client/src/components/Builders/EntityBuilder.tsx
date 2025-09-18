@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { Sparkles, Download, Copy, Save, RotateCcw, Info, Zap, AlertCircle } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Sparkles, Download, Copy, Save, RotateCcw, Info, Zap, AlertCircle, X, Settings, FileText, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import CodePreview from "@/components/Common/CodePreview";
 import ValidationStatus from "@/components/Common/ValidationStatus";
@@ -20,6 +21,8 @@ import ComponentForm, { ComponentDefinition } from "@/components/Common/Componen
 
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToast } from "@/hooks/use-toast";
+import { useCollapsible } from "@/hooks/useCollapsible";
+import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { validateEntityJSON } from "@/lib/minecraft/validation";
 import { 
   ComponentInstance, 
@@ -67,6 +70,19 @@ export default function EntityBuilder() {
   const [showComponentSelector, setShowComponentSelector] = useState(false);
   const [showComponentForm, setShowComponentForm] = useState(false);
   const [editingComponent, setEditingComponent] = useState<ComponentInstance | null>(null);
+  
+  // Collapsible state management
+  const collapsibleComponents = useCollapsible({
+    storageKey: 'entity-builder',
+    defaultCollapsed: false,
+    initialSections: ['basic-info', 'entity-settings', 'actions', 'validation', 'export-options']
+  });
+  
+  const collapsibleCategories = useCollapsible({
+    storageKey: 'entity-builder-categories', 
+    defaultCollapsed: false,
+    initialSections: Object.keys(componentsByCategory)
+  });
 
   // Convert registry components to ComponentItem format
   const availableComponents: ComponentItem[] = useMemo(() => {
@@ -436,14 +452,49 @@ export default function EntityBuilder() {
                         </Alert>
                       )}
 
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="font-medium">Component Categories</h4>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={collapsibleCategories.expandAll}
+                            disabled={collapsibleCategories.getCollapsedCount() === 0}
+                            data-testid="expand-all-categories"
+                          >
+                            Expand All
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={collapsibleCategories.collapseAll}
+                            disabled={collapsibleCategories.getExpandedCount() === 0}
+                            data-testid="collapse-all-categories"
+                          >
+                            Collapse All
+                          </Button>
+                        </div>
+                      </div>
+                      
                       <ScrollArea className="h-[400px]">
-                        <Accordion type="single" collapsible className="space-y-2">
-                          {Object.entries(componentsByCategory).map(([category, categoryComponents]) => (
-                            <AccordionItem key={category} value={category}>
-                              <AccordionTrigger className="text-sm" data-testid={`accordion-${category}`}>
-                                {category} ({categoryComponents.length})
-                              </AccordionTrigger>
-                              <AccordionContent>
+                        <div className="space-y-2">
+                          {Object.entries(componentsByCategory).map(([category, categoryComponents]) => {
+                            // Ensure the category is added to collapsible state
+                            if (!collapsibleCategories.getSectionIds().includes(category)) {
+                              collapsibleCategories.addSection(category, false);
+                            }
+                            
+                            return (
+                              <CollapsibleSection
+                                key={category}
+                                id={category}
+                                title={category}
+                                badge={categoryComponents.length}
+                                icon={<Layers className="w-4 h-4" />}
+                                collapsed={collapsibleCategories.isCollapsed(category)}
+                                onToggle={(collapsed) => collapsibleCategories.setSection(category, collapsed)}
+                                data-testid={`collapsible-category-${category}`}
+                              >
                                 <div className="space-y-2">
                                   {categoryComponents.map((component) => {
                                     const def = getComponentDefinition(component.name);
@@ -513,10 +564,10 @@ export default function EntityBuilder() {
                                     );
                                   })}
                                 </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          ))}
-                        </Accordion>
+                              </CollapsibleSection>
+                            );
+                          })}
+                        </div>
                       </ScrollArea>
                     </TabsContent>
 
@@ -554,31 +605,90 @@ export default function EntityBuilder() {
                     </TabsContent>
 
                     <TabsContent value="advanced" className="space-y-4">
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="font-medium mb-2">Actions</h4>
-                          <div className="flex gap-2">
-                            <Button
-                              variant="outline"
-                              onClick={resetEntity}
-                              data-testid="button-reset"
-                            >
-                              <RotateCcw className="w-4 h-4 mr-2" />
-                              Reset
-                            </Button>
-                            <Button
-                              variant="outline"
-                              onClick={exportToClipboard}
-                              data-testid="button-export"
-                            >
-                              <Copy className="w-4 h-4 mr-2" />
-                              Copy JSON
-                            </Button>
+                      <CollapsibleGroup
+                        title="Advanced Configuration"
+                        description="Advanced settings and validation tools"
+                        showControls={true}
+                        onExpandAll={collapsibleComponents.expandAll}
+                        onCollapseAll={collapsibleComponents.collapseAll}
+                        collapsedCount={collapsibleComponents.getCollapsedCount()}
+                        expandedCount={collapsibleComponents.getExpandedCount()}
+                        data-testid="advanced-config-group"
+                      >
+                        <CollapsibleSection
+                          id="actions"
+                          title="Entity Actions"
+                          description="Reset entity or export to clipboard"
+                          icon={<Settings className="w-4 h-4" />}
+                          collapsed={collapsibleComponents.isCollapsed('actions')}
+                          onToggle={(collapsed) => collapsibleComponents.setSection('actions', collapsed)}
+                          data-testid="collapsible-actions"
+                        >
+                          <div className="space-y-3">
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                onClick={resetEntity}
+                                data-testid="button-reset"
+                              >
+                                <RotateCcw className="w-4 h-4 mr-2" />
+                                Reset Entity
+                              </Button>
+                              <Button
+                                variant="outline"
+                                onClick={exportToClipboard}
+                                data-testid="button-export"
+                              >
+                                <Copy className="w-4 h-4 mr-2" />
+                                Copy JSON
+                              </Button>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              Reset will clear all components and properties. Copy JSON exports the current entity configuration.
+                            </p>
                           </div>
-                        </div>
+                        </CollapsibleSection>
 
-                        <ValidationStatus validation={validation} />
-                      </div>
+                        <CollapsibleSection
+                          id="validation"
+                          title="Validation Status"
+                          description="Entity JSON validation and error checking"
+                          icon={<AlertCircle className="w-4 h-4" />}
+                          badge={validation.errors.length > 0 ? validation.errors.length : undefined}
+                          badgeVariant={validation.errors.length > 0 ? "destructive" : "secondary"}
+                          collapsed={collapsibleComponents.isCollapsed('validation')}
+                          onToggle={(collapsed) => collapsibleComponents.setSection('validation', collapsed)}
+                          data-testid="collapsible-validation"
+                        >
+                          <ValidationStatus validation={validation} />
+                        </CollapsibleSection>
+
+                        <CollapsibleSection
+                          id="export-options"
+                          title="Export Options"
+                          description="Additional export and sharing options"
+                          icon={<FileText className="w-4 h-4" />}
+                          collapsed={collapsibleComponents.isCollapsed('export-options')}
+                          onToggle={(collapsed) => collapsibleComponents.setSection('export-options', collapsed)}
+                          data-testid="collapsible-export"
+                        >
+                          <div className="space-y-3">
+                            <div className="grid grid-cols-2 gap-2">
+                              <Button variant="outline" size="sm">
+                                <Download className="w-3 h-3 mr-2" />
+                                Download .json
+                              </Button>
+                              <Button variant="outline" size="sm">
+                                <Save className="w-3 h-3 mr-2" />
+                                Save Template
+                              </Button>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              Export your entity as a .json file or save as a reusable template.
+                            </p>
+                          </div>
+                        </CollapsibleSection>
+                      </CollapsibleGroup>
                     </TabsContent>
                   </Tabs>
                 </CardContent>
@@ -598,9 +708,25 @@ export default function EntityBuilder() {
         </div>
 
         {/* Component Selector Modal */}
-        {showComponentSelector && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-background rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <Dialog open={showComponentSelector} onOpenChange={setShowComponentSelector}>
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden" data-testid="component-selector-modal">
+            <DialogHeader>
+              <DialogTitle className="flex items-center justify-between">
+                Add Entity Components
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setShowComponentSelector(false)}
+                  data-testid="button-close-selector-x"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </DialogTitle>
+              <DialogDescription>
+                Choose from 50+ official Minecraft Bedrock entity components
+              </DialogDescription>
+            </DialogHeader>
+            <ScrollArea className="max-h-[70vh]">
               <ComponentSelector
                 components={availableComponents}
                 selectedComponents={selectedComponentNames}
@@ -611,24 +737,49 @@ export default function EntityBuilder() {
                 showCategories={true}
                 showCompatibility={true}
               />
-              <div className="p-4 border-t flex justify-end">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowComponentSelector(false)}
-                  data-testid="button-close-selector"
-                >
-                  Close
-                </Button>
-              </div>
+            </ScrollArea>
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowComponentSelector(false)}
+                data-testid="button-close-selector"
+              >
+                Cancel
+              </Button>
             </div>
-          </div>
-        )}
+          </DialogContent>
+        </Dialog>
 
         {/* Component Form Modal */}
-        {showComponentForm && editingComponent && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-background rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-hidden">
+        <Dialog open={showComponentForm && !!editingComponent} onOpenChange={(open) => {
+          if (!open) {
+            setShowComponentForm(false);
+            setEditingComponent(null);
+          }
+        }}>
+          <DialogContent className="max-w-4xl max-h-[95vh] overflow-hidden" data-testid="component-form-modal">
+            <DialogHeader>
+              <DialogTitle className="flex items-center justify-between">
+                Configure Component: {editingComponent?.name}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => {
+                    setShowComponentForm(false);
+                    setEditingComponent(null);
+                  }}
+                  data-testid="button-close-form-x"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </DialogTitle>
+              <DialogDescription>
+                Configure the properties for this component
+              </DialogDescription>
+            </DialogHeader>
+            <ScrollArea className="max-h-[75vh] pr-4">
               {(() => {
+                if (!editingComponent) return null;
                 const def = getComponentDefinition(editingComponent.name);
                 return def ? (
                   <ComponentForm
@@ -644,9 +795,9 @@ export default function EntityBuilder() {
                   />
                 ) : null;
               })()}
-            </div>
-          </div>
-        )}
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
       </section>
     </TooltipProvider>
   );

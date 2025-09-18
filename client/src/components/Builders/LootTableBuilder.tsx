@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Gift, Download, Copy, Save, RotateCcw, Info, Plus, Trash2, Settings, Dices } from "lucide-react";
+import { Gift, Download, Copy, Save, RotateCcw, Info, Plus, Trash2, Settings, Dices, FileText, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +18,8 @@ import ValidationStatus from "@/components/Common/ValidationStatus";
 
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToast } from "@/hooks/use-toast";
+import { useCollapsible } from "@/hooks/useCollapsible";
+import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { validateLootTableJSON } from "@/lib/minecraft/validation";
 
 // Import the comprehensive loot functions registry

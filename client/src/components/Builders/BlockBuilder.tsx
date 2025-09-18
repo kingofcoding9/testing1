@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Package, Download, Copy, Save, RotateCcw, Info, Zap, AlertCircle, Settings } from "lucide-react";
+import { Package, Download, Copy, Save, RotateCcw, Info, Zap, AlertCircle, Settings, FileText, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +20,8 @@ import ComponentForm, { ComponentDefinition } from "@/components/Common/Componen
 
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToast } from "@/hooks/use-toast";
+import { useCollapsible } from "@/hooks/useCollapsible";
+import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { validateBlockJSON } from "@/lib/minecraft/validation";
 import { 
   ComponentInstance, 

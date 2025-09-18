@@ -4,6 +4,8 @@ import {
   Package, FolderTree, Settings, Play, CheckCircle, AlertCircle, 
   Download, Upload, Zap, BookmarkPlus, Eye, Lightbulb
 } from "lucide-react";
+import { useCollapsible } from "@/hooks/useCollapsible";
+import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +27,13 @@ export default function CoreConcepts({ onNavigate }: CoreConceptsProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
   const { toast } = useToast();
+  
+  // Enhanced collapsible functionality
+  const collapsibleSections = useCollapsible({
+    storageKey: 'core-concepts',
+    defaultCollapsed: false,
+    initialSections: tableOfContents.map(item => item.id)
+  });
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => 

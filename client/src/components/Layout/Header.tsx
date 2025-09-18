@@ -1,10 +1,13 @@
-import { Download, Save, Home } from "lucide-react";
+import { Download, Save, Home, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import { useIsMobile } from "@/hooks/use-mobile";
 import omniScienceLogo from "@assets/omni-science_1758171429429.png";
 
 interface HeaderProps {
   currentSection: string;
+  onMenuToggle?: () => void;
+  isSidebarOpen?: boolean;
 }
 
 const sectionTitles: Record<string, { title: string; subtitle: string }> = {
@@ -102,7 +105,8 @@ const sectionTitles: Record<string, { title: string; subtitle: string }> = {
   }
 };
 
-export default function Header({ currentSection }: HeaderProps) {
+export default function Header({ currentSection, onMenuToggle, isSidebarOpen }: HeaderProps) {
+  const isMobile = useIsMobile();
   const sectionInfo = sectionTitles[currentSection] || sectionTitles.welcome;
   const [, setLocation] = useLocation();
 
@@ -113,25 +117,39 @@ export default function Header({ currentSection }: HeaderProps) {
   return (
     <header className="bg-card border-b border-border" data-testid="header">
       {/* Top row with logo and main title */}
-      <div className="flex items-center justify-between p-4 pb-2">
-        <div className="flex items-center space-x-4">
+      <div className="flex items-center justify-between p-3 sm:p-4 pb-2">
+        <div className="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
+          {/* Mobile hamburger menu */}
+          {isMobile && onMenuToggle && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onMenuToggle}
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center mr-2"
+              data-testid="mobile-menu-button"
+              aria-label={isSidebarOpen ? "Close menu" : "Open menu"}
+            >
+              <Menu size={20} />
+            </Button>
+          )}
+          
           <button 
             onClick={handleLogoClick}
-            className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer group"
+            className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity cursor-pointer group flex-1 min-w-0"
             data-testid="logo-home-button"
             aria-label="Go to home page"
           >
             <img 
               src={omniScienceLogo} 
               alt="Omni-Science Logo" 
-              className="h-12 w-auto sm:h-14 md:h-16 transition-transform group-hover:scale-105"
+              className="h-10 w-auto sm:h-12 md:h-14 lg:h-16 transition-transform group-hover:scale-105 flex-shrink-0"
               data-testid="omni-science-logo"
             />
-            <div className="hidden sm:block">
-              <h1 className="text-xl md:text-2xl font-bold text-foreground leading-tight">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground leading-tight truncate">
                 Omni-Science
               </h1>
-              <p className="text-sm text-muted-foreground -mt-1">
+              <p className="text-xs sm:text-sm text-muted-foreground -mt-1 truncate">
                 Minecraft Bedrock Creator Suite
               </p>
             </div>
@@ -139,51 +157,64 @@ export default function Header({ currentSection }: HeaderProps) {
         </div>
         
         {/* Action buttons */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
           <Button 
             variant="secondary" 
             size="sm"
             data-testid="button-export"
-            className="hidden sm:flex"
+            className="hidden lg:flex min-h-[44px]"
           >
             <Download className="mr-2" size={16} />
             Export Project
           </Button>
           <Button 
+            variant="secondary" 
+            size="sm"
+            data-testid="button-export-mobile"
+            className="lg:hidden min-h-[44px] min-w-[44px] p-2"
+            title="Export Project"
+          >
+            <Download size={16} />
+          </Button>
+          <Button 
             size="sm"
             data-testid="button-save"
+            className="min-h-[44px]"
           >
-            <Save className="mr-2" size={16} />
-            <span className="hidden sm:inline">Save Progress</span>
-            <span className="sm:hidden">Save</span>
+            <Save className="mr-1 sm:mr-2" size={16} />
+            <span className="hidden md:inline">Save Progress</span>
+            <span className="hidden sm:inline md:hidden">Save</span>
+            <span className="sm:hidden sr-only">Save</span>
           </Button>
         </div>
       </div>
       
       {/* Bottom row with current section info and credits */}
-      <div className="flex items-center justify-between px-4 pb-3 pt-1">
-        <div className="flex-1">
-          <h2 className="text-lg font-semibold text-foreground" data-testid="page-title">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-3 sm:px-4 pb-3 pt-1 space-y-2 sm:space-y-0">
+        <div className="flex-1 min-w-0">
+          <h2 className="text-base sm:text-lg font-semibold text-foreground truncate" data-testid="page-title">
             {sectionInfo.title}
           </h2>
-          <p className="text-sm text-muted-foreground" data-testid="page-subtitle">
+          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 sm:line-clamp-1" data-testid="page-subtitle">
             {sectionInfo.subtitle}
           </p>
         </div>
         
-        {/* Credits - visible on larger screens */}
-        <div className="hidden lg:flex flex-col text-right text-xs text-muted-foreground">
+        {/* Credits - responsive layout */}
+        <div className="hidden xl:flex flex-col text-right text-xs text-muted-foreground flex-shrink-0">
           <span data-testid="creator-credit">Created by king_of_coding</span>
           <span data-testid="ownership-credit" className="font-medium">Owned by Omni-Science</span>
         </div>
-      </div>
-      
-      {/* Mobile credits row */}
-      <div className="lg:hidden px-4 pb-2 flex justify-center">
-        <div className="text-xs text-muted-foreground text-center">
-          <span data-testid="creator-credit-mobile">Created by king_of_coding</span>
-          <span className="mx-2">•</span>
-          <span data-testid="ownership-credit-mobile" className="font-medium">Owned by Omni-Science</span>
+        
+        {/* Credits - compact for smaller screens */}
+        <div className="xl:hidden flex justify-center sm:justify-end">
+          <div className="text-xs text-muted-foreground text-center sm:text-right">
+            <div className="flex flex-wrap justify-center sm:justify-end items-center gap-1">
+              <span data-testid="creator-credit-compact">Created by king_of_coding</span>
+              <span className="hidden sm:inline">•</span>
+              <span data-testid="ownership-credit-compact" className="font-medium">Owned by Omni-Science</span>
+            </div>
+          </div>
         </div>
       </div>
     </header>

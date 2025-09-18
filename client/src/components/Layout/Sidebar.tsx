@@ -1,4 +1,6 @@
 import { BookOpen, Box, Crown, Eye, Gem, Hammer, Mountain, MapPin, Shovel, PaintbrushVertical, Terminal, Archive, CheckCircle, Home, GraduationCap, Rocket, ExternalLink, Users, MessageCircle, Globe } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useEffect } from "react";
 
 interface SidebarProps {
   currentSection: string;
@@ -8,6 +10,22 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ currentSection, onSectionChange, collapsed, onToggleCollapse }: SidebarProps) {
+  const isMobile = useIsMobile();
+
+  // Auto-collapse sidebar on mobile mount
+  useEffect(() => {
+    if (isMobile && !collapsed) {
+      onToggleCollapse();
+    }
+  }, [isMobile]);
+
+  const handleSectionChange = (section: string) => {
+    onSectionChange(section);
+    // Auto-close sidebar on mobile after navigation
+    if (isMobile && !collapsed) {
+      onToggleCollapse();
+    }
+  };
   const navSections = [
     {
       title: "Getting Started",
@@ -60,41 +78,58 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
   ];
 
   return (
-    <aside 
-      className={`bg-card border-r border-border flex-shrink-0 transition-all duration-300 ${
-        collapsed ? 'sidebar-collapsed' : 'w-64'
-      }`}
-      data-testid="sidebar"
-    >
+    <>
+      {/* Mobile overlay */}
+      {isMobile && !collapsed && (
+        <div 
+          className="sidebar-overlay open"
+          onClick={onToggleCollapse}
+          data-testid="sidebar-overlay"
+        />
+      )}
+      
+      <aside 
+        className={`bg-card border-r border-border flex-shrink-0 transition-all duration-300 ${
+          isMobile 
+            ? `sidebar-mobile ${!collapsed ? 'open' : ''}` 
+            : collapsed 
+            ? 'sidebar-collapsed' 
+            : 'w-64'
+        }`}
+        data-testid="sidebar"
+      >
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Box className="text-primary-foreground text-sm" size={16} />
             </div>
-            {!collapsed && (
+            {(!collapsed || isMobile) && (
               <div className="nav-text">
-                <h1 className="text-lg font-bold text-foreground">Creator Suite</h1>
+                <h1 className="text-base sm:text-lg font-bold text-foreground">Creator Suite</h1>
                 <p className="text-xs text-muted-foreground">Minecraft Bedrock</p>
               </div>
             )}
           </div>
-          <button 
-            onClick={onToggleCollapse}
-            className="p-1 hover:bg-secondary rounded-md transition-colors"
-            data-testid="sidebar-toggle"
-          >
-            <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
+          {!isMobile && (
+            <button 
+              onClick={onToggleCollapse}
+              className="p-2 hover:bg-secondary rounded-md transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              data-testid="sidebar-toggle"
+              aria-label="Toggle sidebar"
+            >
+              <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
       <nav className="p-2 flex-1 overflow-y-auto">
         {navSections.map((section) => (
           <div key={section.title} className="mb-4">
-            {!collapsed && (
+            {(!collapsed || isMobile) && (
               <h3 className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider nav-text">
                 {section.title}
               </h3>
@@ -105,14 +140,14 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
                 return (
                   <li key={item.id}>
                     <button
-                      className={`nav-item w-full flex items-center space-x-3 px-3 py-2 rounded-md text-left ${
+                      className={`nav-item w-full flex items-center space-x-3 px-3 py-3 sm:py-2 rounded-md text-left min-h-[44px] text-sm sm:text-base ${
                         currentSection === item.id ? 'active' : ''
                       }`}
-                      onClick={() => onSectionChange(item.id)}
+                      onClick={() => handleSectionChange(item.id)}
                       data-testid={`nav-${item.id}`}
                     >
-                      <Icon size={16} className="w-5" />
-                      {!collapsed && <span className="nav-text">{item.label}</span>}
+                      <Icon size={18} className="w-5 flex-shrink-0" />
+                      {(!collapsed || isMobile) && <span className="nav-text">{item.label}</span>}
                     </button>
                   </li>
                 );
@@ -122,5 +157,6 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
         ))}
       </nav>
     </aside>
+    </>
   );
 }

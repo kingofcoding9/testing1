@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { 
   Copy, 
   Download, 
@@ -6,6 +6,7 @@ import {
   Search, 
   ChevronRight, 
   ChevronDown, 
+  ChevronLeft, 
   Book, 
   Code2, 
   Zap, 
@@ -20,8 +21,19 @@ import {
   Star,
   Box,
   Target,
-  Cpu
+  Cpu,
+  Maximize2,
+  Minimize2,
+  Save,
+  RotateCcw,
+  Terminal,
+  Lightbulb
 } from "lucide-react";
+import Editor from '@monaco-editor/react';
+import type * as Monaco from 'monaco-editor';
+import { useCollapsible } from "@/hooks/useCollapsible";
+import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,6 +47,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import CodePreview from "@/components/Common/CodePreview";
 import { minecraftRegistry } from "@shared/minecraftRegistry";
 import { cn } from "@/lib/utils";
@@ -66,13 +79,50 @@ interface FilterState {
   favorites: boolean;
 }
 
+interface AutocompleteItem {
+  label: string;
+  kind: Monaco.languages.CompletionItemKind;
+  detail?: string;
+  documentation?: string;
+  insertText: string;
+  range: Monaco.IRange;
+}
+
+interface MonacoEditorRef {
+  editor: Monaco.editor.IStandaloneCodeEditor | null;
+  monaco: typeof Monaco | null;
+}
+
 export default function ScriptStudio() {
   // Core state
-  const [activeTab, setActiveTab] = useState("browser");
   const [scripts, setScripts] = useState<ScriptTab[]>([
-    { id: "1", name: "Main Script", content: "// Your Minecraft script starts here\n", language: "typescript" }
+    { 
+      id: "1", 
+      name: "Main Script", 
+      content: `// Welcome to the enhanced Script Studio!
+// Professional Monaco Editor with intelligent autocomplete
+
+import { world } from '@minecraft/server';
+
+// Start typing to see VS Code-style suggestions
+// Try typing "world." to see available methods
+world.sendMessage("Hello from Script Studio!");
+
+// The editor now features:
+// ✓ Syntax highlighting
+// ✓ Intelligent autocomplete with 476+ API elements  
+// ✓ Parameter hints and type information
+// ✓ JSDoc documentation in suggestions
+// ✓ Error detection and warnings
+// ✓ Bracket matching and auto-closing
+
+`, 
+      language: "typescript" 
+    }
   ]);
   const [activeScriptId, setActiveScriptId] = useState("1");
+  const [editorExpanded, setEditorExpanded] = useState(false);
+  const editorRef = useRef<MonacoEditorRef>({ editor: null, monaco: null });
   
   // Browser state
   const [selectedElement, setSelectedElement] = useState<SelectedElement | null>(null);
@@ -94,7 +144,8 @@ export default function ScriptStudio() {
   const [showParameterHelper, setShowParameterHelper] = useState(true);
   
   // UI state
-  const [splitView, setSplitView] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [documentationOpen, setDocumentationOpen] = useState(true);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
 
   // Process registry data
@@ -123,6 +174,181 @@ export default function ScriptStudio() {
       totalElements: elements.length
     };
   }, []);
+
+  // Monaco Editor setup and autocomplete provider
+  const setupMonacoEditor = useCallback((editor: Monaco.editor.IStandaloneCodeEditor, monaco: typeof Monaco) => {
+    editorRef.current = { editor, monaco };
+
+    // Register completion provider for TypeScript
+    monaco.languages.registerCompletionItemProvider('typescript', {
+      provideCompletionItems: (model, position) => {
+        const suggestions: Monaco.languages.CompletionItem[] = [];
+        const word = model.getWordUntilPosition(position);
+        const range = {
+          startLineNumber: position.lineNumber,
+          endLineNumber: position.lineNumber,
+          startColumn: word.startColumn,
+          endColumn: word.endColumn,
+        };
+
+        // Get line content to analyze context
+        const lineContent = model.getLineContent(position.lineNumber);
+        const beforeCursor = lineContent.substring(0, position.column - 1);
+        
+        // Check if we're after a dot (for method completion)
+        const dotMatch = beforeCursor.match(/(\\w+)\\.$/) || beforeCursor.match(/(\\w+\\.\\w+)\\.$/) ;
+        
+        if (dotMatch) {
+          // Provide method/property completions for specific objects
+          const objectName = dotMatch[1];
+          
+          // Find elements that could be methods/properties of this object
+          registryData.elements.forEach((element: any) => {
+            if (element.type === 'class' && element.name.toLowerCase().includes(objectName.toLowerCase())) {
+              // Add methods if available
+              if (element.methods) {
+                element.methods.forEach((method: any) => {
+                  const params = method.parameters 
+                    ? method.parameters.map((p: any) => `${p.name}: ${p.type}`).join(', ')
+                    : '';
+                  
+                  suggestions.push({
+                    label: method.name,
+                    kind: monaco.languages.CompletionItemKind.Method,
+                    detail: `${method.name}(${params}): ${method.returnType || 'void'}`,
+                    documentation: method.description || `Method from ${element.name}`,
+                    insertText: method.parameters 
+                      ? `${method.name}(\\${1})`
+                      : `${method.name}()`,
+                    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    range,
+                  });
+                });
+              }
+              
+              // Add properties if available
+              if (element.properties) {
+                element.properties.forEach((prop: any) => {
+                  suggestions.push({
+                    label: prop.name,
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    detail: `${prop.name}: ${prop.type}`,
+                    documentation: prop.description || `Property from ${element.name}`,
+                    insertText: prop.name,
+                    range,
+                  });
+                });
+              }
+            }
+          });
+        } else {
+          // General completions - classes, functions, enums
+          registryData.elements.forEach((element: any) => {
+            const shouldInclude = !word.word || element.name.toLowerCase().includes(word.word.toLowerCase());
+            
+            if (shouldInclude) {
+              let kind: Monaco.languages.CompletionItemKind;
+              let detail = '';
+              let insertText = element.name;
+              
+              switch (element.type) {
+                case 'class':
+                  kind = monaco.languages.CompletionItemKind.Class;
+                  detail = `class ${element.name}`;
+                  break;
+                case 'interface':
+                  kind = monaco.languages.CompletionItemKind.Interface;
+                  detail = `interface ${element.name}`;
+                  break;
+                case 'enum':
+                  kind = monaco.languages.CompletionItemKind.Enum;
+                  detail = `enum ${element.name}`;
+                  break;
+                case 'function':
+                  kind = monaco.languages.CompletionItemKind.Function;
+                  const params = element.parameters 
+                    ? element.parameters.map((p: any) => `${p.name}: ${p.type}`).join(', ')
+                    : '';
+                  detail = `function ${element.name}(${params})`;
+                  insertText = element.parameters ? `${element.name}(\\${1})` : `${element.name}()`;
+                  break;
+                default:
+                  kind = monaco.languages.CompletionItemKind.Variable;
+                  detail = `${element.type} ${element.name}`;
+              }
+              
+              suggestions.push({
+                label: element.name,
+                kind,
+                detail: `${detail} - ${element.module}`,
+                documentation: element.description || `${element.type} from ${element.module}`,
+                insertText,
+                insertTextRules: insertText.includes('${') 
+                  ? monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet 
+                  : undefined,
+                range,
+              });
+            }
+          });
+          
+          // Add common imports
+          if (beforeCursor.includes('import')) {
+            registryData.modules.forEach(moduleName => {
+              suggestions.push({
+                label: moduleName,
+                kind: monaco.languages.CompletionItemKind.Module,
+                detail: `Import from ${moduleName}`,
+                documentation: `Minecraft module: ${moduleName}`,
+                insertText: moduleName,
+                range,
+              });
+            });
+          }
+        }
+
+        return { suggestions };
+      },
+    });
+
+    // Register the same provider for JavaScript
+    monaco.languages.registerCompletionItemProvider('javascript', {
+      provideCompletionItems: (model, position) => {
+        return monaco.languages.getLanguages().find(lang => lang.id === 'typescript')
+          ?.completionProvider?.provideCompletionItems?.(model, position) || { suggestions: [] };
+      },
+    });
+
+    // Configure editor options for better experience
+    editor.updateOptions({
+      fontSize: 14,
+      lineHeight: 20,
+      fontFamily: 'JetBrains Mono, Consolas, Monaco, Courier New, monospace',
+      minimap: { enabled: false },
+      scrollBeyondLastLine: false,
+      roundedSelection: false,
+      padding: { top: 16, bottom: 16 },
+      suggest: {
+        showIcons: true,
+        showSnippets: true,
+        showWords: true,
+        showTypeParameters: true,
+      },
+      quickSuggestions: {
+        other: true,
+        comments: true,
+        strings: true,
+      },
+      quickSuggestionsDelay: 100,
+      suggestOnTriggerCharacters: true,
+      acceptSuggestionOnEnter: 'on',
+      tabCompletion: 'on',
+      wordBasedSuggestions: 'allDocuments',
+      parameterHints: {
+        enabled: true,
+        cycle: true,
+      },
+    });
+  }, [registryData]);
 
   // Search and filter logic
   const filteredElements = useMemo(() => {
@@ -156,145 +382,7 @@ export default function ScriptStudio() {
     return filtered;
   }, [registryData.elements, searchTerm, filters, favorites]);
 
-  // Toggle functions
-  const toggleModule = useCallback((moduleName: string) => {
-    setExpandedModules(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(moduleName)) {
-        newSet.delete(moduleName);
-      } else {
-        newSet.add(moduleName);
-      }
-      return newSet;
-    });
-  }, []);
-
-  const toggleElement = useCallback((elementId: string) => {
-    setExpandedElements(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(elementId)) {
-        newSet.delete(elementId);
-      } else {
-        newSet.add(elementId);
-      }
-      return newSet;
-    });
-  }, []);
-
-  const toggleFavorite = useCallback((elementId: string) => {
-    setFavorites(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(elementId)) {
-        newSet.delete(elementId);
-      } else {
-        newSet.add(elementId);
-      }
-      return newSet;
-    });
-  }, []);
-
-  // Element selection
-  const selectElement = useCallback((element: any) => {
-    setSelectedElement({
-      id: element.id,
-      name: element.name,
-      type: element.type,
-      module: element.module,
-      element
-    });
-    setParameterValues({});
-  }, []);
-
-  // Code generation
-  const generateCode = useCallback(() => {
-    if (!selectedElement) return;
-
-    const element = selectedElement.element;
-    let code = "";
-
-    // Add imports
-    const imports = new Set<string>();
-    imports.add(selectedElement.module);
-    
-    code += `import { ${element.name} } from '${selectedElement.module}';\n\n`;
-
-    // Generate code based on element type
-    switch (element.type) {
-      case 'class':
-        if (element.methods && element.methods.length > 0) {
-          const constructor = element.methods.find((m: any) => m.name === 'constructor');
-          if (constructor) {
-            const params = constructor.parameters.map((p: any) => {
-              const value = parameterValues[p.name] || getDefaultValue(p.type);
-              return formatParameterValue(p.type, value);
-            }).join(', ');
-            code += `// Create instance of ${element.name}\n`;
-            code += `const instance = new ${element.name}(${params});\n\n`;
-          }
-        }
-        break;
-        
-      case 'function':
-        const params = (element.parameters || []).map((p: any) => {
-          const value = parameterValues[p.name] || getDefaultValue(p.type);
-          return formatParameterValue(p.type, value);
-        }).join(', ');
-        code += `// Call ${element.name} function\n`;
-        code += `const result = ${element.name}(${params});\n`;
-        break;
-        
-      case 'enum':
-        if (element.enumValues && element.enumValues.length > 0) {
-          code += `// Using ${element.name} enum values\n`;
-          element.enumValues.slice(0, 3).forEach((enumVal: any) => {
-            code += `console.log(${element.name}.${enumVal.name}); // ${enumVal.value}\n`;
-          });
-        }
-        break;
-        
-      default:
-        code += `// ${element.description || `Using ${element.name}`}\n`;
-        code += `// Type: ${element.type}\n`;
-        code += `// Module: ${element.module}\n`;
-    }
-
-    // Update active script
-    setScripts(prev => prev.map(script => 
-      script.id === activeScriptId 
-        ? { ...script, content: script.content + '\n' + code }
-        : script
-    ));
-  }, [selectedElement, parameterValues, activeScriptId]);
-
   // Helper functions
-  const getDefaultValue = (type: string): string => {
-    switch (type.toLowerCase()) {
-      case 'string': return '"example"';
-      case 'number': return '1';
-      case 'boolean': return 'true';
-      case 'vector3': return '{ x: 0, y: 0, z: 0 }';
-      default: return 'undefined';
-    }
-  };
-
-  const formatParameterValue = (type: string, value: string): string => {
-    if (!value) return getDefaultValue(type);
-    
-    switch (type.toLowerCase()) {
-      case 'string':
-        return `"${value}"`;
-      case 'number':
-        return value;
-      case 'boolean':
-        return value;
-      case 'vector3':
-        const coords = value.split(',').map(s => s.trim());
-        return `{ x: ${coords[0] || '0'}, y: ${coords[1] || '0'}, z: ${coords[2] || '0'} }`;
-      default:
-        return value;
-    }
-  };
-
   const getElementIcon = (type: string) => {
     switch (type) {
       case 'class': return <Box className="w-4 h-4 text-blue-500" />;
@@ -312,7 +400,7 @@ export default function ScriptStudio() {
     const newScript: ScriptTab = {
       id: newId,
       name: `Script ${scripts.length + 1}`,
-      content: "// New Minecraft script\n",
+      content: "// New Minecraft script\\nimport { world } from '@minecraft/server';\\n\\n",
       language: "typescript"
     };
     setScripts(prev => [...prev, newScript]);
@@ -335,6 +423,31 @@ export default function ScriptStudio() {
 
   const activeScript = scripts.find(s => s.id === activeScriptId) || scripts[0];
 
+  // Element selection
+  const selectElement = useCallback((element: any) => {
+    setSelectedElement({
+      id: element.id,
+      name: element.name,
+      type: element.type,
+      module: element.module,
+      element
+    });
+    setParameterValues({});
+  }, []);
+
+  // Toggle functions
+  const toggleFavorite = useCallback((elementId: string) => {
+    setFavorites(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(elementId)) {
+        newSet.delete(elementId);
+      } else {
+        newSet.add(elementId);
+      }
+      return newSet;
+    });
+  }, []);
+
   // Export functionality
   const exportScript = (scriptId: string) => {
     const script = scripts.find(s => s.id === scriptId);
@@ -344,7 +457,7 @@ export default function ScriptStudio() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${script.name.replace(/\s+/g, '_')}.${script.language === 'typescript' ? 'ts' : 'js'}`;
+    a.download = `${script.name.replace(/\\s+/g, '_')}.${script.language === 'typescript' ? 'ts' : 'js'}`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -360,547 +473,363 @@ export default function ScriptStudio() {
     }
   };
 
+  const insertCode = (code: string) => {
+    if (editorRef.current.editor) {
+      const editor = editorRef.current.editor;
+      const selection = editor.getSelection();
+      const range = selection || editor.getModel()?.getFullModelRange();
+      
+      if (range) {
+        editor.executeEdits('insert-code', [{
+          range,
+          text: code,
+          forceMoveMarkers: true,
+        }]);
+        editor.focus();
+      }
+    }
+  };
+
   return (
-    <section className="p-6 h-full flex flex-col" data-testid="script-studio">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-foreground mb-2">Script Studio</h2>
-        <p className="text-muted-foreground">
-          Comprehensive Minecraft Bedrock Script API explorer with {registryData.totalElements} elements across {registryData.modules.length} modules
-        </p>
-      </div>
-
-      <div className="flex-1 flex gap-6 min-h-0">
-        {/* Left Panel - API Browser */}
-        <div className="w-1/3 flex flex-col min-h-0">
-          <div className="builder-form p-4 rounded-lg flex-1 flex flex-col">
-            {/* Search Header */}
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">API Browser</h3>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
-                  data-testid="button-toggle-advanced-search"
-                >
-                  <Filter className="w-4 h-4" />
-                </Button>
-                <Badge variant="secondary">{filteredElements.length}</Badge>
-              </div>
-            </div>
-
-            {/* Search Input */}
-            <div className="mb-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search APIs, methods, classes..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                  data-testid="input-api-search"
-                />
-              </div>
-            </div>
-
-            {/* Advanced Search Filters */}
-            {showAdvancedSearch && (
-              <div className="mb-4 p-3 bg-muted rounded-lg space-y-3">
-                <div>
-                  <Label className="text-xs font-medium">Modules</Label>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {registryData.modules.map(module => (
-                      <Badge
-                        key={module}
-                        variant={filters.modules.includes(module) ? "default" : "outline"}
-                        className="cursor-pointer text-xs"
-                        onClick={() => {
-                          setFilters(prev => ({
-                            ...prev,
-                            modules: prev.modules.includes(module)
-                              ? prev.modules.filter(m => m !== module)
-                              : [...prev.modules, module]
-                          }));
-                        }}
-                      >
-                        {module.replace('@minecraft/', '')}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-                
-                <div>
-                  <Label className="text-xs font-medium">Types</Label>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {['class', 'interface', 'enum', 'function', 'type'].map(type => (
-                      <Badge
-                        key={type}
-                        variant={filters.types.includes(type) ? "default" : "outline"}
-                        className="cursor-pointer text-xs"
-                        onClick={() => {
-                          setFilters(prev => ({
-                            ...prev,
-                            types: prev.types.includes(type)
-                              ? prev.types.filter(t => t !== type)
-                              : [...prev.types, type]
-                          }));
-                        }}
-                      >
-                        {type}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Switch
-                    checked={filters.favorites}
-                    onCheckedChange={(checked) => setFilters(prev => ({ ...prev, favorites: checked }))}
-                  />
-                  <Label className="text-xs">Favorites only</Label>
-                </div>
-              </div>
-            )}
-
-            {/* Module Tree */}
-            <ScrollArea className="flex-1">
-              {searchTerm ? (
-                // Search Results
-                <div className="space-y-2">
-                  {filteredElements.map((element: any) => (
-                    <div
-                      key={element.id}
-                      className={cn(
-                        "p-2 rounded-lg cursor-pointer transition-colors",
-                        "hover:bg-muted border",
-                        selectedElement?.id === element.id ? "bg-accent border-accent-foreground" : "border-border"
-                      )}
-                      onClick={() => selectElement(element)}
-                      data-testid={`element-${element.name}`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          {getElementIcon(element.type)}
-                          <span className="font-medium text-sm">{element.name}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Badge variant="outline" className="text-xs">
-                            {element.type}
-                          </Badge>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="w-6 h-6 p-0"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleFavorite(element.id);
-                            }}
-                          >
-                            <Star
-                              className={cn(
-                                "w-3 h-3",
-                                favorites.has(element.id) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
-                              )}
-                            />
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        {element.module} • {element.description?.slice(0, 60)}...
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                // Module Tree View
-                <Accordion type="multiple" value={Array.from(expandedModules)}>
-                  {registryData.modules.map(moduleName => {
-                    const moduleData = registryData.elementsByModule[moduleName];
-                    if (!moduleData) return null;
-
-                    return (
-                      <AccordionItem key={moduleName} value={moduleName} className="border border-border rounded-lg mb-2">
-                        <AccordionTrigger
-                          className="px-3 py-2 hover:bg-muted rounded-lg"
-                          onClick={() => toggleModule(moduleName)}
-                        >
-                          <div className="flex items-center gap-2">
-                            <Package className="w-4 h-4 text-blue-500" />
-                            <span className="font-medium">{moduleName.replace('@minecraft/', '')}</span>
-                            <Badge variant="secondary" className="text-xs">
-                              {(moduleData.elements || []).length}
-                            </Badge>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-3 pb-2">
-                          {Object.entries(moduleData.elementsByType || {}).map(([type, elements]: [string, any]) => (
-                            <div key={type} className="mb-3">
-                              <div className="flex items-center gap-2 mb-2 px-2 py-1 bg-muted rounded">
-                                {getElementIcon(type)}
-                                <span className="text-sm font-medium capitalize">{type}s</span>
-                                <Badge variant="outline" className="text-xs">{elements.length}</Badge>
-                              </div>
-                              <div className="space-y-1 ml-6">
-                                {elements.slice(0, 10).map((element: any) => (
-                                  <div
-                                    key={element.id}
-                                    className={cn(
-                                      "flex items-center justify-between p-2 rounded cursor-pointer transition-colors",
-                                      "hover:bg-muted",
-                                      selectedElement?.id === element.id ? "bg-accent" : ""
-                                    )}
-                                    onClick={() => selectElement(element)}
-                                    data-testid={`element-${element.name}`}
-                                  >
-                                    <span className="text-sm">{element.name}</span>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="w-6 h-6 p-0"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        toggleFavorite(element.id);
-                                      }}
-                                    >
-                                      <Star
-                                        className={cn(
-                                          "w-3 h-3",
-                                          favorites.has(element.id) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
-                                        )}
-                                      />
-                                    </Button>
-                                  </div>
-                                ))}
-                                {elements.length > 10 && (
-                                  <div className="text-xs text-muted-foreground px-2">
-                                    +{elements.length - 10} more...
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </AccordionContent>
-                      </AccordionItem>
-                    );
-                  })}
-                </Accordion>
-              )}
-            </ScrollArea>
+    <section className="h-full flex flex-col" data-testid="script-studio">
+      {/* Header - Compact */}
+      <div className="p-3 border-b bg-background">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-foreground">Script Studio</h2>
+            <p className="text-xs text-muted-foreground">
+              Professional Monaco Editor • {registryData.totalElements} API elements • VS Code-style autocomplete
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              data-testid="button-toggle-sidebar"
+            >
+              {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+              <span className="ml-1 hidden sm:inline">API</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setEditorExpanded(!editorExpanded)}
+              data-testid="button-toggle-fullscreen"
+            >
+              {editorExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            </Button>
           </div>
         </div>
+      </div>
 
-        {/* Right Panel - Documentation & Code Editor */}
-        <div className="flex-1 flex flex-col min-h-0">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="browser" className="flex items-center gap-2">
-                <Book className="w-4 h-4" />
-                Documentation
-              </TabsTrigger>
-              <TabsTrigger value="builder" className="flex items-center gap-2">
-                <Zap className="w-4 h-4" />
-                Code Builder
-              </TabsTrigger>
-              <TabsTrigger value="editor" className="flex items-center gap-2">
-                <FileCode className="w-4 h-4" />
-                Script Editor
-              </TabsTrigger>
-              <TabsTrigger value="templates" className="flex items-center gap-2">
-                <Settings className="w-4 h-4" />
-                Templates
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Documentation Tab */}
-            <TabsContent value="browser" className="flex-1 flex flex-col mt-4">
-              {selectedElement ? (
-                <div className="builder-form p-4 rounded-lg flex-1 overflow-auto">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      {getElementIcon(selectedElement.type)}
-                      <div>
-                        <h3 className="text-lg font-semibold">{selectedElement.name}</h3>
-                        <p className="text-sm text-muted-foreground">{selectedElement.module}</p>
+      {/* Main Content - Editor Prominent Layout */}
+      <div className="flex-1 flex overflow-hidden">
+        <ResizablePanelGroup direction="horizontal" className="h-full">
+          {/* Left Sidebar - API Browser (Collapsible) */}
+          {!sidebarCollapsed && (
+            <>
+              <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
+                <div className="h-full flex flex-col border-r bg-muted/20">
+                  <div className="p-3 border-b">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold text-sm">API Browser</h3>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
+                          data-testid="button-toggle-advanced-search"
+                        >
+                          <Filter className="w-3 h-3" />
+                        </Button>
+                        <Badge variant="secondary" className="text-xs">{filteredElements.length}</Badge>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline">{selectedElement.type}</Badge>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => toggleFavorite(selectedElement.id)}
-                      >
-                        <Star
-                          className={cn(
-                            "w-4 h-4",
-                            favorites.has(selectedElement.id) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
-                          )}
-                        />
-                      </Button>
-                    </div>
-                  </div>
 
-                  {selectedElement.element.description && (
-                    <div className="mb-4">
-                      <h4 className="font-medium mb-2">Description</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {selectedElement.element.description}
-                      </p>
-                    </div>
-                  )}
-
-                  {selectedElement.element.definition && (
-                    <div className="mb-4">
-                      <h4 className="font-medium mb-2">Definition</h4>
-                      <CodePreview
-                        code={selectedElement.element.definition}
-                        language="typescript"
-                        className="text-xs"
+                    <div className="relative">
+                      <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-muted-foreground" />
+                      <Input
+                        placeholder="Search APIs..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-7 h-8 text-sm"
+                        data-testid="input-api-search"
                       />
                     </div>
-                  )}
 
-                  {selectedElement.element.enumValues && (
-                    <div className="mb-4">
-                      <h4 className="font-medium mb-2">Enum Values</h4>
-                      <div className="space-y-2">
-                        {selectedElement.element.enumValues.map((enumVal: any, idx: number) => (
-                          <div key={idx} className="flex items-center justify-between p-2 bg-muted rounded">
-                            <span className="font-mono text-sm">{enumVal.name}</span>
-                            <Badge variant="outline" className="text-xs">{enumVal.value}</Badge>
+                    {showAdvancedSearch && (
+                      <div className="mt-2 p-2 bg-muted rounded space-y-2">
+                        <div>
+                          <Label className="text-xs font-medium">Modules</Label>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {registryData.modules.map(module => (
+                              <Badge
+                                key={module}
+                                variant={filters.modules.includes(module) ? "default" : "outline"}
+                                className="cursor-pointer text-xs h-5"
+                                onClick={() => {
+                                  setFilters(prev => ({
+                                    ...prev,
+                                    modules: prev.modules.includes(module)
+                                      ? prev.modules.filter(m => m !== module)
+                                      : [...prev.modules, module]
+                                  }));
+                                }}
+                              >
+                                {module.replace('@minecraft/', '')}
+                              </Badge>
+                            ))}
                           </div>
-                        ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
-
-                  {selectedElement.element.methods && (
-                    <div className="mb-4">
-                      <h4 className="font-medium mb-2">Methods</h4>
-                      <div className="space-y-2">
-                        {selectedElement.element.methods.slice(0, 5).map((method: any, idx: number) => (
-                          <div key={idx} className="p-2 bg-muted rounded">
-                            <div className="font-mono text-sm">{method.name}</div>
-                            {method.description && (
-                              <div className="text-xs text-muted-foreground mt-1">{method.description}</div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="builder-form p-8 rounded-lg flex-1 flex items-center justify-center">
-                  <div className="text-center">
-                    <Book className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-medium mb-2">Select an API Element</h3>
-                    <p className="text-muted-foreground">
-                      Choose any class, method, enum, or interface from the browser to view detailed documentation
-                    </p>
-                  </div>
-                </div>
-              )}
-            </TabsContent>
-
-            {/* Code Builder Tab */}
-            <TabsContent value="builder" className="flex-1 flex flex-col mt-4">
-              {selectedElement ? (
-                <div className="builder-form p-4 rounded-lg flex-1 overflow-auto">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold">Code Builder</h3>
-                    <Button onClick={generateCode} data-testid="button-generate-code">
-                      <Code2 className="w-4 h-4 mr-2" />
-                      Generate Code
-                    </Button>
+                    )}
                   </div>
 
-                  {selectedElement.element.parameters && selectedElement.element.parameters.length > 0 && (
-                    <div className="space-y-4">
-                      <h4 className="font-medium">Parameters</h4>
-                      {selectedElement.element.parameters.map((param: any, idx: number) => (
-                        <div key={idx} className="space-y-2">
-                          <Label className="text-sm font-medium">
-                            {param.name}
-                            {!param.optional && <span className="text-red-500 ml-1">*</span>}
-                          </Label>
-                          <div className="text-xs text-muted-foreground mb-1">
-                            Type: {param.type} {param.description && `• ${param.description}`}
+                  <ScrollArea className="flex-1">
+                    <div className="p-2 space-y-1">
+                      {filteredElements.map((element: any) => (
+                        <div
+                          key={element.id}
+                          className={cn(
+                            "p-2 rounded cursor-pointer transition-colors hover:bg-muted",
+                            selectedElement?.id === element.id ? "bg-accent" : ""
+                          )}
+                          onClick={() => selectElement(element)}
+                          data-testid={`element-${element.name}`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 min-w-0">
+                              {getElementIcon(element.type)}
+                              <span className="font-medium text-sm truncate">{element.name}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Badge variant="outline" className="text-xs">
+                                {element.type}
+                              </Badge>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="w-5 h-5 p-0"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleFavorite(element.id);
+                                }}
+                              >
+                                <Star
+                                  className={cn(
+                                    "w-3 h-3",
+                                    favorites.has(element.id) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
+                                  )}
+                                />
+                              </Button>
+                            </div>
                           </div>
-                          <Input
-                            placeholder={getDefaultValue(param.type)}
-                            value={parameterValues[param.name] || ''}
-                            onChange={(e) => setParameterValues(prev => ({
-                              ...prev,
-                              [param.name]: e.target.value
-                            }))}
-                            data-testid={`input-param-${param.name}`}
-                          />
+                          <div className="text-xs text-muted-foreground mt-1 truncate">
+                            {element.module} • {element.description?.slice(0, 40)}...
+                          </div>
                         </div>
                       ))}
                     </div>
-                  )}
-
-                  {selectedElement.element.type === 'enum' && selectedElement.element.enumValues && (
-                    <div className="space-y-4">
-                      <h4 className="font-medium">Enum Values</h4>
-                      <div className="grid grid-cols-2 gap-2">
-                        {selectedElement.element.enumValues.map((enumVal: any, idx: number) => (
-                          <Button
-                            key={idx}
-                            variant="outline"
-                            className="justify-start"
-                            onClick={() => {
-                              const code = `${selectedElement.name}.${enumVal.name}`;
-                              setScripts(prev => prev.map(script => 
-                                script.id === activeScriptId 
-                                  ? { ...script, content: script.content + code + '\n' }
-                                  : script
-                              ));
-                            }}
-                          >
-                            <span className="font-mono text-sm">{enumVal.name}</span>
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  </ScrollArea>
                 </div>
-              ) : (
-                <div className="builder-form p-8 rounded-lg flex-1 flex items-center justify-center">
-                  <div className="text-center">
-                    <Zap className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-medium mb-2">Interactive Code Builder</h3>
-                    <p className="text-muted-foreground">
-                      Select an API element to build code with guided parameter input and examples
-                    </p>
-                  </div>
-                </div>
-              )}
-            </TabsContent>
+              </ResizablePanel>
+              <ResizableHandle withHandle />
+            </>
+          )}
 
-            {/* Script Editor Tab */}
-            <TabsContent value="editor" className="flex-1 flex flex-col mt-4">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
+          {/* Main Panel - Editor Focused */}
+          <ResizablePanel defaultSize={sidebarCollapsed ? 100 : 75}>
+            <div className="h-full flex flex-col">
+              {/* Script Tabs - Compact */}
+              <div className="flex items-center justify-between p-2 border-b bg-muted/10">
+                <div className="flex items-center gap-1">
                   {scripts.map(script => (
                     <div key={script.id} className="flex items-center">
                       <Button
-                        variant={script.id === activeScriptId ? "default" : "outline"}
+                        variant={script.id === activeScriptId ? "secondary" : "ghost"}
                         size="sm"
                         onClick={() => setActiveScriptId(script.id)}
-                        className="rounded-r-none"
+                        className="rounded-r-none h-8 text-xs"
                       >
                         {script.name}
                       </Button>
                       {scripts.length > 1 && (
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
                           onClick={() => removeScript(script.id)}
-                          className="rounded-l-none border-l-0 px-2"
+                          className="rounded-l-none border-l-0 px-1 h-8"
                         >
                           <X className="w-3 h-3" />
                         </Button>
                       )}
                     </div>
                   ))}
-                  <Button variant="outline" size="sm" onClick={addScript}>
-                    <Plus className="w-4 h-4" />
+                  <Button variant="ghost" size="sm" onClick={addScript} className="h-8">
+                    <Plus className="w-3 h-3" />
                   </Button>
                 </div>
-                <div className="flex items-center gap-2">
+                
+                <div className="flex items-center gap-1">
                   <Select
                     value={activeScript.language}
                     onValueChange={(value: 'javascript' | 'typescript') => 
                       updateScript(activeScriptId, { language: value })
                     }
                   >
-                    <SelectTrigger className="w-32">
+                    <SelectTrigger className="w-20 h-8 text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="typescript">TypeScript</SelectItem>
-                      <SelectItem value="javascript">JavaScript</SelectItem>
+                      <SelectItem value="typescript">TS</SelectItem>
+                      <SelectItem value="javascript">JS</SelectItem>
                     </SelectContent>
                   </Select>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => copyScript(activeScriptId)}
                     data-testid="button-copy-script"
+                    className="h-8"
                   >
-                    <Copy className="w-4 h-4" />
+                    <Copy className="w-3 h-3" />
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => exportScript(activeScriptId)}
                     data-testid="button-export-script"
+                    className="h-8"
                   >
-                    <Download className="w-4 h-4" />
+                    <Download className="w-3 h-3" />
                   </Button>
                 </div>
               </div>
 
-              <div className="builder-form p-4 rounded-lg flex-1 flex flex-col">
-                <div className="flex items-center gap-2 mb-2">
-                  <Input
-                    value={activeScript.name}
-                    onChange={(e) => updateScript(activeScriptId, { name: e.target.value })}
-                    className="font-medium"
-                    data-testid="input-script-name"
+              {/* Monaco Editor - PROMINENT POSITION */}
+              <div className="flex-1 flex flex-col bg-editor">
+                <div className="flex-1">
+                  <Editor
+                    height="100%"
+                    defaultLanguage={activeScript.language}
+                    language={activeScript.language}
+                    value={activeScript.content}
+                    onChange={(value) => updateScript(activeScriptId, { content: value || '' })}
+                    onMount={setupMonacoEditor}
+                    options={{
+                      theme: 'vs-dark',
+                      fontSize: 14,
+                      lineHeight: 20,
+                      fontFamily: 'JetBrains Mono, Consolas, Monaco, Courier New, monospace',
+                      minimap: { enabled: false },
+                      scrollBeyondLastLine: false,
+                      roundedSelection: false,
+                      padding: { top: 16, bottom: 16 },
+                      automaticLayout: true,
+                    }}
+                    data-testid="monaco-editor"
                   />
                 </div>
-                <Textarea
-                  value={activeScript.content}
-                  onChange={(e) => updateScript(activeScriptId, { content: e.target.value })}
-                  className="flex-1 font-mono text-sm resize-none"
-                  placeholder="Write your Minecraft script here..."
-                  data-testid="textarea-script-content"
-                />
               </div>
-            </TabsContent>
 
-            {/* Templates Tab */}
-            <TabsContent value="templates" className="flex-1 mt-4">
-              <div className="builder-form p-4 rounded-lg h-full">
-                <h3 className="text-lg font-semibold mb-4">Script Templates</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    {
-                      name: "Hello World",
-                      description: "Basic message sending example",
-                      code: `import { world } from '@minecraft/server';\n\nworld.sendMessage("Hello, Minecraft!");`
-                    },
-                    {
-                      name: "Entity Spawner",
-                      description: "Spawn entities at coordinates",
-                      code: `import { world } from '@minecraft/server';\n\nconst location = { x: 0, y: 64, z: 0 };\nconst entity = world.spawnEntity("minecraft:pig", location);\nworld.sendMessage("Spawned a pig!");`
-                    },
-                    {
-                      name: "Player Tracker",
-                      description: "Track player movements",
-                      code: `import { world, system } from '@minecraft/server';\n\nsystem.runInterval(() => {\n  const players = world.getPlayers();\n  players.forEach(player => {\n    const location = player.location;\n    console.log(\`Player \${player.name} at \${location.x}, \${location.y}, \${location.z}\`);\n  });\n}, 20);`
-                    },
-                    {
-                      name: "Block Placer",
-                      description: "Place blocks in the world",
-                      code: `import { world, BlockPermutation } from '@minecraft/server';\n\nconst location = { x: 0, y: 64, z: 0 };\nconst block = BlockPermutation.resolve("minecraft:diamond_block");\nworld.setBlock(location, block);`
-                    }
-                  ].map((template, idx) => (
-                    <div key={idx} className="p-4 border border-border rounded-lg hover:bg-muted transition-colors cursor-pointer"
-                         onClick={() => updateScript(activeScriptId, { content: activeScript.content + '\n' + template.code })}>
-                      <h4 className="font-medium mb-2">{template.name}</h4>
-                      <p className="text-sm text-muted-foreground mb-3">{template.description}</p>
-                      <CodePreview code={template.code} language="typescript" className="text-xs" />
-                    </div>
-                  ))}
-                </div>
+              {/* Bottom Panel - Documentation & Tools (Collapsible) */}
+              {documentationOpen && (
+                <>
+                  <ResizableHandle withHandle />
+                  <div className="h-48 border-t bg-muted/10">
+                    <Tabs defaultValue="docs" className="h-full flex flex-col">
+                      <TabsList className="grid w-full grid-cols-3 h-8">
+                        <TabsTrigger value="docs" className="text-xs">
+                          <Book className="w-3 h-3 mr-1" />
+                          Docs
+                        </TabsTrigger>
+                        <TabsTrigger value="tools" className="text-xs">
+                          <Zap className="w-3 h-3 mr-1" />
+                          Tools
+                        </TabsTrigger>
+                        <TabsTrigger value="templates" className="text-xs">
+                          <Settings className="w-3 h-3 mr-1" />
+                          Templates
+                        </TabsTrigger>
+                      </TabsList>
+
+                      <TabsContent value="docs" className="flex-1 p-3 overflow-auto">
+                        {selectedElement ? (
+                          <div>
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-2">
+                                {getElementIcon(selectedElement.type)}
+                                <div>
+                                  <h4 className="font-semibold text-sm">{selectedElement.name}</h4>
+                                  <p className="text-xs text-muted-foreground">{selectedElement.module}</p>
+                                </div>
+                              </div>
+                              <Button
+                                size="sm"
+                                onClick={() => insertCode(`${selectedElement.name}`)}
+                                data-testid="button-insert-code"
+                              >
+                                <Plus className="w-3 h-3 mr-1" />
+                                Insert
+                              </Button>
+                            </div>
+                            <p className="text-sm">{selectedElement.element.description}</p>
+                          </div>
+                        ) : (
+                          <div className="text-center py-8">
+                            <Book className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                            <p className="text-sm text-muted-foreground">Select an API element to view documentation</p>
+                          </div>
+                        )}
+                      </TabsContent>
+
+                      <TabsContent value="tools" className="flex-1 p-3">
+                        <div className="text-center py-8">
+                          <Terminal className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                          <p className="text-sm text-muted-foreground">Code tools and utilities</p>
+                        </div>
+                      </TabsContent>
+
+                      <TabsContent value="templates" className="flex-1 p-3 overflow-auto">
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            {
+                              name: "Hello World",
+                              code: `import { world } from '@minecraft/server';\\nworld.sendMessage("Hello!");`
+                            },
+                            {
+                              name: "Player Events",
+                              code: `import { world } from '@minecraft/server';\\nworld.afterEvents.playerJoin.subscribe((event) => {\\n  world.sendMessage(\`Welcome \${event.player.name}!\`);\\n});`
+                            }
+                          ].map((template, idx) => (
+                            <Card key={idx} className="cursor-pointer hover:bg-muted/50" onClick={() => insertCode(template.code)}>
+                              <CardHeader className="p-2">
+                                <CardTitle className="text-xs">{template.name}</CardTitle>
+                              </CardHeader>
+                            </Card>
+                          ))}
+                        </div>
+                      </TabsContent>
+                    </Tabs>
+                  </div>
+                </>
+              )}
+
+              {/* Toggle Documentation Panel */}
+              <div className="absolute bottom-2 right-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setDocumentationOpen(!documentationOpen)}
+                  className="h-8"
+                >
+                  {documentationOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+                </Button>
               </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
     </section>
   );

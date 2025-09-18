@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Download, Package, File, Folder, Check, AlertCircle } from "lucide-react";
+import { Download, Package, File, Folder, Check, AlertCircle, Settings, FileText, Layers } from "lucide-react";
+import { useCollapsible } from "@/hooks/useCollapsible";
+import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

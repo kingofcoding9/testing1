@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import Sidebar from "@/components/Layout/Sidebar";
 import Header from "@/components/Layout/Header";
 import EntityBuilder from "@/components/Builders/EntityBuilder";
@@ -52,9 +53,21 @@ type Section =
 export default function Home() {
   const [currentSection, setCurrentSection] = useState<Section>('welcome');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const isMobile = useIsMobile();
+
+  // Auto-collapse sidebar on mobile
+  useEffect(() => {
+    if (isMobile && !sidebarCollapsed) {
+      setSidebarCollapsed(true);
+    }
+  }, [isMobile]);
 
   const handleNavigate = (section: string) => {
     setCurrentSection(section as Section);
+  };
+
+  const handleMenuToggle = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
   };
 
   const renderSection = () => {
@@ -111,17 +124,21 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen bg-background text-foreground">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden">
       <Sidebar 
         currentSection={currentSection}
         onSectionChange={handleNavigate}
         collapsed={sidebarCollapsed}
-        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        onToggleCollapse={handleMenuToggle}
       />
-      <main className="flex-1 flex flex-col overflow-hidden">
-        <Header currentSection={currentSection} />
-        <div className="flex-1 overflow-y-auto">
-          <div className="fadeIn">
+      <main className="flex-1 flex flex-col min-w-0 h-full">
+        <Header 
+          currentSection={currentSection} 
+          onMenuToggle={isMobile ? handleMenuToggle : undefined}
+          isSidebarOpen={!sidebarCollapsed}
+        />
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <div className="fadeIn p-3 sm:p-4 md:p-6 min-h-full">
             {renderSection()}
           </div>
         </div>

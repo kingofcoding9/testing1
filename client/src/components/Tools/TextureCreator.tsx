@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { Undo, Redo, Download, Plus, Trash2, Eye, EyeOff, Grid, Save, Upload, Move, ChevronUp, ChevronDown } from "lucide-react";
+import { Undo, Redo, Download, Plus, Trash2, Eye, EyeOff, Grid, Save, Upload, Move, ChevronUp, ChevronDown, Settings, Palette } from "lucide-react";
+import { useCollapsible } from "@/hooks/useCollapsible";
+import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
