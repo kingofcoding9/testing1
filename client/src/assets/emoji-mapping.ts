@@ -56,6 +56,9 @@ export const emojiMap = {
   bridgeCore: '🌉', // bridge/connection
   snowstorm: '❄️', // particles/effects
   pixilart: '🎨', // pixel art/creativity
+  structureEditor: '🏗️', // structure/building
+  lootTabler: '📊', // tables/data/analysis
+  dialogueEditor: '💬', // conversation/dialogue/chat
   
   // Category Icons (Registries)
   core: '⚙️', // core/settings

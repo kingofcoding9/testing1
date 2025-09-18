@@ -90,6 +90,51 @@ const externalTools: ExternalTool[] = [
     ],
     icon: 'pixilart',
     category: 'editing'
+  },
+  {
+    id: 'structure-editor',
+    name: 'Structure Editor',
+    url: 'https://mcbe-essentials.github.io/structure-editor/',
+    description: 'Professional tool for creating and editing Minecraft Bedrock structures with advanced features and export capabilities',
+    features: [
+      'Structure Creation',
+      'Advanced Editing',
+      'Export Capabilities',
+      'Block Placement',
+      'Template Management'
+    ],
+    icon: 'structureEditor',
+    category: 'editing'
+  },
+  {
+    id: 'loot-tabler',
+    name: 'Loot Tabler',
+    url: 'https://mcbe-essentials.github.io/structure-editor/loot-tabler/',
+    description: 'Comprehensive loot table generator for Minecraft Bedrock with advanced configuration options and validation',
+    features: [
+      'Loot Table Generation',
+      'Advanced Configuration',
+      'Validation System',
+      'Drop Rate Calculation',
+      'Condition Management'
+    ],
+    icon: 'lootTabler',
+    category: 'editing'
+  },
+  {
+    id: 'dialogue-editor',
+    name: 'Dialogue Editor',
+    url: 'https://mcbe-essentials.github.io/dialogue-editor',
+    description: 'Interactive dialogue system editor for creating complex NPC conversations and scripted interactions in Minecraft Bedrock',
+    features: [
+      'Interactive Dialogue Design',
+      'NPC Conversation Trees',
+      'Scripted Interactions',
+      'Branching Logic',
+      'Response Management'
+    ],
+    icon: 'dialogueEditor',
+    category: 'editing'
   }
 ];
 
@@ -349,7 +394,7 @@ export default function ExternalTools() {
 
       <div className="flex-1 min-h-0">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-          <TabsList className="grid w-full grid-cols-3 mb-4 h-auto">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 mb-4 h-auto">
             {externalTools.map((tool) => (
               <TabsTrigger 
                 key={tool.id} 
