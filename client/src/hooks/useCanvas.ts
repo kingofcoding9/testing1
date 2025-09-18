@@ -99,16 +99,27 @@ export function useCanvas(width: number, height: number) {
 
     ctx.restore();
 
-    // Update canvas data
+    // Update canvas data - capture at logical texture dimensions
     const imageData = ctx.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
-    const newCanvasData = {
-      width,
-      height,
-      pixels: new Uint8ClampedArray(imageData.data)
-    };
     
-    setCanvasData(newCanvasData);
-    addToHistory(newCanvasData);
+    // Create a temporary canvas at the logical texture size to scale down the data
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+    const tempCtx = tempCanvas.getContext('2d');
+    if (tempCtx) {
+      tempCtx.drawImage(canvasRef.current, 0, 0, width, height);
+      const scaledImageData = tempCtx.getImageData(0, 0, width, height);
+      
+      const newCanvasData = {
+        width,
+        height,
+        pixels: new Uint8ClampedArray(scaledImageData.data)
+      };
+      
+      setCanvasData(newCanvasData);
+      addToHistory(newCanvasData);
+    }
   }, [width, height, addToHistory]);
 
   const undo = useCallback(() => {
@@ -121,8 +132,20 @@ export function useCanvas(width: number, height: number) {
       if (canvasRef.current) {
         const ctx = canvasRef.current.getContext('2d');
         if (ctx) {
-          const imageData = new ImageData(previousState.pixels, width, height);
-          ctx.putImageData(imageData, 0, 0);
+          // Create temporary canvas at logical size and restore the data
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = width;
+          tempCanvas.height = height;
+          const tempCtx = tempCanvas.getContext('2d');
+          
+          if (tempCtx) {
+            const imageData = new ImageData(previousState.pixels, width, height);
+            tempCtx.putImageData(imageData, 0, 0);
+            
+            // Scale up to display canvas
+            ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            ctx.drawImage(tempCanvas, 0, 0, canvasRef.current.width, canvasRef.current.height);
+          }
         }
       }
     }
@@ -138,8 +161,20 @@ export function useCanvas(width: number, height: number) {
       if (canvasRef.current) {
         const ctx = canvasRef.current.getContext('2d');
         if (ctx) {
-          const imageData = new ImageData(nextState.pixels, width, height);
-          ctx.putImageData(imageData, 0, 0);
+          // Create temporary canvas at logical size and restore the data
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = width;
+          tempCanvas.height = height;
+          const tempCtx = tempCanvas.getContext('2d');
+          
+          if (tempCtx) {
+            const imageData = new ImageData(nextState.pixels, width, height);
+            tempCtx.putImageData(imageData, 0, 0);
+            
+            // Scale up to display canvas
+            ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            ctx.drawImage(tempCanvas, 0, 0, canvasRef.current.width, canvasRef.current.height);
+          }
         }
       }
     }
@@ -154,26 +189,47 @@ export function useCanvas(width: number, height: number) {
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     
-    const imageData = ctx.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
-    const newCanvasData = {
-      width,
-      height,
-      pixels: new Uint8ClampedArray(imageData.data)
-    };
-    
-    setCanvasData(newCanvasData);
-    addToHistory(newCanvasData);
+    // Create a temporary canvas at the logical texture size to capture data properly
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+    const tempCtx = tempCanvas.getContext('2d');
+    if (tempCtx) {
+      tempCtx.fillStyle = '#FFFFFF';
+      tempCtx.fillRect(0, 0, width, height);
+      const scaledImageData = tempCtx.getImageData(0, 0, width, height);
+      
+      const newCanvasData = {
+        width,
+        height,
+        pixels: new Uint8ClampedArray(scaledImageData.data)
+      };
+      
+      setCanvasData(newCanvasData);
+      addToHistory(newCanvasData);
+    }
   }, [width, height, addToHistory]);
 
   const exportCanvas = useCallback(async (format: 'png' | 'jpg' = 'png'): Promise<Blob | null> => {
     if (!canvasRef.current) return null;
     
+    // Create a temporary canvas at the logical texture size for export
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+    const tempCtx = tempCanvas.getContext('2d');
+    
+    if (!tempCtx) return null;
+    
+    // Draw the display canvas onto the temp canvas at logical dimensions
+    tempCtx.drawImage(canvasRef.current, 0, 0, width, height);
+    
     return new Promise((resolve) => {
-      canvasRef.current!.toBlob((blob) => {
+      tempCanvas.toBlob((blob) => {
         resolve(blob);
       }, `image/${format}`);
     });
-  }, []);
+  }, [width, height]);
 
   return {
     canvasData,

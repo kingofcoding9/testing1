@@ -151,8 +151,15 @@ export default function TextureCreator() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'texture.png';
+        a.download = `texture_${canvasSize.width}x${canvasSize.height}.png`;
+        a.style.display = 'none';
+        
+        // Append to DOM before clicking (required for some browsers)
+        document.body.appendChild(a);
         a.click();
+        
+        // Clean up
+        document.body.removeChild(a);
         URL.revokeObjectURL(url);
       }
     } else {
