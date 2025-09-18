@@ -135,7 +135,7 @@ export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
                   <h3 className="text-xl font-semibold text-foreground">Discord Community</h3>
                 </div>
                 <p className="text-muted-foreground text-sm mb-4">
-                  Connect with other creators, get help with projects, and stay updated with the latest news from Omni-Science.
+                  Connect with other creators, get help with projects, and stay updated with the latest news from Omni-Science Game Studio.
                 </p>
                 <button 
                   className="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center justify-center"
@@ -159,10 +159,10 @@ export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
                   <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mr-4">
                     <Globe className="text-primary-foreground" size={24} />
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground">Omni-Science</h3>
+                  <h3 className="text-xl font-semibold text-foreground">Omni-Science Game Studio</h3>
                 </div>
                 <p className="text-muted-foreground text-sm mb-4">
-                  Explore our educational platform with science content, interactive learning materials, and comprehensive resources.
+                  Professional game design studio with 6 years of industry experience. Our team of 7 skilled developers creates innovative games and supports The Helping Guild charity.
                 </p>
                 <button 
                   className="w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground px-4 py-2 rounded-md font-medium transition-colors flex items-center justify-center"

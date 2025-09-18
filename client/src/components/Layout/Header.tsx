@@ -97,11 +97,11 @@ const sectionTitles: Record<string, { title: string; subtitle: string }> = {
   },
   'community': {
     title: 'Community Hub',
-    subtitle: 'Connect with the Omni-Science community and access resources'
+    subtitle: 'Connect with the Omni-Science Game Studio community and access professional resources'
   },
   'omni-science': {
-    title: 'Omni-Science',
-    subtitle: 'Visit our educational platform and learn about our mission'
+    title: 'Omni-Science Game Studio',
+    subtitle: 'Explore our game studio, team, and mission (supporting The Helping Guild)'
   }
 };
 
@@ -147,10 +147,10 @@ export default function Header({ currentSection, onMenuToggle, isSidebarOpen }: 
             />
             <div className="min-w-0 flex-1">
               <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground leading-tight truncate">
-                Omni-Science
+                Omni-Science Game Studio
               </h1>
               <p className="text-xs sm:text-sm text-muted-foreground -mt-1 truncate">
-                Minecraft Bedrock Creator Suite
+                Professional Game Development Tools
               </p>
             </div>
           </button>
@@ -203,7 +203,7 @@ export default function Header({ currentSection, onMenuToggle, isSidebarOpen }: 
         {/* Credits - responsive layout */}
         <div className="hidden xl:flex flex-col text-right text-xs text-muted-foreground flex-shrink-0">
           <span data-testid="creator-credit">Created by king_of_coding</span>
-          <span data-testid="ownership-credit" className="font-medium">Owned by Omni-Science</span>
+          <span data-testid="ownership-credit" className="font-medium">Owned by Omni-Science Game Studio</span>
         </div>
         
         {/* Credits - compact for smaller screens */}
@@ -212,7 +212,7 @@ export default function Header({ currentSection, onMenuToggle, isSidebarOpen }: 
             <div className="flex flex-wrap justify-center sm:justify-end items-center gap-1">
               <span data-testid="creator-credit-compact">Created by king_of_coding</span>
               <span className="hidden sm:inline">•</span>
-              <span data-testid="ownership-credit-compact" className="font-medium">Owned by Omni-Science</span>
+              <span data-testid="ownership-credit-compact" className="font-medium">Owned by Omni-Science Game Studio</span>
             </div>
           </div>
         </div>

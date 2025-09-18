@@ -20,7 +20,7 @@ export default function CommunitySection() {
             Community & Resources
           </h1>
           <p className="text-lg text-muted-foreground mb-6">
-            Connect with the Omni-Science community and explore our educational resources
+            Connect with the Omni-Science Game Studio community and explore our professional tools and community support
           </p>
         </div>
 
@@ -82,33 +82,34 @@ export default function CommunitySection() {
                   <Globe className="text-primary-foreground" size={24} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold">Omni-Science</h3>
-                  <p className="text-sm text-muted-foreground font-normal">Educational Platform</p>
+                  <h3 className="text-xl font-semibold">Omni-Science Game Studio</h3>
+                  <p className="text-sm text-muted-foreground font-normal">Game Design Studio</p>
                 </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-6">
-                Explore our main educational platform with comprehensive science content, 
-                interactive learning materials, and additional resources beyond Minecraft development.
+                Discover Omni-Science, a professional game design studio with 6 years of industry experience. 
+                Our team of 7 skilled developers creates innovative games while supporting The Helping Guild charity 
+                to make a positive impact in our community.
               </p>
               
               <div className="space-y-3 mb-6">
                 <div className="flex items-center text-sm text-muted-foreground">
                   <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                  Comprehensive science education resources
+                  Professional game design and development expertise
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                  Interactive learning experiences
+                  Team of 7 experienced developers and designers
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                  Educational tools and materials
+                  6 years of proven industry experience
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                  Learn about our mission and vision
+                  Proudly supporting The Helping Guild charity
                 </div>
               </div>
 
@@ -119,7 +120,7 @@ export default function CommunitySection() {
                 data-testid="button-visit-omniscience"
               >
                 <Globe className="mr-2" size={20} />
-                Visit Omni-Science
+                Visit Omni-Science Game Studio
                 <ExternalLink className="ml-2" size={16} />
               </Button>
             </CardContent>
@@ -138,8 +139,8 @@ export default function CommunitySection() {
               <div className="text-sm text-muted-foreground">Community Support</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-primary">Educational</div>
-              <div className="text-sm text-muted-foreground">Science Resources</div>
+              <div className="text-2xl font-bold text-primary">Game Studio</div>
+              <div className="text-sm text-muted-foreground">Professional Development</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-primary">Open Source</div>
