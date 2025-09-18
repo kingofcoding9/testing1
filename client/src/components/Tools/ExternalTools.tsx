@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { ExternalLink, Loader2, AlertTriangle, RefreshCw, Maximize2, Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -80,6 +80,7 @@ export default function ExternalTools() {
   const [autoReload, setAutoReload] = useState(true);
   const [fullscreenMode, setFullscreenMode] = useState(false);
   const iframeRefs = useRef<{ [key: string]: HTMLIFrameElement | null }>({});
+  const fullscreenContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Initialize iframe states
   useEffect(() => {
@@ -89,6 +90,68 @@ export default function ExternalTools() {
     }, {} as IframeState);
     setIframeStates(initialStates);
   }, []);
+
+  // Enhanced fullscreen functionality
+  const enterFullscreen = useCallback(async () => {
+    if (fullscreenContainerRef.current) {
+      try {
+        await fullscreenContainerRef.current.requestFullscreen();
+        setFullscreenMode(true);
+      } catch (error) {
+        // Fallback to CSS fullscreen if Fullscreen API fails
+        setFullscreenMode(true);
+      }
+    }
+  }, []);
+
+  const exitFullscreen = useCallback(async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      }
+      setFullscreenMode(false);
+    } catch (error) {
+      setFullscreenMode(false);
+    }
+  }, []);
+
+  const toggleFullscreen = useCallback(() => {
+    if (fullscreenMode) {
+      exitFullscreen();
+    } else {
+      enterFullscreen();
+    }
+  }, [fullscreenMode, enterFullscreen, exitFullscreen]);
+
+  // Keyboard event handlers
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // F11 for fullscreen toggle
+      if (event.key === 'F11') {
+        event.preventDefault();
+        toggleFullscreen();
+      }
+      // Escape to exit fullscreen
+      if (event.key === 'Escape' && fullscreenMode) {
+        exitFullscreen();
+      }
+    };
+
+    const handleFullscreenChange = () => {
+      // Sync state with actual fullscreen status
+      if (!document.fullscreenElement && fullscreenMode) {
+        setFullscreenMode(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, [fullscreenMode, toggleFullscreen, exitFullscreen]);
 
   const updateIframeState = (toolId: string, updates: Partial<IframeState[string]>) => {
     setIframeStates(prev => ({
@@ -121,7 +184,7 @@ export default function ExternalTools() {
     const state = iframeStates[tool.id] || { loading: true, error: false, loaded: false };
 
     return (
-      <div className="relative w-full h-full min-h-[600px] bg-muted rounded-lg overflow-hidden">
+      <div className="relative w-full h-full min-h-[600px] overflow-hidden">
         {/* Loading State */}
         {state.loading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm z-10">
@@ -152,7 +215,7 @@ export default function ExternalTools() {
         <iframe
           ref={(el) => { iframeRefs.current[tool.id] = el; }}
           src={tool.url}
-          className="w-full h-full border-0"
+          className="w-full h-full border-0 bg-white"
           sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads"
           referrerPolicy="strict-origin-when-cross-origin"
           onLoad={() => handleIframeLoad(tool.id)}
@@ -223,11 +286,12 @@ export default function ExternalTools() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setFullscreenMode(!fullscreenMode)}
+              onClick={toggleFullscreen}
               data-testid="button-fullscreen-toggle"
+              title="Toggle fullscreen (F11)"
             >
               <Maximize2 className="w-4 h-4 mr-2" />
-              {fullscreenMode ? 'Exit' : 'Fullscreen'}
+              {fullscreenMode ? 'Exit Fullscreen' : 'Fullscreen'}
             </Button>
           </div>
         </div>
@@ -269,21 +333,27 @@ export default function ExternalTools() {
               className="flex-1 min-h-0 mt-0"
               data-testid={`content-${tool.id}`}
             >
-              <div className={`h-full flex flex-col ${fullscreenMode ? 'fixed inset-0 z-50 bg-background p-6' : ''}`}>
+              <div 
+                ref={fullscreenContainerRef}
+                className={`h-full flex flex-col ${
+                  fullscreenMode 
+                    ? 'fixed inset-0 z-50 bg-background p-0' 
+                    : ''
+                }`}
+              >
                 {!fullscreenMode && renderToolOverview(tool)}
                 
                 <div className="flex-1 min-h-0">
-                  <Card className="h-full">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <CardTitle className="flex items-center space-x-2">
-                            <span>{tool.icon}</span>
-                            <span>{tool.name}</span>
-                          </CardTitle>
-                          <CardDescription>
-                            Integrated {tool.name.toLowerCase()} workspace
-                          </CardDescription>
+                  {fullscreenMode ? (
+                    // True fullscreen mode - no card, minimal UI
+                    <div className="h-full flex flex-col">
+                      <div className="flex items-center justify-between p-4 bg-background/95 backdrop-blur-sm border-b">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">{tool.icon}</span>
+                          <div>
+                            <h3 className="font-semibold text-foreground">{tool.name}</h3>
+                            <p className="text-sm text-muted-foreground">Fullscreen Mode</p>
+                          </div>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Button
@@ -292,27 +362,83 @@ export default function ExternalTools() {
                             onClick={() => reloadIframe(tool.id)}
                             disabled={iframeStates[tool.id]?.loading}
                             data-testid={`button-reload-${tool.id}`}
+                            title="Reload iframe"
                           >
                             <RefreshCw className={`w-4 h-4 ${iframeStates[tool.id]?.loading ? 'animate-spin' : ''}`} />
                           </Button>
-                          {fullscreenMode && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openInNewWindow(tool)}
+                            title="Open in new window"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={exitFullscreen}
+                            title="Exit fullscreen (Esc)"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        {renderIframe(tool)}
+                      </div>
+                    </div>
+                  ) : (
+                    // Normal card mode
+                    <Card className="h-full">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <CardTitle className="flex items-center space-x-2">
+                              <span>{tool.icon}</span>
+                              <span>{tool.name}</span>
+                            </CardTitle>
+                            <CardDescription>
+                              Integrated {tool.name.toLowerCase()} workspace
+                            </CardDescription>
+                          </div>
+                          <div className="flex items-center space-x-2">
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => setFullscreenMode(false)}
+                              onClick={() => reloadIframe(tool.id)}
+                              disabled={iframeStates[tool.id]?.loading}
+                              data-testid={`button-reload-${tool.id}`}
+                              title="Reload iframe"
                             >
-                              <X className="w-4 h-4" />
+                              <RefreshCw className={`w-4 h-4 ${iframeStates[tool.id]?.loading ? 'animate-spin' : ''}`} />
                             </Button>
-                          )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => openInNewWindow(tool)}
+                              title="Open in new window"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={toggleFullscreen}
+                              title="Enter fullscreen (F11)"
+                            >
+                              <Maximize2 className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-0 h-full pb-6">
-                      <div className="h-full px-6">
-                        {renderIframe(tool)}
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardHeader>
+                      <CardContent className="p-0 h-full">
+                        <div className="h-full">
+                          {renderIframe(tool)}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
                 </div>
               </div>
             </TabsContent>

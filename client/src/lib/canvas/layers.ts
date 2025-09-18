@@ -31,6 +31,8 @@ export class LayerManager {
   private activeLayerId: string | null = null;
   private compositeCanvas: HTMLCanvasElement;
   private compositeCtx: CanvasRenderingContext2D;
+  private updateScheduled = false;
+  private compositeUpdateCallbacks: (() => void)[] = [];
 
   constructor(width: number, height: number) {
     this.compositeCanvas = document.createElement('canvas');
@@ -70,7 +72,7 @@ export class LayerManager {
       this.activeLayerId = id;
     }
 
-    this.updateComposite();
+    this.scheduleCompositeUpdate();
     return id;
   }
 
@@ -91,7 +93,7 @@ export class LayerManager {
       this.activeLayerId = this.layers.length > 0 ? this.layers[Math.max(0, index - 1)].id : null;
     }
 
-    this.updateComposite();
+    this.scheduleCompositeUpdate();
     return true;
   }
 
@@ -113,7 +115,7 @@ export class LayerManager {
       newLayer.visible = layer.visible;
     }
 
-    this.updateComposite();
+    this.scheduleCompositeUpdate();
     return newId;
   }
 
@@ -127,7 +129,7 @@ export class LayerManager {
     // Swap layers
     [this.layers[index], this.layers[newIndex]] = [this.layers[newIndex], this.layers[index]];
     
-    this.updateComposite();
+    this.scheduleCompositeUpdate();
     return true;
   }
 
@@ -156,7 +158,7 @@ export class LayerManager {
     if (!layer) return false;
 
     (layer as any)[property] = value;
-    this.updateComposite();
+    this.scheduleCompositeUpdate();
     return true;
   }
 
@@ -165,7 +167,7 @@ export class LayerManager {
     if (!layer) return false;
 
     layer.visible = !layer.visible;
-    this.updateComposite();
+    this.scheduleCompositeUpdate();
     return true;
   }
 
@@ -174,7 +176,7 @@ export class LayerManager {
     if (!layer) return false;
 
     layer.opacity = Math.max(0, Math.min(100, opacity));
-    this.updateComposite();
+    this.scheduleCompositeUpdate();
     return true;
   }
 
@@ -183,7 +185,7 @@ export class LayerManager {
     if (!layer) return false;
 
     layer.blendMode = blendMode;
-    this.updateComposite();
+    this.scheduleCompositeUpdate();
     return true;
   }
 
@@ -251,6 +253,19 @@ export class LayerManager {
         this.compositeCtx.restore();
       }
     });
+    
+    // Notify callbacks
+    this.compositeUpdateCallbacks.forEach(callback => callback());
+  }
+  
+  private scheduleCompositeUpdate(): void {
+    if (this.updateScheduled) return;
+    
+    this.updateScheduled = true;
+    requestAnimationFrame(() => {
+      this.updateComposite();
+      this.updateScheduled = false;
+    });
   }
 
   private getCanvasBlendMode(blendMode: BlendMode): GlobalCompositeOperation {
@@ -274,6 +289,22 @@ export class LayerManager {
 
   getCompositeCanvas(): HTMLCanvasElement {
     return this.compositeCanvas;
+  }
+  
+  // Subscribe to composite updates for external components
+  onCompositeUpdate(callback: () => void): () => void {
+    this.compositeUpdateCallbacks.push(callback);
+    return () => {
+      const index = this.compositeUpdateCallbacks.indexOf(callback);
+      if (index > -1) {
+        this.compositeUpdateCallbacks.splice(index, 1);
+      }
+    };
+  }
+  
+  // Force immediate update for cases where we need synchronous rendering
+  forceCompositeUpdate(): void {
+    this.updateComposite();
   }
 
   // Export/Import functionality

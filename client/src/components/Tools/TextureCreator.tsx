@@ -13,6 +13,7 @@ import { LayerData } from "@/lib/canvas/layers";
 export default function TextureCreator() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
+  const cursorRef = useRef<HTMLCanvasElement>(null);
   const [selectedTool, setSelectedTool] = useState<CanvasTool>('pencil');
   const [brushSize, setBrushSize] = useState([4]);
   const [brushOpacity, setBrushOpacity] = useState([100]);
@@ -26,6 +27,7 @@ export default function TextureCreator() {
   // Use the new layered canvas system
   const {
     initializeCanvas,
+    initializeCursorCanvas,
     updateDisplay,
     startDrawing,
     continueDrawing,
@@ -41,7 +43,10 @@ export default function TextureCreator() {
     redo,
     displayToTexture,
     resizeCanvas,
-    exportTexture
+    exportTexture,
+    updateCursorPosition,
+    showCursor,
+    hideCursor
   } = useLayeredCanvas(16, 16);
 
   // Get current layers from LayerManager
@@ -54,7 +59,10 @@ export default function TextureCreator() {
       initializeCanvas(canvasRef.current);
       drawGrid();
     }
-  }, [initializeCanvas]);
+    if (cursorRef.current) {
+      initializeCursorCanvas(cursorRef.current);
+    }
+  }, [initializeCanvas, initializeCursorCanvas]);
 
   // Update grid when showGrid or canvas size changes
   useEffect(() => {
@@ -132,8 +140,8 @@ export default function TextureCreator() {
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing || !canvasRef.current) return;
+  const handleMouseMoveEvent = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current) return;
 
     const rect = canvasRef.current.getBoundingClientRect();
     const displayPoint: Point = {
@@ -148,12 +156,18 @@ export default function TextureCreator() {
       color: selectedColor
     };
 
-    if (selectedTool === 'rectangle' || selectedTool === 'circle' || selectedTool === 'line') {
-      // For shape tools, show preview (we'll implement this later)
-      // For now, just store the current position
-    } else {
-      // For drawing tools, continue drawing
-      continueDrawing(displayPoint, selectedTool, brushSettings);
+    // Always update cursor outline on mouse move
+    updateCursorPosition(displayPoint, selectedTool, brushSettings);
+
+    // Handle drawing if mouse is down
+    if (isDrawing) {
+      if (selectedTool === 'rectangle' || selectedTool === 'circle' || selectedTool === 'line') {
+        // For shape tools, show preview (we'll implement this later)
+        // For now, just store the current position
+      } else {
+        // For drawing tools, continue drawing
+        continueDrawing(displayPoint, selectedTool, brushSettings);
+      }
     }
   };
 
@@ -414,13 +428,23 @@ export default function TextureCreator() {
                     className="border border-border rounded cursor-crosshair bg-white"
                     style={{ imageRendering: 'pixelated' }}
                     onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
+                    onMouseMove={handleMouseMoveEvent}
                     onMouseUp={handleMouseUp}
+                    onMouseEnter={() => {
+                      const brushSettings: BrushSettings = {
+                        size: brushSize[0],
+                        opacity: brushOpacity[0] / 100,
+                        hardness: brushHardness[0] / 100,
+                        color: selectedColor
+                      };
+                      showCursor(selectedTool, brushSettings);
+                    }}
                     onMouseLeave={() => {
                       if (isDrawing) {
                         setIsDrawing(false);
                         endDrawing();
                       }
+                      hideCursor();
                     }}
                     data-testid="texture-canvas"
                   />
@@ -428,6 +452,11 @@ export default function TextureCreator() {
                     ref={overlayRef}
                     className="absolute top-0 left-0 pointer-events-none rounded"
                     data-testid="grid-overlay"
+                  />
+                  <canvas
+                    ref={cursorRef}
+                    className="absolute top-0 left-0 pointer-events-none rounded"
+                    data-testid="cursor-overlay"
                   />
                 </div>
               </div>

@@ -2,6 +2,26 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { LayerManager, LayerData } from '@/lib/canvas/layers';
 import { CanvasTool, BrushSettings, Point } from '@/lib/canvas/tools';
 
+// Throttling utility for performance
+function throttle<T extends (...args: any[]) => any>(func: T, delay: number): T {
+  let timeoutId: NodeJS.Timeout | null = null;
+  let lastExecTime = 0;
+  return ((...args: any[]) => {
+    const currentTime = Date.now();
+    
+    if (currentTime - lastExecTime > delay) {
+      func(...args);
+      lastExecTime = currentTime;
+    } else {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func(...args);
+        lastExecTime = Date.now();
+      }, delay - (currentTime - lastExecTime));
+    }
+  }) as T;
+}
+
 interface LayeredCanvasState {
   textureWidth: number;
   textureHeight: number;
@@ -28,12 +48,26 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
   });
 
   const displayCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const cursorCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const isDrawingRef = useRef(false);
   const lastPointRef = useRef<Point | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const pendingUpdateRef = useRef(false);
+  const cleanupCallbacksRef = useRef<(() => void)[]>([]);
+  const currentMousePosRef = useRef<Point | null>(null);
+  const currentToolRef = useRef<CanvasTool>('pencil');
+  const currentBrushSettingsRef = useRef<BrushSettings>({ size: 4, opacity: 1, hardness: 1, color: '#000000' });
 
   // Initialize LayerManager when dimensions change
   useEffect(() => {
     const manager = new LayerManager(state.textureWidth, state.textureHeight);
+    
+    // Subscribe to composite updates for automatic display refresh
+    const unsubscribe = manager.onCompositeUpdate(() => {
+      scheduleDisplayUpdate();
+    });
+    cleanupCallbacksRef.current.push(unsubscribe);
+    
     setState(prev => ({ ...prev, layerManager: manager }));
     
     // Add initial history state
@@ -49,11 +83,20 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
       historyIndex: 0
     }));
     
-    // Update display
-    updateDisplay();
-  }, [state.textureWidth, state.textureHeight]);
+    // Initial display update
+    scheduleDisplayUpdate();
+    
+    // Cleanup on unmount or size change
+    return () => {
+      cleanupCallbacksRef.current.forEach(cleanup => cleanup());
+      cleanupCallbacksRef.current = [];
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [state.textureWidth, state.textureHeight, scheduleDisplayUpdate]);
 
-  // Update display canvas when layers change
+  // Update display canvas with optimized rendering
   const updateDisplay = useCallback(() => {
     if (!displayCanvasRef.current || !state.layerManager) return;
 
@@ -61,12 +104,14 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size to match display scale
+    // Set canvas size only if it has changed (avoid unnecessary resize)
     const displayWidth = state.textureWidth * state.displayScale;
     const displayHeight = state.textureHeight * state.displayScale;
     
-    canvas.width = displayWidth;
-    canvas.height = displayHeight;
+    if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+      canvas.width = displayWidth;
+      canvas.height = displayHeight;
+    }
 
     // Clear and draw composite
     ctx.clearRect(0, 0, displayWidth, displayHeight);
@@ -78,6 +123,111 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
     const composite = state.layerManager.getCompositeCanvas();
     ctx.drawImage(composite, 0, 0, displayWidth, displayHeight);
   }, [state.layerManager, state.textureWidth, state.textureHeight, state.displayScale]);
+  
+  // Optimized update display with requestAnimationFrame
+  const scheduleDisplayUpdate = useCallback(() => {
+    if (pendingUpdateRef.current) return;
+    
+    pendingUpdateRef.current = true;
+    animationFrameRef.current = requestAnimationFrame(() => {
+      updateDisplay();
+      pendingUpdateRef.current = false;
+    });
+  }, [updateDisplay]);
+  
+  // Update cursor outline
+  const updateCursorOutline = useCallback((mousePos: Point | null, tool: CanvasTool, settings: BrushSettings) => {
+    if (!cursorCanvasRef.current || !mousePos) return;
+
+    const canvas = cursorCanvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Clear previous cursor
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Convert display position to texture coordinates for accurate preview
+    const texturePos = displayToTexture(mousePos.x, mousePos.y);
+    const displayPos = textureToDisplay(texturePos.x, texturePos.y);
+
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.lineWidth = 1;
+    
+    // Add contrast outline for visibility against all backgrounds
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 2;
+
+    switch (tool) {
+      case 'pencil':
+        // Rectangular pixel preview
+        const pixelSize = state.displayScale;
+        ctx.strokeRect(displayPos.x, displayPos.y, pixelSize, pixelSize);
+        ctx.fillRect(displayPos.x, displayPos.y, pixelSize, pixelSize);
+        break;
+      
+      case 'brush':
+        // Larger rectangular brush preview
+        const brushPixelSize = Math.max(1, Math.floor(settings.size / 4));
+        const brushDisplaySize = brushPixelSize * state.displayScale;
+        const brushX = displayPos.x - (brushDisplaySize - state.displayScale) / 2;
+        const brushY = displayPos.y - (brushDisplaySize - state.displayScale) / 2;
+        ctx.strokeRect(brushX, brushY, brushDisplaySize, brushDisplaySize);
+        ctx.fillRect(brushX, brushY, brushDisplaySize, brushDisplaySize);
+        break;
+      
+      case 'eraser':
+        // Circular eraser preview
+        const eraserSize = Math.max(1, Math.floor(settings.size / 4)) * state.displayScale;
+        ctx.beginPath();
+        ctx.arc(displayPos.x + state.displayScale / 2, displayPos.y + state.displayScale / 2, eraserSize / 2, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fill();
+        break;
+      
+      case 'fill':
+        // Bucket icon preview
+        const bucketSize = state.displayScale;
+        ctx.strokeRect(displayPos.x, displayPos.y, bucketSize, bucketSize);
+        ctx.fillRect(displayPos.x, displayPos.y, bucketSize, bucketSize);
+        break;
+      
+      case 'rectangle':
+      case 'circle':
+      case 'line':
+        // Crosshair for shape tools
+        const crosshairSize = state.displayScale * 2;
+        const centerX = displayPos.x + state.displayScale / 2;
+        const centerY = displayPos.y + state.displayScale / 2;
+        
+        ctx.beginPath();
+        ctx.moveTo(centerX - crosshairSize / 2, centerY);
+        ctx.lineTo(centerX + crosshairSize / 2, centerY);
+        ctx.moveTo(centerX, centerY - crosshairSize / 2);
+        ctx.lineTo(centerX, centerY + crosshairSize / 2);
+        ctx.stroke();
+        break;
+      
+      case 'select':
+        // Selection cursor
+        const selectSize = state.displayScale;
+        ctx.strokeStyle = 'rgba(0, 120, 255, 0.8)';
+        ctx.setLineDash([2, 2]);
+        ctx.strokeRect(displayPos.x, displayPos.y, selectSize, selectSize);
+        break;
+    }
+    
+    ctx.restore();
+  }, [state.displayScale, displayToTexture, textureToDisplay]);
+  
+  // Throttled cursor update for performance
+  const throttledCursorUpdate = useCallback(
+    throttle((mousePos: Point, tool: CanvasTool, settings: BrushSettings) => {
+      updateCursorOutline(mousePos, tool, settings);
+    }, 16), // ~60 FPS
+    [updateCursorOutline]
+  );
 
   // Add to history
   const addToHistory = useCallback(() => {
@@ -164,8 +314,8 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
         break;
     }
 
-    updateDisplay();
-  }, [state.layerManager, state.textureWidth, state.textureHeight, updateDisplay]);
+    // Display update is now handled by layer manager callbacks
+  }, [state.layerManager, state.textureWidth, state.textureHeight]);
 
   // Draw filled shapes
   const drawShape = useCallback((startPoint: Point, endPoint: Point, tool: CanvasTool, settings: BrushSettings, filled: boolean = true) => {
@@ -221,8 +371,8 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
     }
 
     ctx.restore();
-    updateDisplay();
-  }, [state.layerManager, updateDisplay]);
+    // Display update is now handled by layer manager callbacks
+  }, [state.layerManager]);
 
   // Helper function to draw pixel-perfect rectangles
   const drawPixelRectangle = (ctx: CanvasRenderingContext2D, center: Point, size: number, color: string, opacity: number) => {
@@ -316,6 +466,41 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
     } : null;
   };
 
+  // Initialize cursor canvas
+  const initializeCursorCanvas = useCallback((canvas: HTMLCanvasElement) => {
+    cursorCanvasRef.current = canvas;
+    
+    // Set initial size
+    const displayWidth = state.textureWidth * state.displayScale;
+    const displayHeight = state.textureHeight * state.displayScale;
+    canvas.width = displayWidth;
+    canvas.height = displayHeight;
+  }, [state.textureWidth, state.textureHeight, state.displayScale]);
+  
+  // Handle mouse move for cursor outline
+  const updateCursorPosition = useCallback((displayPoint: Point, tool: CanvasTool, settings: BrushSettings) => {
+    currentMousePosRef.current = displayPoint;
+    currentToolRef.current = tool;
+    currentBrushSettingsRef.current = settings;
+    throttledCursorUpdate(displayPoint, tool, settings);
+  }, [throttledCursorUpdate]);
+  
+  // Handle mouse enter/leave for cursor visibility
+  const showCursor = useCallback((tool: CanvasTool, settings: BrushSettings) => {
+    if (currentMousePosRef.current) {
+      updateCursorOutline(currentMousePosRef.current, tool, settings);
+    }
+  }, [updateCursorOutline]);
+  
+  const hideCursor = useCallback(() => {
+    if (cursorCanvasRef.current) {
+      const ctx = cursorCanvasRef.current.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, cursorCanvasRef.current.width, cursorCanvasRef.current.height);
+      }
+    }
+  }, []);
+
   // Public API
   const initializeCanvas = useCallback((canvas: HTMLCanvasElement) => {
     displayCanvasRef.current = canvas;
@@ -386,9 +571,9 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
       }
       
       setState(prev => ({ ...prev, historyIndex: newIndex }));
-      updateDisplay();
+      scheduleDisplayUpdate();
     }
-  }, [state.historyIndex, state.history, state.layerManager, updateDisplay]);
+  }, [state.historyIndex, state.history, state.layerManager, scheduleDisplayUpdate]);
 
   const redo = useCallback(() => {
     if (state.historyIndex < state.history.length - 1 && state.layerManager) {
@@ -401,9 +586,9 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
       }
       
       setState(prev => ({ ...prev, historyIndex: newIndex }));
-      updateDisplay();
+      scheduleDisplayUpdate();
     }
-  }, [state.historyIndex, state.history, state.layerManager, updateDisplay]);
+  }, [state.historyIndex, state.history, state.layerManager, scheduleDisplayUpdate]);
 
   const exportTexture = useCallback(async (): Promise<Blob | null> => {
     if (!state.layerManager) return null;
@@ -446,6 +631,12 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
     displayToTexture,
     textureToDisplay,
     resizeCanvas,
-    exportTexture
+    exportTexture,
+    
+    // Cursor system
+    initializeCursorCanvas,
+    updateCursorPosition,
+    showCursor,
+    hideCursor
   };
 }
