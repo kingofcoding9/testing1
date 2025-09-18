@@ -227,43 +227,43 @@ export default function TextureCreator() {
   const addLayer = () => {
     if (!layerManager) return;
     const layerId = layerManager.addLayer(`Layer ${layers.length + 1}`, true);
-    updateDisplay();
+    // LayerManager will automatically trigger display update via callbacks
   };
 
   const removeLayer = (layerId: string) => {
     if (!layerManager || layers.length <= 1) return;
     layerManager.removeLayer(layerId);
-    updateDisplay();
+    // LayerManager will automatically trigger display update via callbacks
   };
 
   const setActiveLayer = (layerId: string) => {
     if (!layerManager) return;
     layerManager.setActiveLayer(layerId);
-    updateDisplay();
+    // No need for display update, just changing active layer doesn't affect visual
   };
 
   const toggleLayerVisibility = (layerId: string) => {
     if (!layerManager) return;
     layerManager.toggleLayerVisibility(layerId);
-    updateDisplay();
+    // LayerManager will automatically trigger display update via callbacks
   };
 
   const updateLayerOpacity = (layerId: string, opacity: number) => {
     if (!layerManager) return;
     layerManager.setLayerOpacity(layerId, opacity);
-    updateDisplay();
+    // LayerManager will automatically trigger display update via callbacks
   };
 
   const moveLayer = (layerId: string, direction: 'up' | 'down') => {
     if (!layerManager) return;
     layerManager.moveLayer(layerId, direction);
-    updateDisplay();
+    // LayerManager will automatically trigger display update via callbacks
   };
 
   const duplicateLayer = (layerId: string) => {
     if (!layerManager) return;
     layerManager.duplicateLayer(layerId);
-    updateDisplay();
+    // LayerManager will automatically trigger display update via callbacks
   };
 
   const handleExportTexture = async (format: 'png' | 'resource-pack') => {
@@ -594,7 +594,7 @@ export default function TextureCreator() {
                           onChange={(e) => {
                             if (layerManager) {
                               layerManager.updateLayerProperty(layer.id, 'name', e.target.value);
-                              updateDisplay();
+                              // No display update needed for name change
                             }
                           }}
                           className="text-sm border-none p-0 h-auto bg-transparent"

@@ -58,44 +58,6 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
   const currentToolRef = useRef<CanvasTool>('pencil');
   const currentBrushSettingsRef = useRef<BrushSettings>({ size: 4, opacity: 1, hardness: 1, color: '#000000' });
 
-  // Initialize LayerManager when dimensions change
-  useEffect(() => {
-    const manager = new LayerManager(state.textureWidth, state.textureHeight);
-    
-    // Subscribe to composite updates for automatic display refresh
-    const unsubscribe = manager.onCompositeUpdate(() => {
-      scheduleDisplayUpdate();
-    });
-    cleanupCallbacksRef.current.push(unsubscribe);
-    
-    setState(prev => ({ ...prev, layerManager: manager }));
-    
-    // Add initial history state
-    const initialHistory: LayerHistoryState = {
-      timestamp: Date.now(),
-      layersData: manager.exportLayers(),
-      activeLayerId: manager.getActiveLayer()?.id || null
-    };
-    
-    setState(prev => ({
-      ...prev,
-      history: [initialHistory],
-      historyIndex: 0
-    }));
-    
-    // Initial display update
-    scheduleDisplayUpdate();
-    
-    // Cleanup on unmount or size change
-    return () => {
-      cleanupCallbacksRef.current.forEach(cleanup => cleanup());
-      cleanupCallbacksRef.current = [];
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, [state.textureWidth, state.textureHeight, scheduleDisplayUpdate]);
-
   // Update display canvas with optimized rendering
   const updateDisplay = useCallback(() => {
     if (!displayCanvasRef.current || !state.layerManager) return;
@@ -134,6 +96,44 @@ export function useLayeredCanvas(initialWidth: number = 16, initialHeight: numbe
       pendingUpdateRef.current = false;
     });
   }, [updateDisplay]);
+
+  // Initialize LayerManager when dimensions change
+  useEffect(() => {
+    const manager = new LayerManager(state.textureWidth, state.textureHeight);
+    
+    // Subscribe to composite updates for automatic display refresh
+    const unsubscribe = manager.onCompositeUpdate(() => {
+      scheduleDisplayUpdate();
+    });
+    cleanupCallbacksRef.current.push(unsubscribe);
+    
+    setState(prev => ({ ...prev, layerManager: manager }));
+    
+    // Add initial history state
+    const initialHistory: LayerHistoryState = {
+      timestamp: Date.now(),
+      layersData: manager.exportLayers(),
+      activeLayerId: manager.getActiveLayer()?.id || null
+    };
+    
+    setState(prev => ({
+      ...prev,
+      history: [initialHistory],
+      historyIndex: 0
+    }));
+    
+    // Initial display update
+    scheduleDisplayUpdate();
+    
+    // Cleanup on unmount or size change
+    return () => {
+      cleanupCallbacksRef.current.forEach(cleanup => cleanup());
+      cleanupCallbacksRef.current = [];
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [state.textureWidth, state.textureHeight, scheduleDisplayUpdate]);
   
   // Update cursor outline
   const updateCursorOutline = useCallback((mousePos: Point | null, tool: CanvasTool, settings: BrushSettings) => {
