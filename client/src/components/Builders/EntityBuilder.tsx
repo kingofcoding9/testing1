@@ -1,461 +1,653 @@
-import { useState } from "react";
-import { Plus, Copy, Download, Check } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Sparkles, Download, Copy, Save, RotateCcw, Info, Zap, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
 import CodePreview from "@/components/Common/CodePreview";
 import ValidationStatus from "@/components/Common/ValidationStatus";
-import ComponentModal from "@/components/Common/ComponentModal";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { validateEntityJSON } from "@/lib/minecraft/validation";
-import { generateEntityJSON } from "@/lib/minecraft/templates";
+import ComponentSelector, { ComponentItem } from "@/components/Common/ComponentSelector";
+import ComponentForm, { ComponentDefinition } from "@/components/Common/ComponentForm";
 
-interface EntityComponent {
-  id: string;
-  type: string;
-  enabled: boolean;
-  properties: Record<string, any>;
-}
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useToast } from "@/hooks/use-toast";
+import { validateEntityJSON } from "@/lib/minecraft/validation";
+import { 
+  ComponentInstance, 
+  generateComponentsJSON, 
+  applyPreset, 
+  getRecommendedComponents,
+  checkComponentCompatibility,
+  validateComponentProperties,
+  ENTITY_PRESETS 
+} from "@/lib/minecraft/componentUtils";
+
+// Import the comprehensive entity registry
+import { entityComponents } from "@shared/entityRegistry";
 
 export default function EntityBuilder() {
+  const { toast } = useToast();
+
+  // Basic entity properties
   const [identifier, setIdentifier] = useLocalStorage('entity-identifier', '');
   const [displayName, setDisplayName] = useLocalStorage('entity-display-name', '');
-  const [components, setComponents] = useLocalStorage<EntityComponent[]>('entity-components', [
+  const [description, setDescription] = useLocalStorage('entity-description', '');
+  const [isSpawnable, setIsSpawnable] = useLocalStorage('entity-spawnable', true);
+  const [isSummonable, setIsSummonable] = useLocalStorage('entity-summonable', true);
+  const [isExperimental, setIsExperimental] = useLocalStorage('entity-experimental', false);
+
+  // Component management
+  const [components, setComponents] = useLocalStorage<ComponentInstance[]>('entity-components-v2', [
     {
-      id: 'health',
-      type: 'minecraft:health',
+      name: 'minecraft:health',
       enabled: true,
-      properties: { value: 20, max: 20 }
+      properties: { value: 20, max: 20 },
+      metadata: { addedAt: Date.now(), category: 'Core', difficulty: 'beginner' }
+    },
+    {
+      name: 'minecraft:physics',
+      enabled: true,
+      properties: {},
+      metadata: { addedAt: Date.now(), category: 'Core', difficulty: 'beginner' }
     }
   ]);
-  const [showComponentModal, setShowComponentModal] = useState(false);
-  const [activeTab, setActiveTab] = useState('health');
 
-  const entityJSON = generateEntityJSON(identifier, displayName, components);
-  const validation = validateEntityJSON(entityJSON);
+  // UI state
+  const [activeTab, setActiveTab] = useState('basic');
+  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
+  const [showComponentSelector, setShowComponentSelector] = useState(false);
+  const [showComponentForm, setShowComponentForm] = useState(false);
+  const [editingComponent, setEditingComponent] = useState<ComponentInstance | null>(null);
 
-  const updateComponent = (id: string, properties: Record<string, any>) => {
-    setComponents(components.map(comp => 
-      comp.id === id ? { ...comp, properties: { ...comp.properties, ...properties } } : comp
-    ));
-  };
+  // Convert registry components to ComponentItem format
+  const availableComponents: ComponentItem[] = useMemo(() => {
+    return entityComponents.map(comp => ({
+      name: comp.name,
+      description: comp.description,
+      category: comp.category,
+      subcategory: comp.subcategory,
+      version: comp.version,
+      difficulty: comp.difficulty,
+      properties: comp.properties,
+      example: comp.example,
+      keywords: comp.keywords,
+      stability: comp.stability,
+      dependencies: comp.dependencies,
+      conflicts: comp.conflicts
+    }));
+  }, []);
 
-  const toggleComponent = (id: string) => {
-    setComponents(components.map(comp =>
-      comp.id === id ? { ...comp, enabled: !comp.enabled } : comp
-    ));
-  };
+  // Get selected component names for ComponentSelector
+  const selectedComponentNames = components.map(c => c.name);
 
-  const addComponent = (componentType: string) => {
-    const newComponent: EntityComponent = {
-      id: `component-${Date.now()}`,
-      type: componentType,
-      enabled: true,
-      properties: getDefaultProperties(componentType)
+  // Generate JSON
+  const entityJSON = useMemo(() => {
+    const componentsJSON = generateComponentsJSON(components);
+    
+    return {
+      format_version: "1.21.0",
+      "minecraft:entity": {
+        description: {
+          identifier: identifier || "my_addon:custom_entity",
+          is_spawnable: isSpawnable,
+          is_summonable: isSummonable,
+          is_experimental: isExperimental
+        },
+        component_groups: {},
+        components: {
+          "minecraft:type_family": {
+            family: ["custom", "mob"]
+          },
+          "minecraft:collision_box": {
+            width: 0.6,
+            height: 1.8
+          },
+          ...componentsJSON
+        },
+        events: {}
+      }
     };
-    setComponents([...components, newComponent]);
-    setShowComponentModal(false);
-  };
+  }, [identifier, isSpawnable, isSummonable, isExperimental, components]);
 
-  const getDefaultProperties = (type: string): Record<string, any> => {
-    switch (type) {
-      case 'minecraft:movement':
-        return { value: 0.25 };
-      case 'minecraft:navigation.walk':
-        return { can_path_over_water: false, avoid_water: true };
-      case 'minecraft:movement.basic':
-        return {};
-      case 'minecraft:jump.static':
-        return { jump_power: 0.42 };
-      case 'minecraft:behavior.random_stroll':
-        return { priority: 6, speed_multiplier: 1.0 };
-      case 'minecraft:behavior.look_at_player':
-        return { priority: 7, look_distance: 6.0 };
-      case 'minecraft:behavior.panic':
-        return { priority: 1, speed_multiplier: 1.25 };
-      case 'minecraft:behavior.float':
-        return { priority: 0 };
-      default:
-        return {};
+  const validation = validateEntityJSON(entityJSON);
+  const recommendedComponents = getRecommendedComponents(components, availableComponents);
+
+  // Component management functions
+  const addComponent = (componentName: string) => {
+    const componentDef = availableComponents.find(c => c.name === componentName);
+    if (!componentDef) return;
+
+    // Check compatibility
+    const compatibility = checkComponentCompatibility(componentDef, components, availableComponents);
+    if (!compatibility.compatible) {
+      toast({
+        title: "Cannot add component",
+        description: compatibility.issues.join(', '),
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Generate default properties
+    const defaultProperties: Record<string, any> = {};
+    componentDef.properties.forEach(prop => {
+      if (prop.default !== undefined) {
+        defaultProperties[prop.name] = prop.default;
+      } else {
+        switch (prop.type) {
+          case 'number':
+            defaultProperties[prop.name] = prop.min ?? prop.example ?? 0;
+            break;
+          case 'boolean':
+            defaultProperties[prop.name] = prop.example ?? false;
+            break;
+          case 'string':
+            defaultProperties[prop.name] = prop.options?.[0] ?? prop.example ?? '';
+            break;
+          case 'range':
+            defaultProperties[prop.name] = prop.example ?? { min: 0, max: 1 };
+            break;
+          case 'vector3':
+            defaultProperties[prop.name] = prop.example ?? { x: 0, y: 0, z: 0 };
+            break;
+          case 'array':
+            defaultProperties[prop.name] = prop.example ?? [];
+            break;
+          case 'object':
+            defaultProperties[prop.name] = prop.example ?? {};
+            break;
+        }
+      }
+    });
+
+    const newComponent: ComponentInstance = {
+      name: componentName,
+      enabled: true,
+      properties: defaultProperties,
+      metadata: {
+        addedAt: Date.now(),
+        category: componentDef.category,
+        difficulty: componentDef.difficulty
+      }
+    };
+
+    setComponents([...components, newComponent]);
+    setShowComponentSelector(false);
+
+    // Show warnings if any
+    if (compatibility.warnings.length > 0) {
+      toast({
+        title: "Component added with warnings",
+        description: compatibility.warnings.join(', '),
+        variant: "default"
+      });
     }
   };
 
-  const renderHealthTab = () => {
-    const healthComponent = components.find(c => c.id === 'health');
-    if (!healthComponent) return null;
-
-    return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-          <div>
-            <h4 className="font-medium text-foreground">Health Component</h4>
-            <p className="text-xs text-muted-foreground">Defines entity's health points</p>
-          </div>
-          <Switch
-            checked={healthComponent.enabled}
-            onCheckedChange={() => toggleComponent('health')}
-            data-testid="switch-health-enabled"
-          />
-        </div>
-        
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="max-health">Max Health</Label>
-            <Input
-              id="max-health"
-              type="number"
-              value={healthComponent.properties.max || 20}
-              onChange={(e) => updateComponent('health', { max: parseInt(e.target.value) || 20 })}
-              data-testid="input-max-health"
-            />
-          </div>
-          <div>
-            <Label htmlFor="current-health">Current Health</Label>
-            <Input
-              id="current-health"
-              type="number"
-              value={healthComponent.properties.value || 20}
-              onChange={(e) => updateComponent('health', { value: parseInt(e.target.value) || 20 })}
-              data-testid="input-current-health"
-            />
-          </div>
-        </div>
-      </div>
-    );
+  const removeComponent = (componentName: string) => {
+    setComponents(components.filter(c => c.name !== componentName));
+    if (selectedComponent === componentName) {
+      setSelectedComponent(null);
+    }
   };
 
-  const renderMovementTab = () => {
-    const movementComponents = components.filter(c => 
-      ['minecraft:movement', 'minecraft:navigation.walk', 'minecraft:movement.basic', 'minecraft:jump.static'].includes(c.type)
-    );
-
-    return (
-      <div className="space-y-4">
-        <div className="text-sm text-muted-foreground mb-4">
-          Configure entity movement properties and navigation capabilities.
-        </div>
-        
-        {movementComponents.length === 0 ? (
-          <div className="text-center text-muted-foreground py-8">
-            <p>No movement components added yet. Use "Add Component" to add movement components.</p>
-          </div>
-        ) : (
-          movementComponents.map((component) => (
-            <div key={component.id} className="p-4 bg-muted rounded-lg">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <h4 className="font-medium text-foreground">{component.type}</h4>
-                  <p className="text-xs text-muted-foreground">
-                    {component.type === 'minecraft:movement' && 'Controls basic movement speed'}
-                    {component.type === 'minecraft:navigation.walk' && 'Enables land navigation'}
-                    {component.type === 'minecraft:movement.basic' && 'Basic movement mechanics'}
-                    {component.type === 'minecraft:jump.static' && 'Jumping capabilities'}
-                  </p>
-                </div>
-                <Switch
-                  checked={component.enabled}
-                  onCheckedChange={() => toggleComponent(component.id)}
-                  data-testid={`switch-${component.id}-enabled`}
-                />
-              </div>
-              
-              {component.type === 'minecraft:movement' && (
-                <div>
-                  <Label htmlFor={`movement-speed-${component.id}`}>Movement Speed</Label>
-                  <Input
-                    id={`movement-speed-${component.id}`}
-                    type="number"
-                    step="0.1"
-                    value={component.properties.value || 0.25}
-                    onChange={(e) => updateComponent(component.id, { value: parseFloat(e.target.value) || 0.25 })}
-                    data-testid={`input-movement-speed-${component.id}`}
-                  />
-                </div>
-              )}
-              
-              {component.type === 'minecraft:navigation.walk' && (
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      checked={component.properties.can_path_over_water || false}
-                      onCheckedChange={(checked) => updateComponent(component.id, { can_path_over_water: checked })}
-                      data-testid={`switch-path-over-water-${component.id}`}
-                    />
-                    <Label>Can path over water</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      checked={component.properties.avoid_water || false}
-                      onCheckedChange={(checked) => updateComponent(component.id, { avoid_water: checked })}
-                      data-testid={`switch-avoid-water-${component.id}`}
-                    />
-                    <Label>Avoid water</Label>
-                  </div>
-                </div>
-              )}
-              
-              {component.type === 'minecraft:jump.static' && (
-                <div>
-                  <Label htmlFor={`jump-power-${component.id}`}>Jump Power</Label>
-                  <Input
-                    id={`jump-power-${component.id}`}
-                    type="number"
-                    step="0.1"
-                    value={component.properties.jump_power || 0.42}
-                    onChange={(e) => updateComponent(component.id, { jump_power: parseFloat(e.target.value) || 0.42 })}
-                    data-testid={`input-jump-power-${component.id}`}
-                  />
-                </div>
-              )}
-            </div>
-          ))
-        )}
-      </div>
-    );
+  const updateComponent = (componentName: string, newProperties: Record<string, any>) => {
+    setComponents(components.map(comp => 
+      comp.name === componentName 
+        ? { ...comp, properties: newProperties }
+        : comp
+    ));
   };
 
-  const renderBehaviorTab = () => {
-    const behaviorComponents = components.filter(c => 
-      c.type.startsWith('minecraft:behavior.')
-    );
-
-    return (
-      <div className="space-y-4">
-        <div className="text-sm text-muted-foreground mb-4">
-          Configure entity AI behaviors and interactions.
-        </div>
-        
-        {behaviorComponents.length === 0 ? (
-          <div className="text-center text-muted-foreground py-8">
-            <p>No behavior components added yet. Use "Add Component" to add AI behaviors.</p>
-          </div>
-        ) : (
-          behaviorComponents.map((component) => (
-            <div key={component.id} className="p-4 bg-muted rounded-lg">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <h4 className="font-medium text-foreground">{component.type}</h4>
-                  <p className="text-xs text-muted-foreground">
-                    {component.type === 'minecraft:behavior.random_stroll' && 'Makes entity wander randomly'}
-                    {component.type === 'minecraft:behavior.look_at_player' && 'Entity looks at nearby players'}
-                    {component.type === 'minecraft:behavior.panic' && 'Entity flees when hurt'}
-                    {component.type === 'minecraft:behavior.float' && 'Entity floats in water'}
-                  </p>
-                </div>
-                <Switch
-                  checked={component.enabled}
-                  onCheckedChange={() => toggleComponent(component.id)}
-                  data-testid={`switch-${component.id}-enabled`}
-                />
-              </div>
-              
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor={`priority-${component.id}`}>Priority</Label>
-                  <Input
-                    id={`priority-${component.id}`}
-                    type="number"
-                    value={component.properties.priority || 1}
-                    onChange={(e) => updateComponent(component.id, { priority: parseInt(e.target.value) || 1 })}
-                    data-testid={`input-priority-${component.id}`}
-                  />
-                </div>
-                
-                {(component.type === 'minecraft:behavior.random_stroll' || component.type === 'minecraft:behavior.panic') && (
-                  <div>
-                    <Label htmlFor={`speed-multiplier-${component.id}`}>Speed Multiplier</Label>
-                    <Input
-                      id={`speed-multiplier-${component.id}`}
-                      type="number"
-                      step="0.1"
-                      value={component.properties.speed_multiplier || 1.0}
-                      onChange={(e) => updateComponent(component.id, { speed_multiplier: parseFloat(e.target.value) || 1.0 })}
-                      data-testid={`input-speed-multiplier-${component.id}`}
-                    />
-                  </div>
-                )}
-                
-                {component.type === 'minecraft:behavior.look_at_player' && (
-                  <div>
-                    <Label htmlFor={`look-distance-${component.id}`}>Look Distance</Label>
-                    <Input
-                      id={`look-distance-${component.id}`}
-                      type="number"
-                      step="0.1"
-                      value={component.properties.look_distance || 6.0}
-                      onChange={(e) => updateComponent(component.id, { look_distance: parseFloat(e.target.value) || 6.0 })}
-                      data-testid={`input-look-distance-${component.id}`}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-    );
+  const toggleComponent = (componentName: string) => {
+    setComponents(components.map(comp =>
+      comp.name === componentName 
+        ? { ...comp, enabled: !comp.enabled }
+        : comp
+    ));
   };
 
-  const renderAdvancedTab = () => {
-    const advancedComponents = components.filter(c => 
-      !['minecraft:health', 'minecraft:movement', 'minecraft:navigation.walk', 'minecraft:movement.basic', 'minecraft:jump.static'].includes(c.type) &&
-      !c.type.startsWith('minecraft:behavior.')
-    );
+  const openComponentForm = (component: ComponentInstance) => {
+    setEditingComponent(component);
+    setShowComponentForm(true);
+  };
 
-    return (
-      <div className="space-y-4">
-        <div className="text-sm text-muted-foreground mb-4">
-          Configure advanced entity properties and custom components.
-        </div>
-        
-        {advancedComponents.length === 0 ? (
-          <div className="text-center text-muted-foreground py-8">
-            <p>No advanced components added yet. Use "Add Component" to add custom components.</p>
-          </div>
-        ) : (
-          advancedComponents.map((component) => (
-            <div key={component.id} className="p-4 bg-muted rounded-lg">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <h4 className="font-medium text-foreground">{component.type}</h4>
-                  <p className="text-xs text-muted-foreground">Custom component</p>
-                </div>
-                <Switch
-                  checked={component.enabled}
-                  onCheckedChange={() => toggleComponent(component.id)}
-                  data-testid={`switch-${component.id}-enabled`}
-                />
-              </div>
-              
-              <div className="text-sm">
-                <Label>Component Properties</Label>
-                <pre className="bg-background p-2 rounded text-xs mt-1 overflow-x-auto">
-                  {JSON.stringify(component.properties, null, 2)}
-                </pre>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-    );
+  const handleComponentFormSubmit = (values: Record<string, any>) => {
+    if (editingComponent) {
+      updateComponent(editingComponent.name, values);
+      setShowComponentForm(false);
+      setEditingComponent(null);
+      
+      toast({
+        title: "Component updated",
+        description: `${editingComponent.name} has been updated successfully.`
+      });
+    }
+  };
+
+  const applyEntityPreset = (presetName: string) => {
+    const presetComponents = applyPreset(presetName, 'entity', availableComponents);
+    setComponents(presetComponents);
+    
+    toast({
+      title: "Preset applied",
+      description: `Applied ${presetName} preset with ${presetComponents.length} components.`
+    });
+  };
+
+  const resetEntity = () => {
+    setComponents([
+      {
+        name: 'minecraft:health',
+        enabled: true,
+        properties: { value: 20, max: 20 },
+        metadata: { addedAt: Date.now(), category: 'Core', difficulty: 'beginner' }
+      }
+    ]);
+    setIdentifier('');
+    setDisplayName('');
+    setDescription('');
+    
+    toast({
+      title: "Entity reset",
+      description: "Entity has been reset to default state."
+    });
+  };
+
+  const exportToClipboard = () => {
+    navigator.clipboard.writeText(JSON.stringify(entityJSON, null, 2));
+    toast({
+      title: "Copied to clipboard",
+      description: "Entity JSON has been copied to your clipboard."
+    });
+  };
+
+  const componentsByCategory = useMemo(() => {
+    const grouped: Record<string, ComponentInstance[]> = {};
+    components.forEach(comp => {
+      const category = comp.metadata?.category || 'Other';
+      if (!grouped[category]) grouped[category] = [];
+      grouped[category].push(comp);
+    });
+    return grouped;
+  }, [components]);
+
+  const getComponentDefinition = (componentName: string): ComponentDefinition | null => {
+    const def = availableComponents.find(c => c.name === componentName);
+    if (!def) return null;
+    
+    return {
+      name: def.name,
+      description: def.description,
+      category: def.category,
+      subcategory: def.subcategory,
+      version: def.version,
+      difficulty: def.difficulty,
+      properties: def.properties,
+      example: def.example,
+      keywords: def.keywords,
+      stability: def.stability,
+      dependencies: def.dependencies,
+      conflicts: def.conflicts
+    };
   };
 
   return (
-    <section className="p-6" data-testid="entity-builder">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-6">
-          {/* Builder Form */}
-          <div className="builder-form rounded-lg p-6">
-            <h3 className="text-xl font-semibold text-foreground mb-4">Entity Configuration</h3>
-            
-            {/* Basic Info */}
-            <div className="space-y-4 mb-6">
-              <div>
-                <Label htmlFor="entity-identifier">Entity Identifier</Label>
-                <Input
-                  id="entity-identifier"
-                  value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
-                  placeholder="my_addon:custom_entity"
-                  data-testid="input-identifier"
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Format: namespace:identifier (e.g., my_addon:custom_zombie)
-                </p>
-              </div>
-              
-              <div>
-                <Label htmlFor="display-name">Display Name</Label>
-                <Input
-                  id="display-name"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  placeholder="Custom Entity"
-                  data-testid="input-display-name"
-                />
-              </div>
+    <TooltipProvider>
+      <section className="p-6" data-testid="entity-builder">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-6">
+            {/* Builder Form */}
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5" />
+                    Entity Configuration
+                  </CardTitle>
+                  <CardDescription>
+                    Create comprehensive Minecraft Bedrock entities with all official components
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Tabs value={activeTab} onValueChange={setActiveTab}>
+                    <TabsList className="grid w-full grid-cols-4">
+                      <TabsTrigger value="basic" data-testid="tab-basic">Basic</TabsTrigger>
+                      <TabsTrigger value="components" data-testid="tab-components">
+                        Components ({components.length})
+                      </TabsTrigger>
+                      <TabsTrigger value="presets" data-testid="tab-presets">Presets</TabsTrigger>
+                      <TabsTrigger value="advanced" data-testid="tab-advanced">Advanced</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="basic" className="space-y-4">
+                      <div className="grid gap-4">
+                        <div>
+                          <Label htmlFor="entity-identifier">Entity Identifier *</Label>
+                          <Input
+                            id="entity-identifier"
+                            value={identifier}
+                            onChange={(e) => setIdentifier(e.target.value)}
+                            placeholder="my_addon:custom_entity"
+                            data-testid="input-identifier"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Must include namespace (e.g., my_addon:entity_name)
+                          </p>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="entity-display-name">Display Name</Label>
+                          <Input
+                            id="entity-display-name"
+                            value={displayName}
+                            onChange={(e) => setDisplayName(e.target.value)}
+                            placeholder="Custom Entity"
+                            data-testid="input-display-name"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="entity-description">Description</Label>
+                          <Input
+                            id="entity-description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="A custom entity for my addon"
+                            data-testid="input-description"
+                          />
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              id="is-spawnable"
+                              checked={isSpawnable}
+                              onCheckedChange={setIsSpawnable}
+                              data-testid="switch-spawnable"
+                            />
+                            <Label htmlFor="is-spawnable">Spawnable</Label>
+                          </div>
+
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              id="is-summonable"
+                              checked={isSummonable}
+                              onCheckedChange={setIsSummonable}
+                              data-testid="switch-summonable"
+                            />
+                            <Label htmlFor="is-summonable">Summonable</Label>
+                          </div>
+
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              id="is-experimental"
+                              checked={isExperimental}
+                              onCheckedChange={setIsExperimental}
+                              data-testid="switch-experimental"
+                            />
+                            <Label htmlFor="is-experimental">Experimental</Label>
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="components" className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium">Entity Components</h4>
+                        <Button 
+                          onClick={() => setShowComponentSelector(true)}
+                          data-testid="button-add-component"
+                        >
+                          Add Component
+                        </Button>
+                      </div>
+
+                      {recommendedComponents.length > 0 && (
+                        <Alert>
+                          <Info className="h-4 w-4" />
+                          <AlertDescription>
+                            <div className="space-y-2">
+                              <p className="font-medium">Recommended components:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {recommendedComponents.slice(0, 3).map(comp => (
+                                  <Button
+                                    key={comp.name}
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => addComponent(comp.name)}
+                                    data-testid={`button-add-recommended-${comp.name}`}
+                                  >
+                                    {comp.name}
+                                  </Button>
+                                ))}
+                              </div>
+                            </div>
+                          </AlertDescription>
+                        </Alert>
+                      )}
+
+                      <ScrollArea className="h-[400px]">
+                        <Accordion type="single" collapsible className="space-y-2">
+                          {Object.entries(componentsByCategory).map(([category, categoryComponents]) => (
+                            <AccordionItem key={category} value={category}>
+                              <AccordionTrigger className="text-sm" data-testid={`accordion-${category}`}>
+                                {category} ({categoryComponents.length})
+                              </AccordionTrigger>
+                              <AccordionContent>
+                                <div className="space-y-2">
+                                  {categoryComponents.map((component) => {
+                                    const def = getComponentDefinition(component.name);
+                                    return (
+                                      <Card key={component.name} className="p-3">
+                                        <div className="flex items-start justify-between gap-2">
+                                          <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 mb-1">
+                                              <Switch
+                                                checked={component.enabled}
+                                                onCheckedChange={() => toggleComponent(component.name)}
+                                                data-testid={`switch-${component.name}`}
+                                              />
+                                              <span className="font-medium text-sm truncate">
+                                                {component.name}
+                                              </span>
+                                              {def && (
+                                                <Badge 
+                                                  variant="outline" 
+                                                  className={`text-xs ${
+                                                    def.difficulty === 'beginner' ? 'border-green-500' :
+                                                    def.difficulty === 'intermediate' ? 'border-yellow-500' :
+                                                    'border-red-500'
+                                                  }`}
+                                                >
+                                                  {def.difficulty}
+                                                </Badge>
+                                              )}
+                                            </div>
+                                            {def && (
+                                              <p className="text-xs text-muted-foreground line-clamp-2">
+                                                {def.description}
+                                              </p>
+                                            )}
+                                          </div>
+                                          <div className="flex gap-1">
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <Button
+                                                  variant="ghost"
+                                                  size="sm"
+                                                  onClick={() => openComponentForm(component)}
+                                                  disabled={!component.enabled}
+                                                  data-testid={`button-configure-${component.name}`}
+                                                >
+                                                  <Zap className="w-3 h-3" />
+                                                </Button>
+                                              </TooltipTrigger>
+                                              <TooltipContent>Configure properties</TooltipContent>
+                                            </Tooltip>
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <Button
+                                                  variant="ghost"
+                                                  size="sm"
+                                                  onClick={() => removeComponent(component.name)}
+                                                  data-testid={`button-remove-${component.name}`}
+                                                >
+                                                  <AlertCircle className="w-3 h-3" />
+                                                </Button>
+                                              </TooltipTrigger>
+                                              <TooltipContent>Remove component</TooltipContent>
+                                            </Tooltip>
+                                          </div>
+                                        </div>
+                                      </Card>
+                                    );
+                                  })}
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          ))}
+                        </Accordion>
+                      </ScrollArea>
+                    </TabsContent>
+
+                    <TabsContent value="presets" className="space-y-4">
+                      <div>
+                        <h4 className="font-medium mb-3">Entity Presets</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Quick start with common entity configurations
+                        </p>
+                        <div className="grid gap-3">
+                          {Object.entries(ENTITY_PRESETS).map(([presetName, componentList]) => (
+                            <Card key={presetName} className="p-4 cursor-pointer hover:bg-muted/50">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h5 className="font-medium capitalize">
+                                    {presetName.replace(/_/g, ' ')}
+                                  </h5>
+                                  <p className="text-xs text-muted-foreground">
+                                    {componentList.length} components
+                                  </p>
+                                </div>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => applyEntityPreset(presetName)}
+                                  data-testid={`button-preset-${presetName}`}
+                                >
+                                  Apply
+                                </Button>
+                              </div>
+                            </Card>
+                          ))}
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="advanced" className="space-y-4">
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="font-medium mb-2">Actions</h4>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              onClick={resetEntity}
+                              data-testid="button-reset"
+                            >
+                              <RotateCcw className="w-4 h-4 mr-2" />
+                              Reset
+                            </Button>
+                            <Button
+                              variant="outline"
+                              onClick={exportToClipboard}
+                              data-testid="button-export"
+                            >
+                              <Copy className="w-4 h-4 mr-2" />
+                              Copy JSON
+                            </Button>
+                          </div>
+                        </div>
+
+                        <ValidationStatus validation={validation} />
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Component Tabs */}
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4">
-              <TabsList className="bg-muted rounded-lg p-1">
-                <TabsTrigger value="health" data-testid="tab-health">Health</TabsTrigger>
-                <TabsTrigger value="movement" data-testid="tab-movement">Movement</TabsTrigger>
-                <TabsTrigger value="behavior" data-testid="tab-behavior">Behavior</TabsTrigger>
-                <TabsTrigger value="advanced" data-testid="tab-advanced">Advanced</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="health" className="mt-4">
-                {renderHealthTab()}
-              </TabsContent>
-
-              <TabsContent value="movement" className="mt-4">
-                {renderMovementTab()}
-              </TabsContent>
-
-              <TabsContent value="behavior" className="mt-4">
-                {renderBehaviorTab()}
-              </TabsContent>
-
-              <TabsContent value="advanced" className="mt-4">
-                {renderAdvancedTab()}
-              </TabsContent>
-            </Tabs>
-
-            {/* Add Component Button */}
-            <Button 
-              className="w-full" 
-              onClick={() => setShowComponentModal(true)}
-              data-testid="button-add-component"
-            >
-              <Plus className="mr-2" size={16} />
-              Add Component
-            </Button>
-          </div>
-
-          {/* JSON Output */}
-          <div className="builder-form rounded-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-foreground">Generated JSON</h3>
-              <div className="flex space-x-2">
-                <Button 
-                  variant="secondary" 
-                  size="sm"
-                  data-testid="button-copy-json"
-                >
-                  <Copy className="mr-2" size={16} />
-                  Copy
-                </Button>
-                <Button 
-                  variant="secondary" 
-                  size="sm"
-                  data-testid="button-export-json"
-                >
-                  <Download className="mr-2" size={16} />
-                  Export
-                </Button>
-              </div>
-            </div>
-            
-            <CodePreview code={JSON.stringify(entityJSON, null, 2)} language="json" />
-
-            {/* Validation Status */}
-            <div className="mt-4">
-              <ValidationStatus validation={validation} />
+            {/* JSON Preview */}
+            <div className="space-y-6">
+              <CodePreview 
+                code={JSON.stringify(entityJSON, null, 2)}
+                language="json"
+                title="Entity JSON"
+                validation={validation}
+              />
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Component Modal */}
-      <ComponentModal
-        isOpen={showComponentModal}
-        onClose={() => setShowComponentModal(false)}
-        onAddComponent={addComponent}
-        componentType="entity"
-      />
-    </section>
+        {/* Component Selector Modal */}
+        {showComponentSelector && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-background rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+              <ComponentSelector
+                components={availableComponents}
+                selectedComponents={selectedComponentNames}
+                onAddComponent={addComponent}
+                onRemoveComponent={removeComponent}
+                title="Add Entity Components"
+                description="Choose from 50+ official Minecraft Bedrock entity components"
+                showCategories={true}
+                showCompatibility={true}
+              />
+              <div className="p-4 border-t flex justify-end">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowComponentSelector(false)}
+                  data-testid="button-close-selector"
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Component Form Modal */}
+        {showComponentForm && editingComponent && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-background rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-hidden">
+              {(() => {
+                const def = getComponentDefinition(editingComponent.name);
+                return def ? (
+                  <ComponentForm
+                    component={def}
+                    initialValues={editingComponent.properties}
+                    onSubmit={handleComponentFormSubmit}
+                    onCancel={() => {
+                      setShowComponentForm(false);
+                      setEditingComponent(null);
+                    }}
+                    isEditing={true}
+                    showExample={true}
+                  />
+                ) : null;
+              })()}
+            </div>
+          </div>
+        )}
+      </section>
+    </TooltipProvider>
   );
 }

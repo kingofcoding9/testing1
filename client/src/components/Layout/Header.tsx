@@ -85,6 +85,10 @@ const sectionTitles: Record<string, { title: string; subtitle: string }> = {
   'validator': {
     title: 'JSON Validator',
     subtitle: 'Validate and debug your addon files'
+  },
+  'external-tools': {
+    title: 'External Tools',
+    subtitle: 'Professional integrated tools for complete Minecraft development workflow'
   }
 };
 

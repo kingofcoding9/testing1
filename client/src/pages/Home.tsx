@@ -13,6 +13,7 @@ import TextureCreator from "@/components/Tools/TextureCreator";
 import ScriptStudio from "@/components/Tools/ScriptStudio";
 import AddonPackager from "@/components/Tools/AddonPackager";
 import JSONValidator from "@/components/Tools/JSONValidator";
+import ExternalTools from "@/components/Tools/ExternalTools";
 import CoreConcepts from "@/components/Documentation/CoreConcepts";
 import EntityDocs from "@/components/Documentation/EntityDocs";
 import BlockDocs from "@/components/Documentation/BlockDocs";
@@ -42,7 +43,8 @@ type Section =
   | 'texture-creator'
   | 'script-studio'
   | 'addon-packager'
-  | 'validator';
+  | 'validator'
+  | 'external-tools';
 
 export default function Home() {
   const [currentSection, setCurrentSection] = useState<Section>('welcome');
@@ -90,6 +92,8 @@ export default function Home() {
         return <AddonPackager />;
       case 'validator':
         return <JSONValidator />;
+      case 'external-tools':
+        return <ExternalTools />;
       default:
         return <WelcomeSection onNavigate={setCurrentSection} />;
     }

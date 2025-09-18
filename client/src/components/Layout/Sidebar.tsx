@@ -1,4 +1,4 @@
-import { BookOpen, Box, Crown, Eye, Gem, Hammer, Mountain, MapPin, Shovel, PaintbrushVertical, Terminal, Archive, CheckCircle, Home, GraduationCap, Rocket } from "lucide-react";
+import { BookOpen, Box, Crown, Eye, Gem, Hammer, Mountain, MapPin, Shovel, PaintbrushVertical, Terminal, Archive, CheckCircle, Home, GraduationCap, Rocket, ExternalLink } from "lucide-react";
 
 interface SidebarProps {
   currentSection: string;
@@ -47,6 +47,7 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
         { id: 'script-studio', icon: Terminal, label: 'Script Studio' },
         { id: 'addon-packager', icon: Archive, label: 'Addon Packager' },
         { id: 'validator', icon: CheckCircle, label: 'JSON Validator' },
+        { id: 'external-tools', icon: ExternalLink, label: 'External Tools' },
       ]
     }
   ];
