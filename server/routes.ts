@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { insertProjectSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint
@@ -44,22 +45,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Save addon project endpoint
-  app.post("/api/projects", (req, res) => {
+  app.post("/api/projects", async (req, res) => {
     try {
-      const { name, description, data } = req.body;
+      // Validate request body using Zod schema
+      const validationResult = insertProjectSchema.safeParse(req.body);
       
-      if (!name || !data) {
+      if (!validationResult.success) {
         return res.status(400).json({ 
-          error: "Missing project name or data" 
+          error: "Invalid project data",
+          details: validationResult.error.issues
         });
       }
 
-      // For now, return success - in a real implementation, this would save to storage
-      const projectId = `project_${Date.now()}`;
+      const project = await storage.createProject(validationResult.data);
       
       res.json({
         success: true,
-        projectId,
+        project,
         message: "Project saved successfully"
       });
     } catch (error) {
@@ -71,27 +73,131 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Load addon project endpoint
-  app.get("/api/projects/:id", (req, res) => {
+  // Get projects (list) endpoint - needs to come before the /:id route
+  app.get("/api/projects", async (req, res) => {
+    try {
+      const { type } = req.query;
+      
+      let projects;
+      if (type && typeof type === 'string') {
+        projects = await storage.getProjectsByType(type);
+      } else {
+        projects = await storage.getAllProjects();
+      }
+      
+      res.json({
+        success: true,
+        projects
+      });
+    } catch (error) {
+      console.error('List projects error:', error);
+      res.status(500).json({ 
+        error: "Failed to load projects",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Load addon project by ID endpoint
+  app.get("/api/projects/:id", async (req, res) => {
     try {
       const { id } = req.params;
+      const projectId = parseInt(id);
       
-      // For now, return a sample project - in a real implementation, this would load from storage
-      res.json({
-        id,
-        name: "Sample Project",
-        description: "A sample addon project",
-        data: {
-          entities: [],
-          blocks: [],
-          items: []
-        },
-        lastModified: new Date().toISOString()
-      });
+      if (isNaN(projectId)) {
+        return res.status(400).json({ 
+          error: "Invalid project ID" 
+        });
+      }
+      
+      const project = await storage.getProject(projectId);
+      
+      if (!project) {
+        return res.status(404).json({ 
+          error: "Project not found" 
+        });
+      }
+      
+      res.json(project);
     } catch (error) {
       console.error('Load project error:', error);
       res.status(500).json({ 
         error: "Failed to load project",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Update project endpoint
+  app.put("/api/projects/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const projectId = parseInt(id);
+      
+      if (isNaN(projectId)) {
+        return res.status(400).json({ 
+          error: "Invalid project ID" 
+        });
+      }
+      
+      const { name, description, data, type } = req.body;
+      const updateData: any = {};
+      
+      if (name !== undefined) updateData.name = name;
+      if (description !== undefined) updateData.description = description;
+      if (data !== undefined) updateData.data = data;
+      if (type !== undefined) updateData.type = type;
+      
+      const project = await storage.updateProject(projectId, updateData);
+      
+      if (!project) {
+        return res.status(404).json({ 
+          error: "Project not found" 
+        });
+      }
+      
+      res.json({
+        success: true,
+        project,
+        message: "Project updated successfully"
+      });
+    } catch (error) {
+      console.error('Update project error:', error);
+      res.status(500).json({ 
+        error: "Failed to update project",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Delete project endpoint
+  app.delete("/api/projects/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const projectId = parseInt(id);
+      
+      if (isNaN(projectId)) {
+        return res.status(400).json({ 
+          error: "Invalid project ID" 
+        });
+      }
+      
+      const deleted = await storage.deleteProject(projectId);
+      
+      if (!deleted) {
+        return res.status(404).json({ 
+          error: "Project not found" 
+        });
+      }
+      
+      res.json({
+        success: true,
+        message: "Project deleted successfully"
+      });
+    } catch (error) {
+      console.error('Delete project error:', error);
+      res.status(500).json({ 
+        error: "Failed to delete project",
         details: error instanceof Error ? error.message : "Unknown error"
       });
     }
@@ -197,7 +303,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Export addon endpoint
-  app.post("/api/export", (req, res) => {
+  app.post("/api/export", async (req, res) => {
     try {
       const { format, config } = req.body;
       
@@ -207,16 +313,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // For now, return success - in a real implementation, this would generate the actual addon file
+      // Validate export config
+      if (!config.name || !config.files) {
+        return res.status(400).json({ 
+          error: "Missing required config fields: name and files" 
+        });
+      }
+
+      // For now, generate a unique identifier for the export
+      const exportId = `addon_${Date.now()}`;
+      const downloadUrl = `/api/downloads/${exportId}.${format}`;
+      
+      // In a real implementation, you would:
+      // 1. Generate the addon file using the AddonExporter
+      // 2. Store it temporarily on the server
+      // 3. Provide a download endpoint
+      
       res.json({
         success: true,
-        downloadUrl: `/downloads/addon_${Date.now()}.${format}`,
-        message: "Addon exported successfully"
+        downloadUrl,
+        exportId,
+        message: "Addon export prepared successfully",
+        config: {
+          name: config.name,
+          fileCount: config.files?.length || 0,
+          format
+        }
       });
     } catch (error) {
       console.error('Export error:', error);
       res.status(500).json({ 
-        error: "Failed to export addon" 
+        error: "Failed to export addon",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Download endpoint for exported addons
+  app.get("/api/downloads/:filename", (req, res) => {
+    try {
+      const { filename } = req.params;
+      
+      // In a real implementation, this would serve the actual addon file
+      // For now, return an appropriate response
+      res.status(404).json({
+        error: "Download not found",
+        message: "Addon file generation is in progress"
+      });
+    } catch (error) {
+      console.error('Download error:', error);
+      res.status(500).json({ 
+        error: "Download failed",
+        details: error instanceof Error ? error.message : "Unknown error"
       });
     }
   });

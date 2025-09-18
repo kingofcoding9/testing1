@@ -157,8 +157,79 @@ export default function ItemBuilder() {
               </TabsContent>
 
               <TabsContent value="advanced" className="space-y-4">
-                <div className="text-center text-muted-foreground py-8">
-                  <p>Advanced properties will be available soon</p>
+                <div className="text-sm text-muted-foreground mb-4">
+                  Configure advanced item properties and custom attributes.
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="custom-damage">Custom Damage</Label>
+                      <Input
+                        id="custom-damage"
+                        type="number"
+                        min="0"
+                        placeholder="1"
+                        data-testid="input-custom-damage"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="attack-speed">Attack Speed</Label>
+                      <Input
+                        id="attack-speed"
+                        type="number"
+                        min="0"
+                        step="0.1"
+                        placeholder="1.0"
+                        data-testid="input-attack-speed"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label>Special Properties</Label>
+                    <div className="flex items-center space-x-2">
+                      <Switch data-testid="switch-can-destroy-in-creative" />
+                      <span className="text-sm">Can destroy in creative</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch data-testid="switch-hand-equipped" />
+                      <span className="text-sm">Hand equipped</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch data-testid="switch-stackable" />
+                      <span className="text-sm">Stackable</span>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="repair-items">Repair Items (comma-separated)</Label>
+                    <Input
+                      id="repair-items"
+                      placeholder="minecraft:iron_ingot, minecraft:gold_ingot"
+                      data-testid="input-repair-items"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="enchantable-slot">Enchantable Slot</Label>
+                    <Input
+                      id="enchantable-slot"
+                      placeholder="sword, pickaxe, etc."
+                      data-testid="input-enchantable-slot"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="food-nutrition">Food Nutrition (if food item)</Label>
+                    <Input
+                      id="food-nutrition"
+                      type="number"
+                      min="0"
+                      placeholder="4"
+                      data-testid="input-food-nutrition"
+                    />
+                  </div>
                 </div>
               </TabsContent>
             </Tabs>

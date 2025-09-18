@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CodePreview from "@/components/Common/CodePreview";
 import ValidationStatus from "@/components/Common/ValidationStatus";
@@ -14,13 +15,58 @@ export default function BiomeBuilder() {
   const [displayName, setDisplayName] = useLocalStorage('biome-display-name', '');
   const [temperature, setTemperature] = useLocalStorage('biome-temperature', [0.8]);
   const [downfall, setDownfall] = useLocalStorage('biome-downfall', [0.4]);
+  
+  // Features state
+  const [surfaceMaterial, setSurfaceMaterial] = useLocalStorage('biome-surface-material', 'minecraft:grass_block');
+  const [subsurfaceMaterial, setSubsurfaceMaterial] = useLocalStorage('biome-subsurface-material', 'minecraft:dirt');
+  const [treeDensity, setTreeDensity] = useLocalStorage('biome-tree-density', '0.1');
+  const [grassDensity, setGrassDensity] = useLocalStorage('biome-grass-density', '0.3');
+  const [coalOre, setCoalOre] = useLocalStorage('biome-coal-ore', true);
+  const [ironOre, setIronOre] = useLocalStorage('biome-iron-ore', true);
+  const [diamondOre, setDiamondOre] = useLocalStorage('biome-diamond-ore', false);
+  
+  // Spawning state
+  const [cowWeight, setCowWeight] = useLocalStorage('biome-cow-weight', '10');
+  const [sheepWeight, setSheepWeight] = useLocalStorage('biome-sheep-weight', '12');
+  const [pigWeight, setPigWeight] = useLocalStorage('biome-pig-weight', '10');
+  const [zombieWeight, setZombieWeight] = useLocalStorage('biome-zombie-weight', '95');
+  const [skeletonWeight, setSkeletonWeight] = useLocalStorage('biome-skeleton-weight', '100');
+  const [spiderWeight, setSpiderWeight] = useLocalStorage('biome-spider-weight', '100');
+  const [spawnLightLevel, setSpawnLightLevel] = useLocalStorage('biome-spawn-light-level', '7');
+  const [spawnRate, setSpawnRate] = useLocalStorage('biome-spawn-rate', '0.5');
+  
   const [activeTab, setActiveTab] = useState('basic');
 
   const biomeConfig = {
     identifier,
     displayName,
     temperature: temperature[0],
-    downfall: downfall[0]
+    downfall: downfall[0],
+    features: {
+      surfaceMaterial,
+      subsurfaceMaterial,
+      treeDensity: parseFloat(treeDensity) || 0.1,
+      grassDensity: parseFloat(grassDensity) || 0.3,
+      ores: {
+        coal: coalOre,
+        iron: ironOre,
+        diamond: diamondOre
+      }
+    },
+    spawning: {
+      peaceful: {
+        cow: parseInt(cowWeight) || 10,
+        sheep: parseInt(sheepWeight) || 12,
+        pig: parseInt(pigWeight) || 10
+      },
+      hostile: {
+        zombie: parseInt(zombieWeight) || 95,
+        skeleton: parseInt(skeletonWeight) || 100,
+        spider: parseInt(spiderWeight) || 100
+      },
+      lightLevel: parseInt(spawnLightLevel) || 7,
+      spawnRate: parseFloat(spawnRate) || 0.5
+    }
   };
 
   const biomeJSON = {
@@ -33,9 +79,103 @@ export default function BiomeBuilder() {
         "minecraft:climate": {
           "temperature": biomeConfig.temperature,
           "downfall": biomeConfig.downfall
+        },
+        "minecraft:surface_parameters": {
+          "top_material": biomeConfig.features.surfaceMaterial,
+          "mid_material": biomeConfig.features.subsurfaceMaterial
+        },
+        "minecraft:surface_material_adjustments": {
+          "adjustments": [
+            {
+              "materials": {
+                "top_material": biomeConfig.features.surfaceMaterial,
+                "mid_material": biomeConfig.features.subsurfaceMaterial
+              }
+            }
+          ]
+        },
+        "minecraft:overworld_generation_rules": {
+          "hills_transformation": "minecraft:forest_hills",
+          "generate_for_climates": [
+            ["medium", 1.0]
+          ]
+        },
+        "minecraft:surface_material": {
+          "top_material": biomeConfig.features.surfaceMaterial
+        },
+        ...(biomeConfig.features.treeDensity > 0 && {
+          "minecraft:tree_frequency": {
+            "frequency": biomeConfig.features.treeDensity
+          }
+        }),
+        ...(biomeConfig.features.grassDensity > 0 && {
+          "minecraft:grass_color": {
+            "multiplier": biomeConfig.features.grassDensity
+          }
+        }),
+        ...(biomeConfig.features.ores.coal && {
+          "minecraft:ore_deposits": {
+            "coal_ore": {
+              "probability": 0.8,
+              "block": "minecraft:coal_ore"
+            }
+          }
+        })
+      }
+    },
+    // Spawning rules as separate components  
+    ...(Object.values(biomeConfig.spawning.peaceful).some(w => w > 0) && {
+      "spawn_rules": {
+        "format_version": "1.21.0",
+        "minecraft:spawn_rules": {
+          "description": {
+            "identifier": (biomeConfig.identifier || "my_addon:custom_biome") + "_spawns"
+          },
+          "conditions": [
+            {
+              "minecraft:spawns_on_surface": {},
+              "minecraft:spawns_underground": {},
+              "minecraft:brightness_filter": {
+                "min": 0,
+                "max": biomeConfig.spawning.lightLevel
+              },
+              "minecraft:weight": {
+                "default": biomeConfig.spawning.spawnRate
+              },
+              "minecraft:mob_event_filter": {
+                "event": "minecraft:entity_spawned"
+              },
+              "minecraft:permute_type": [
+                ...(biomeConfig.spawning.peaceful.cow > 0 ? [{
+                  "entity_type": "minecraft:cow",
+                  "weight": biomeConfig.spawning.peaceful.cow
+                }] : []),
+                ...(biomeConfig.spawning.peaceful.sheep > 0 ? [{
+                  "entity_type": "minecraft:sheep", 
+                  "weight": biomeConfig.spawning.peaceful.sheep
+                }] : []),
+                ...(biomeConfig.spawning.peaceful.pig > 0 ? [{
+                  "entity_type": "minecraft:pig",
+                  "weight": biomeConfig.spawning.peaceful.pig
+                }] : []),
+                ...(biomeConfig.spawning.hostile.zombie > 0 ? [{
+                  "entity_type": "minecraft:zombie",
+                  "weight": biomeConfig.spawning.hostile.zombie
+                }] : []),
+                ...(biomeConfig.spawning.hostile.skeleton > 0 ? [{
+                  "entity_type": "minecraft:skeleton",
+                  "weight": biomeConfig.spawning.hostile.skeleton  
+                }] : []),
+                ...(biomeConfig.spawning.hostile.spider > 0 ? [{
+                  "entity_type": "minecraft:spider",
+                  "weight": biomeConfig.spawning.hostile.spider
+                }] : [])
+              ]
+            }
+          ]
         }
       }
-    }
+    })
   };
 
   const validation = { isValid: true, errors: [] };
@@ -131,14 +271,201 @@ export default function BiomeBuilder() {
               </TabsContent>
 
               <TabsContent value="features" className="space-y-4">
-                <div className="text-center text-muted-foreground py-8">
-                  <p>Biome features configuration will be available soon</p>
+                <div className="text-sm text-muted-foreground mb-4">
+                  Configure biome features like terrain, vegetation, and structures.
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="surface-material">Surface Material</Label>
+                    <Input
+                      id="surface-material"
+                      value={surfaceMaterial}
+                      onChange={(e) => setSurfaceMaterial(e.target.value)}
+                      placeholder="minecraft:grass_block"
+                      data-testid="input-surface-material"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="subsurface-material">Subsurface Material</Label>
+                    <Input
+                      id="subsurface-material"
+                      value={subsurfaceMaterial}
+                      onChange={(e) => setSubsurfaceMaterial(e.target.value)}
+                      placeholder="minecraft:dirt"
+                      data-testid="input-subsurface-material"
+                    />
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="tree-density">Tree Density</Label>
+                      <Input
+                        id="tree-density"
+                        type="number"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={treeDensity}
+                        onChange={(e) => setTreeDensity(e.target.value)}
+                        placeholder="0.1"
+                        data-testid="input-tree-density"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="grass-density">Grass Density</Label>
+                      <Input
+                        id="grass-density"
+                        type="number"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={grassDensity}
+                        onChange={(e) => setGrassDensity(e.target.value)}
+                        placeholder="0.3"
+                        data-testid="input-grass-density"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label>Ore Generation</Label>
+                    <div className="flex items-center space-x-2">
+                      <Switch 
+                        checked={coalOre}
+                        onCheckedChange={setCoalOre}
+                        data-testid="switch-coal-ore" 
+                      />
+                      <span className="text-sm">Coal Ore</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch 
+                        checked={ironOre}
+                        onCheckedChange={setIronOre}
+                        data-testid="switch-iron-ore" 
+                      />
+                      <span className="text-sm">Iron Ore</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch 
+                        checked={diamondOre}
+                        onCheckedChange={setDiamondOre}
+                        data-testid="switch-diamond-ore" 
+                      />
+                      <span className="text-sm">Diamond Ore</span>
+                    </div>
+                  </div>
                 </div>
               </TabsContent>
 
               <TabsContent value="spawning" className="space-y-4">
-                <div className="text-center text-muted-foreground py-8">
-                  <p>Mob spawning rules will be available soon</p>
+                <div className="text-sm text-muted-foreground mb-4">
+                  Configure mob spawning rules for different creature types.
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="p-4 bg-muted rounded-lg">
+                    <h4 className="font-medium text-foreground mb-3">Peaceful Creatures</h4>
+                    <div className="space-y-3">
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="cow-weight">Cow Weight</Label>
+                          <Input
+                            id="cow-weight"
+                            type="number"
+                            min="0"
+                            placeholder="10"
+                            data-testid="input-cow-weight"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="sheep-weight">Sheep Weight</Label>
+                          <Input
+                            id="sheep-weight"
+                            type="number"
+                            min="0"
+                            placeholder="12"
+                            data-testid="input-sheep-weight"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="pig-weight">Pig Weight</Label>
+                          <Input
+                            id="pig-weight"
+                            type="number"
+                            min="0"
+                            placeholder="10"
+                            data-testid="input-pig-weight"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-muted rounded-lg">
+                    <h4 className="font-medium text-foreground mb-3">Hostile Creatures</h4>
+                    <div className="space-y-3">
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="zombie-weight">Zombie Weight</Label>
+                          <Input
+                            id="zombie-weight"
+                            type="number"
+                            min="0"
+                            placeholder="95"
+                            data-testid="input-zombie-weight"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="skeleton-weight">Skeleton Weight</Label>
+                          <Input
+                            id="skeleton-weight"
+                            type="number"
+                            min="0"
+                            placeholder="100"
+                            data-testid="input-skeleton-weight"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="spider-weight">Spider Weight</Label>
+                          <Input
+                            id="spider-weight"
+                            type="number"
+                            min="0"
+                            placeholder="100"
+                            data-testid="input-spider-weight"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="spawn-light-level">Max Light Level for Hostile Spawns</Label>
+                      <Input
+                        id="spawn-light-level"
+                        type="number"
+                        min="0"
+                        max="15"
+                        placeholder="7"
+                        data-testid="input-spawn-light-level"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="spawn-rate">Overall Spawn Rate</Label>
+                      <Input
+                        id="spawn-rate"
+                        type="number"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        placeholder="0.5"
+                        data-testid="input-spawn-rate"
+                      />
+                    </div>
+                  </div>
                 </div>
               </TabsContent>
             </Tabs>

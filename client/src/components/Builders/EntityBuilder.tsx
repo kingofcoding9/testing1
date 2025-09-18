@@ -65,8 +65,18 @@ export default function EntityBuilder() {
         return { value: 0.25 };
       case 'minecraft:navigation.walk':
         return { can_path_over_water: false, avoid_water: true };
+      case 'minecraft:movement.basic':
+        return {};
+      case 'minecraft:jump.static':
+        return { jump_power: 0.42 };
       case 'minecraft:behavior.random_stroll':
         return { priority: 6, speed_multiplier: 1.0 };
+      case 'minecraft:behavior.look_at_player':
+        return { priority: 7, look_distance: 6.0 };
+      case 'minecraft:behavior.panic':
+        return { priority: 1, speed_multiplier: 1.25 };
+      case 'minecraft:behavior.float':
+        return { priority: 0 };
       default:
         return {};
     }
@@ -112,6 +122,222 @@ export default function EntityBuilder() {
             />
           </div>
         </div>
+      </div>
+    );
+  };
+
+  const renderMovementTab = () => {
+    const movementComponents = components.filter(c => 
+      ['minecraft:movement', 'minecraft:navigation.walk', 'minecraft:movement.basic', 'minecraft:jump.static'].includes(c.type)
+    );
+
+    return (
+      <div className="space-y-4">
+        <div className="text-sm text-muted-foreground mb-4">
+          Configure entity movement properties and navigation capabilities.
+        </div>
+        
+        {movementComponents.length === 0 ? (
+          <div className="text-center text-muted-foreground py-8">
+            <p>No movement components added yet. Use "Add Component" to add movement components.</p>
+          </div>
+        ) : (
+          movementComponents.map((component) => (
+            <div key={component.id} className="p-4 bg-muted rounded-lg">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h4 className="font-medium text-foreground">{component.type}</h4>
+                  <p className="text-xs text-muted-foreground">
+                    {component.type === 'minecraft:movement' && 'Controls basic movement speed'}
+                    {component.type === 'minecraft:navigation.walk' && 'Enables land navigation'}
+                    {component.type === 'minecraft:movement.basic' && 'Basic movement mechanics'}
+                    {component.type === 'minecraft:jump.static' && 'Jumping capabilities'}
+                  </p>
+                </div>
+                <Switch
+                  checked={component.enabled}
+                  onCheckedChange={() => toggleComponent(component.id)}
+                  data-testid={`switch-${component.id}-enabled`}
+                />
+              </div>
+              
+              {component.type === 'minecraft:movement' && (
+                <div>
+                  <Label htmlFor={`movement-speed-${component.id}`}>Movement Speed</Label>
+                  <Input
+                    id={`movement-speed-${component.id}`}
+                    type="number"
+                    step="0.1"
+                    value={component.properties.value || 0.25}
+                    onChange={(e) => updateComponent(component.id, { value: parseFloat(e.target.value) || 0.25 })}
+                    data-testid={`input-movement-speed-${component.id}`}
+                  />
+                </div>
+              )}
+              
+              {component.type === 'minecraft:navigation.walk' && (
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      checked={component.properties.can_path_over_water || false}
+                      onCheckedChange={(checked) => updateComponent(component.id, { can_path_over_water: checked })}
+                      data-testid={`switch-path-over-water-${component.id}`}
+                    />
+                    <Label>Can path over water</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      checked={component.properties.avoid_water || false}
+                      onCheckedChange={(checked) => updateComponent(component.id, { avoid_water: checked })}
+                      data-testid={`switch-avoid-water-${component.id}`}
+                    />
+                    <Label>Avoid water</Label>
+                  </div>
+                </div>
+              )}
+              
+              {component.type === 'minecraft:jump.static' && (
+                <div>
+                  <Label htmlFor={`jump-power-${component.id}`}>Jump Power</Label>
+                  <Input
+                    id={`jump-power-${component.id}`}
+                    type="number"
+                    step="0.1"
+                    value={component.properties.jump_power || 0.42}
+                    onChange={(e) => updateComponent(component.id, { jump_power: parseFloat(e.target.value) || 0.42 })}
+                    data-testid={`input-jump-power-${component.id}`}
+                  />
+                </div>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    );
+  };
+
+  const renderBehaviorTab = () => {
+    const behaviorComponents = components.filter(c => 
+      c.type.startsWith('minecraft:behavior.')
+    );
+
+    return (
+      <div className="space-y-4">
+        <div className="text-sm text-muted-foreground mb-4">
+          Configure entity AI behaviors and interactions.
+        </div>
+        
+        {behaviorComponents.length === 0 ? (
+          <div className="text-center text-muted-foreground py-8">
+            <p>No behavior components added yet. Use "Add Component" to add AI behaviors.</p>
+          </div>
+        ) : (
+          behaviorComponents.map((component) => (
+            <div key={component.id} className="p-4 bg-muted rounded-lg">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h4 className="font-medium text-foreground">{component.type}</h4>
+                  <p className="text-xs text-muted-foreground">
+                    {component.type === 'minecraft:behavior.random_stroll' && 'Makes entity wander randomly'}
+                    {component.type === 'minecraft:behavior.look_at_player' && 'Entity looks at nearby players'}
+                    {component.type === 'minecraft:behavior.panic' && 'Entity flees when hurt'}
+                    {component.type === 'minecraft:behavior.float' && 'Entity floats in water'}
+                  </p>
+                </div>
+                <Switch
+                  checked={component.enabled}
+                  onCheckedChange={() => toggleComponent(component.id)}
+                  data-testid={`switch-${component.id}-enabled`}
+                />
+              </div>
+              
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor={`priority-${component.id}`}>Priority</Label>
+                  <Input
+                    id={`priority-${component.id}`}
+                    type="number"
+                    value={component.properties.priority || 1}
+                    onChange={(e) => updateComponent(component.id, { priority: parseInt(e.target.value) || 1 })}
+                    data-testid={`input-priority-${component.id}`}
+                  />
+                </div>
+                
+                {(component.type === 'minecraft:behavior.random_stroll' || component.type === 'minecraft:behavior.panic') && (
+                  <div>
+                    <Label htmlFor={`speed-multiplier-${component.id}`}>Speed Multiplier</Label>
+                    <Input
+                      id={`speed-multiplier-${component.id}`}
+                      type="number"
+                      step="0.1"
+                      value={component.properties.speed_multiplier || 1.0}
+                      onChange={(e) => updateComponent(component.id, { speed_multiplier: parseFloat(e.target.value) || 1.0 })}
+                      data-testid={`input-speed-multiplier-${component.id}`}
+                    />
+                  </div>
+                )}
+                
+                {component.type === 'minecraft:behavior.look_at_player' && (
+                  <div>
+                    <Label htmlFor={`look-distance-${component.id}`}>Look Distance</Label>
+                    <Input
+                      id={`look-distance-${component.id}`}
+                      type="number"
+                      step="0.1"
+                      value={component.properties.look_distance || 6.0}
+                      onChange={(e) => updateComponent(component.id, { look_distance: parseFloat(e.target.value) || 6.0 })}
+                      data-testid={`input-look-distance-${component.id}`}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    );
+  };
+
+  const renderAdvancedTab = () => {
+    const advancedComponents = components.filter(c => 
+      !['minecraft:health', 'minecraft:movement', 'minecraft:navigation.walk', 'minecraft:movement.basic', 'minecraft:jump.static'].includes(c.type) &&
+      !c.type.startsWith('minecraft:behavior.')
+    );
+
+    return (
+      <div className="space-y-4">
+        <div className="text-sm text-muted-foreground mb-4">
+          Configure advanced entity properties and custom components.
+        </div>
+        
+        {advancedComponents.length === 0 ? (
+          <div className="text-center text-muted-foreground py-8">
+            <p>No advanced components added yet. Use "Add Component" to add custom components.</p>
+          </div>
+        ) : (
+          advancedComponents.map((component) => (
+            <div key={component.id} className="p-4 bg-muted rounded-lg">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h4 className="font-medium text-foreground">{component.type}</h4>
+                  <p className="text-xs text-muted-foreground">Custom component</p>
+                </div>
+                <Switch
+                  checked={component.enabled}
+                  onCheckedChange={() => toggleComponent(component.id)}
+                  data-testid={`switch-${component.id}-enabled`}
+                />
+              </div>
+              
+              <div className="text-sm">
+                <Label>Component Properties</Label>
+                <pre className="bg-background p-2 rounded text-xs mt-1 overflow-x-auto">
+                  {JSON.stringify(component.properties, null, 2)}
+                </pre>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     );
   };
@@ -166,21 +392,15 @@ export default function EntityBuilder() {
               </TabsContent>
 
               <TabsContent value="movement" className="mt-4">
-                <div className="text-center text-muted-foreground py-8">
-                  <p>Movement components will be available soon</p>
-                </div>
+                {renderMovementTab()}
               </TabsContent>
 
               <TabsContent value="behavior" className="mt-4">
-                <div className="text-center text-muted-foreground py-8">
-                  <p>Behavior components will be available soon</p>
-                </div>
+                {renderBehaviorTab()}
               </TabsContent>
 
               <TabsContent value="advanced" className="mt-4">
-                <div className="text-center text-muted-foreground py-8">
-                  <p>Advanced components will be available soon</p>
-                </div>
+                {renderAdvancedTab()}
               </TabsContent>
             </Tabs>
 
