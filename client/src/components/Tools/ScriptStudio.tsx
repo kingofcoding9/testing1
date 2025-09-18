@@ -155,15 +155,17 @@ world.sendMessage("Hello from Script Studio!");
     
     // Group elements by type and module
     const elementsByModule = modules.reduce((acc, moduleName) => {
-      const moduleData = minecraftRegistry.modules[moduleName];
-      acc[moduleName] = {
-        ...moduleData,
-        elementsByType: (moduleData.elements || []).reduce((typeAcc: any, element: any) => {
-          if (!typeAcc[element.type]) typeAcc[element.type] = [];
-          typeAcc[element.type].push(element);
-          return typeAcc;
-        }, {})
-      };
+      const moduleData = minecraftRegistry.modules[moduleName as keyof typeof minecraftRegistry.modules];
+      if (moduleData) {
+        acc[moduleName] = {
+          ...moduleData,
+          elementsByType: (moduleData.elements || []).reduce((typeAcc: any, element: any) => {
+            if (!typeAcc[element.type]) typeAcc[element.type] = [];
+            typeAcc[element.type].push(element);
+            return typeAcc;
+          }, {})
+        };
+      }
       return acc;
     }, {} as any);
 
@@ -310,11 +312,35 @@ world.sendMessage("Hello from Script Studio!");
       },
     });
 
-    // Register the same provider for JavaScript
+    // Register the same provider for JavaScript  
     monaco.languages.registerCompletionItemProvider('javascript', {
       provideCompletionItems: (model, position) => {
-        return monaco.languages.getLanguages().find(lang => lang.id === 'typescript')
-          ?.completionProvider?.provideCompletionItems?.(model, position) || { suggestions: [] };
+        // Reuse the TypeScript completion logic for JavaScript
+        const suggestions: Monaco.languages.CompletionItem[] = [];
+        const word = model.getWordUntilPosition(position);
+        const range = {
+          startLineNumber: position.lineNumber,
+          endLineNumber: position.lineNumber,
+          startColumn: word.startColumn,
+          endColumn: word.endColumn,
+        };
+
+        // Add basic completions for JavaScript
+        registryData.elements.forEach((element: any) => {
+          const shouldInclude = !word.word || element.name.toLowerCase().includes(word.word.toLowerCase());
+          if (shouldInclude) {
+            suggestions.push({
+              label: element.name,
+              kind: monaco.languages.CompletionItemKind.Class,
+              detail: `${element.type} ${element.name}`,
+              documentation: element.description,
+              insertText: element.name,
+              range,
+            });
+          }
+        });
+        
+        return { suggestions };
       },
     });
 
@@ -717,8 +743,12 @@ world.sendMessage("Hello from Script Studio!");
                     value={activeScript.content}
                     onChange={(value) => updateScript(activeScriptId, { content: value || '' })}
                     onMount={setupMonacoEditor}
+                    theme="vs-dark"
+                    beforeMount={(monaco) => {
+                      // Ensure dark theme is applied before mounting to prevent white flash
+                      monaco.editor.setTheme('vs-dark');
+                    }}
                     options={{
-                      theme: 'vs-dark',
                       fontSize: 14,
                       lineHeight: 20,
                       fontFamily: 'JetBrains Mono, Consolas, Monaco, Courier New, monospace',
@@ -727,6 +757,30 @@ world.sendMessage("Hello from Script Studio!");
                       roundedSelection: false,
                       padding: { top: 16, bottom: 16 },
                       automaticLayout: true,
+                      scrollbar: {
+                        vertical: 'visible',
+                        horizontal: 'visible',
+                        verticalScrollbarSize: 12,
+                        horizontalScrollbarSize: 12,
+                      },
+                      mouseWheelScrollSensitivity: 1,
+                      fastScrollSensitivity: 5,
+                      scrollPredominantAxis: false,
+                      smoothScrolling: true,
+                      cursorStyle: 'line',
+                      cursorWidth: 2,
+                      cursorBlinking: 'blink',
+                      renderLineHighlight: 'line',
+                      selectOnLineNumbers: true,
+                      lineNumbersMinChars: 4,
+                      glyphMargin: false,
+                      folding: true,
+                      foldingStrategy: 'indentation',
+                      showFoldingControls: 'mouseover',
+                      wordWrap: 'off',
+                      wordWrapColumn: 80,
+                      wordWrapMinified: true,
+                      wrappingIndent: 'indent',
                     }}
                     data-testid="monaco-editor"
                   />

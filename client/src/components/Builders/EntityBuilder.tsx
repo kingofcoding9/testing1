@@ -36,6 +36,7 @@ import {
 
 // Import the comprehensive entity registry
 import { entityComponents } from "@shared/entityRegistry";
+import getComponentDefinition from "@shared/componentIndex";
 
 export default function EntityBuilder() {
   const { toast } = useToast();
@@ -78,11 +79,32 @@ export default function EntityBuilder() {
     initialSections: ['basic-info', 'entity-settings', 'actions', 'validation', 'export-options']
   });
   
+  // Group current components by category - moved before useEffect
+  const componentsByCategory = useMemo(() => {
+    const grouped: Record<string, ComponentInstance[]> = {};
+    components.forEach(comp => {
+      const category = comp.metadata?.category || 'Other';
+      if (!grouped[category]) grouped[category] = [];
+      grouped[category].push(comp);
+    });
+    return grouped;
+  }, [components]);
+
   const collapsibleCategories = useCollapsible({
     storageKey: 'entity-builder-categories', 
     defaultCollapsed: false,
-    initialSections: Object.keys(componentsByCategory)
+    initialSections: []
   });
+
+  // Update collapsible categories when componentsByCategory changes
+  useEffect(() => {
+    const categoryKeys = Object.keys(componentsByCategory);
+    categoryKeys.forEach(category => {
+      if (!collapsibleCategories.getSectionIds().includes(category)) {
+        collapsibleCategories.addSection(category, false);
+      }
+    });
+  }, [componentsByCategory, collapsibleCategories]);
 
   // Convert registry components to ComponentItem format
   const availableComponents: ComponentItem[] = useMemo(() => {
@@ -101,6 +123,7 @@ export default function EntityBuilder() {
       conflicts: comp.conflicts
     }));
   }, []);
+
 
   // Get selected component names for ComponentSelector
   const selectedComponentNames = components.map(c => c.name);
@@ -287,15 +310,6 @@ export default function EntityBuilder() {
     });
   };
 
-  const componentsByCategory = useMemo(() => {
-    const grouped: Record<string, ComponentInstance[]> = {};
-    components.forEach(comp => {
-      const category = comp.metadata?.category || 'Other';
-      if (!grouped[category]) grouped[category] = [];
-      grouped[category].push(comp);
-    });
-    return grouped;
-  }, [components]);
 
   const getComponentDefinition = (componentName: string): ComponentDefinition | null => {
     const def = availableComponents.find(c => c.name === componentName);
@@ -654,8 +668,8 @@ export default function EntityBuilder() {
                           title="Validation Status"
                           description="Entity JSON validation and error checking"
                           icon={<AlertCircle className="w-4 h-4" />}
-                          badge={validation.errors.length > 0 ? validation.errors.length : undefined}
-                          badgeVariant={validation.errors.length > 0 ? "destructive" : "secondary"}
+                          badge={validation.errors && validation.errors.length > 0 ? validation.errors.length : undefined}
+                          badgeVariant={validation.errors && validation.errors.length > 0 ? "destructive" : "secondary"}
                           collapsed={collapsibleComponents.isCollapsed('validation')}
                           onToggle={(collapsed) => collapsibleComponents.setSection('validation', collapsed)}
                           data-testid="collapsible-validation"
@@ -701,7 +715,6 @@ export default function EntityBuilder() {
                 code={JSON.stringify(entityJSON, null, 2)}
                 language="json"
                 title="Entity JSON"
-                validation={validation}
               />
             </div>
           </div>

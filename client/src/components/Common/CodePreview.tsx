@@ -6,9 +6,10 @@ interface CodePreviewProps {
   code: string;
   language: string;
   className?: string;
+  title?: string;
 }
 
-export default function CodePreview({ code, language, className = "" }: CodePreviewProps) {
+export default function CodePreview({ code, language, className = "", title }: CodePreviewProps) {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = async () => {
@@ -48,6 +49,11 @@ export default function CodePreview({ code, language, className = "" }: CodePrev
     <div className={`relative syntax-highlight rounded-lg ${className}`} data-testid="code-preview">
       <div className="flex items-center justify-between p-3 border-b border-border">
         <div className="flex items-center space-x-2">
+          {title && (
+            <span className="text-xs font-medium text-foreground mr-2">
+              {title}
+            </span>
+          )}
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
             {language}
           </span>

@@ -89,7 +89,7 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
       )}
       
       <aside 
-        className={`bg-card border-r border-border flex-shrink-0 transition-all duration-300 ${
+        className={`bg-card border-r border-border flex-shrink-0 transition-all duration-300 h-screen flex flex-col ${
           isMobile 
             ? `sidebar-mobile ${!collapsed ? 'open' : ''}` 
             : collapsed 

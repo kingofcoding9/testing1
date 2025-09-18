@@ -28,33 +28,7 @@ export default function CoreConcepts({ onNavigate }: CoreConceptsProps) {
   const [selectedDifficulty, setSelectedDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
   const { toast } = useToast();
   
-  // Enhanced collapsible functionality
-  const collapsibleSections = useCollapsible({
-    storageKey: 'core-concepts',
-    defaultCollapsed: false,
-    initialSections: tableOfContents.map(item => item.id)
-  });
-
-  const toggleSection = (sectionId: string) => {
-    setExpandedSections(prev => 
-      prev.includes(sectionId) 
-        ? prev.filter(id => id !== sectionId)
-        : [...prev, sectionId]
-    );
-  };
-
-  const copyToClipboard = async (code: string, title: string) => {
-    try {
-      await navigator.clipboard.writeText(code);
-      toast({
-        title: "Copied to clipboard",
-        description: `${title} has been copied to your clipboard.`,
-      });
-    } catch (err) {
-      console.error('Failed to copy code:', err);
-    }
-  };
-
+  // Table of contents - moved before useCollapsible to avoid hoisting issues
   const tableOfContents = [
     { 
       id: 'getting-started', 
@@ -137,6 +111,33 @@ export default function CoreConcepts({ onNavigate }: CoreConceptsProps) {
       description: 'Performance optimization and advanced techniques'
     },
   ];
+
+  // Enhanced collapsible functionality
+  const collapsibleSections = useCollapsible({
+    storageKey: 'core-concepts',
+    defaultCollapsed: false,
+    initialSections: tableOfContents.map(item => item.id)
+  });
+
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections(prev => 
+      prev.includes(sectionId) 
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
+  };
+
+  const copyToClipboard = async (code: string, title: string) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      toast({
+        title: "Copied to clipboard",
+        description: `${title} has been copied to your clipboard.`,
+      });
+    } catch (err) {
+      console.error('Failed to copy code:', err);
+    }
+  };
 
   const filteredContents = tableOfContents.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
