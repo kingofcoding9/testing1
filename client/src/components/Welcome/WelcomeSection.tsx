@@ -26,9 +26,9 @@ export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
     },
     {
       icon: "textureCreator",
-      title: "Texture Creator",
-      description: "Advanced 2D texture editor with layers, custom brushes, and filters.",
-      section: "texture-creator",
+      title: "Pixel Art Creator",
+      description: "Professional pixel art editor for creating custom textures and sprites (Pixilart).",
+      section: "pixilart-external",
       bgColor: "bg-primary"
     },
     {
@@ -90,7 +90,13 @@ export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
             <Card 
               key={index}
               className="bg-card border border-border hover:border-primary transition-colors cursor-pointer"
-              onClick={() => onNavigate(feature.section)}
+              onClick={() => {
+                if (feature.section === 'pixilart-external') {
+                  window.open('https://www.pixilart.com/draw?ref=home-page', '_blank', 'noopener,noreferrer');
+                } else {
+                  onNavigate(feature.section);
+                }
+              }}
               data-testid={`feature-card-${feature.section}`}
             >
               <CardContent className="pt-6">
@@ -111,7 +117,11 @@ export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
                   className="text-primary text-sm font-medium hover:underline flex items-center"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onNavigate(feature.section);
+                    if (feature.section === 'pixilart-external') {
+                      window.open('https://www.pixilart.com/draw?ref=home-page', '_blank', 'noopener,noreferrer');
+                    } else {
+                      onNavigate(feature.section);
+                    }
                   }}
                 >
                   Get Started <ArrowRight className="ml-1" size={14} />

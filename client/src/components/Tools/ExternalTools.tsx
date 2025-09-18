@@ -76,6 +76,21 @@ const externalTools: ExternalTool[] = [
     ],
     icon: 'snowstorm',
     category: 'effects'
+  },
+  {
+    id: 'pixilart',
+    name: 'Pixilart',
+    url: 'https://www.pixilart.com/draw?ref=home-page',
+    description: 'Professional pixel art editor for creating custom textures and sprites',
+    features: [
+      'Pixel Art Creation',
+      'Custom Brush Tools',
+      'Layer Support',
+      'Color Palettes',
+      'Export Formats'
+    ],
+    icon: 'pixilart',
+    category: 'editing'
   }
 ];
 

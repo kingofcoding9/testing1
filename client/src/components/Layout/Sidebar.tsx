@@ -76,7 +76,6 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
     {
       title: "Tools",
       items: [
-        { id: 'texture-creator', icon: 'textureCreator', label: 'Texture Creator' },
         { id: 'script-studio', icon: 'scriptStudio', label: 'Script Studio' },
         { id: 'addon-packager', icon: 'addonPackager', label: 'Addon Packager' },
         { id: 'validator', icon: 'validator', label: 'JSON Validator' },

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Package, Download, Copy, Save, RotateCcw, Info, Zap, AlertCircle, Settings, FileText, Layers } from "lucide-react";
+import { Package, Download, Copy, Save, RotateCcw, Info, Zap, AlertCircle, Settings, FileText, Layers, Box, Cog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -643,7 +643,7 @@ export default function ItemBuilder() {
                     <TabsContent value="components" className="space-y-4">
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-medium">{getComponentsTabLabel()}</h4>
+                          <h4 className="font-medium">Item Components</h4>
                           <Button 
                             onClick={() => setShowComponentSelector(true)}
                             data-testid="button-add-component"
@@ -651,7 +651,113 @@ export default function ItemBuilder() {
                             Add Component
                           </Button>
                         </div>
-                        {renderComponentsByCategory()}
+
+                        {recommendedComponents.length > 0 && (
+                          <Alert>
+                            <Info className="h-4 w-4" />
+                            <AlertDescription>
+                              <div className="space-y-2">
+                                <p className="font-medium">Recommended components:</p>
+                                <div className="flex flex-wrap gap-1">
+                                  {recommendedComponents.map(comp => (
+                                    <Button
+                                      key={comp.name}
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => addComponent(comp.name)}
+                                      data-testid={`button-add-recommended-${comp.name}`}
+                                    >
+                                      {comp.name}
+                                    </Button>
+                                  ))}
+                                </div>
+                              </div>
+                            </AlertDescription>
+                          </Alert>
+                        )}
+
+                        <ScrollArea className="h-[400px]">
+                          <Accordion type="single" collapsible className="space-y-2">
+                            {Object.entries(componentsByCategory).map(([category, categoryComponents]) => (
+                              <AccordionItem key={category} value={category}>
+                                <AccordionTrigger className="text-sm" data-testid={`accordion-${category}`}>
+                                  {category} ({categoryComponents.length})
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                  <div className="space-y-2">
+                                    {categoryComponents.map((component) => {
+                                      const def = getComponentDefinition(component.name);
+                                      return (
+                                        <Card key={component.name} className="p-3">
+                                          <div className="flex items-start justify-between gap-2">
+                                            <div className="flex-1 min-w-0">
+                                              <div className="flex items-center gap-2 mb-1">
+                                                <Switch
+                                                  checked={component.enabled}
+                                                  onCheckedChange={() => toggleComponent(component.name)}
+                                                  data-testid={`switch-${component.name}`}
+                                                />
+                                                <span className="font-medium text-sm truncate">
+                                                  {component.name}
+                                                </span>
+                                                {def && (
+                                                  <Badge 
+                                                    variant="outline" 
+                                                    className={`text-xs ${
+                                                      def.difficulty === 'beginner' ? 'border-green-500' :
+                                                      def.difficulty === 'intermediate' ? 'border-yellow-500' :
+                                                      'border-red-500'
+                                                    }`}
+                                                  >
+                                                    {def.difficulty}
+                                                  </Badge>
+                                                )}
+                                              </div>
+                                              {def && (
+                                                <p className="text-xs text-muted-foreground line-clamp-2">
+                                                  {def.description}
+                                                </p>
+                                              )}
+                                            </div>
+                                            <div className="flex gap-1">
+                                              <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                  <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => openComponentForm(component)}
+                                                    disabled={!component.enabled}
+                                                    data-testid={`button-configure-${component.name}`}
+                                                  >
+                                                    <Settings className="w-3 h-3" />
+                                                  </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>Configure properties</TooltipContent>
+                                              </Tooltip>
+                                              <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                  <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => removeComponent(component.name)}
+                                                    data-testid={`button-remove-${component.name}`}
+                                                  >
+                                                    <AlertCircle className="w-3 h-3" />
+                                                  </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>Remove component</TooltipContent>
+                                              </Tooltip>
+                                            </div>
+                                          </div>
+                                        </Card>
+                                      );
+                                    })}
+                                  </div>
+                                </AccordionContent>
+                              </AccordionItem>
+                            ))}
+                          </Accordion>
+                        </ScrollArea>
                       </div>
                     </TabsContent>
 

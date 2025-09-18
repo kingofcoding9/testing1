@@ -55,6 +55,7 @@ export const iconMap = {
   blockbench: 'diamond_pickaxe.png', // modeling tool
   bridgeCore: 'bamboo_door.png', // bridge-like structure
   snowstorm: 'bucket_powder_snow.png', // particle effects/snow
+  pixilart: 'brush.png', // pixel art editor
   
   // Category Icons (Registries)
   core: 'anvil-hammer.png', // ⚙️

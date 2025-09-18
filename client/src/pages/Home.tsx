@@ -39,7 +39,6 @@ type Section =
   | 'builder-loot'
   | 'builder-biome'
   | 'builder-spawn'
-  | 'texture-creator'
   | 'script-studio'
   | 'addon-packager'
   | 'validator'
@@ -106,8 +105,6 @@ export default function Home() {
         return <BiomeBuilder />;
       case 'builder-spawn':
         return <SpawnRuleBuilder />;
-      case 'texture-creator':
-        return <TextureCreator />;
       case 'script-studio':
         return <ScriptStudio />;
       case 'addon-packager':
