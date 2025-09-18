@@ -1,53 +1,70 @@
 import { useState, useRef, useEffect } from "react";
-import { Undo, Redo, Download, Plus, Trash2, Eye, EyeOff, Grid, Save, Upload } from "lucide-react";
+import { Undo, Redo, Download, Plus, Trash2, Eye, EyeOff, Grid, Save, Upload, Move, ChevronUp, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useCanvas } from "@/hooks/useCanvas";
-import { CanvasTool, BrushSettings } from "@/lib/canvas/tools";
-import { LayerManager, LayerData } from "@/lib/canvas/layers";
+import { useLayeredCanvas } from "@/hooks/useLayeredCanvas";
+import { CanvasTool, BrushSettings, Point } from "@/lib/canvas/tools";
+import { LayerData } from "@/lib/canvas/layers";
 
 export default function TextureCreator() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
-  const [selectedTool, setSelectedTool] = useState<CanvasTool>('brush');
-  const [brushSize, setBrushSize] = useState([5]);
+  const [selectedTool, setSelectedTool] = useState<CanvasTool>('pencil');
+  const [brushSize, setBrushSize] = useState([4]);
   const [brushOpacity, setBrushOpacity] = useState([100]);
   const [brushHardness, setBrushHardness] = useState([100]);
-  const [selectedColor, setSelectedColor] = useState('#ffffff');
+  const [selectedColor, setSelectedColor] = useState('#8b4513');
   const [showGrid, setShowGrid] = useState(true);
-  const [canvasSize, setCanvasSize] = useState({ width: 16, height: 16 });
-  const [layers, setLayers] = useState<LayerData[]>([
-    { id: 'background', name: 'Background', visible: true, opacity: 100 },
-    { id: 'details', name: 'Details', visible: true, opacity: 75 }
-  ]);
-  const [activeLayer, setActiveLayer] = useState('background');
+  const [fillShapes, setFillShapes] = useState(true);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [dragStart, setDragStart] = useState<Point | null>(null);
 
+  // Use the new layered canvas system
   const {
-    canvasData,
-    history,
-    historyIndex,
     initializeCanvas,
-    drawOnCanvas,
+    updateDisplay,
+    startDrawing,
+    continueDrawing,
+    endDrawing,
+    drawShape,
+    layerManager,
+    textureWidth,
+    textureHeight,
+    displayScale,
+    canUndo,
+    canRedo,
     undo,
     redo,
-    clearCanvas,
-    exportCanvas
-  } = useCanvas(canvasSize.width, canvasSize.height);
+    displayToTexture,
+    resizeCanvas,
+    exportTexture
+  } = useLayeredCanvas(16, 16);
 
+  // Get current layers from LayerManager
+  const layers = layerManager?.getLayers() || [];
+  const activeLayer = layerManager?.getActiveLayer();
+
+  // Initialize canvas when component mounts
   useEffect(() => {
     if (canvasRef.current) {
       initializeCanvas(canvasRef.current);
       drawGrid();
     }
-  }, [canvasSize, initializeCanvas]);
+  }, [initializeCanvas]);
 
+  // Update grid when showGrid or canvas size changes
   useEffect(() => {
     drawGrid();
-  }, [showGrid]);
+  }, [showGrid, textureWidth, textureHeight, displayScale]);
+
+  // Update display when layer manager changes
+  useEffect(() => {
+    updateDisplay();
+  }, [layerManager, updateDisplay]);
 
   const drawGrid = () => {
     if (!overlayRef.current) return;
@@ -55,35 +72,47 @@ export default function TextureCreator() {
     const ctx = overlayRef.current.getContext('2d');
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, overlayRef.current.width, overlayRef.current.height);
+    const displayWidth = textureWidth * displayScale;
+    const displayHeight = textureHeight * displayScale;
+    
+    overlayRef.current.width = displayWidth;
+    overlayRef.current.height = displayHeight;
+    
+    ctx.clearRect(0, 0, displayWidth, displayHeight);
     
     if (showGrid) {
-      const scale = 320 / canvasSize.width;
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
       ctx.lineWidth = 1;
 
-      for (let x = 0; x <= canvasSize.width; x++) {
+      // Draw vertical lines
+      for (let x = 0; x <= textureWidth; x++) {
+        const xPos = x * displayScale;
         ctx.beginPath();
-        ctx.moveTo(x * scale, 0);
-        ctx.lineTo(x * scale, overlayRef.current.height);
+        ctx.moveTo(xPos, 0);
+        ctx.lineTo(xPos, displayHeight);
         ctx.stroke();
       }
 
-      for (let y = 0; y <= canvasSize.height; y++) {
+      // Draw horizontal lines
+      for (let y = 0; y <= textureHeight; y++) {
+        const yPos = y * displayScale;
         ctx.beginPath();
-        ctx.moveTo(0, y * scale);
-        ctx.lineTo(overlayRef.current.width, y * scale);
+        ctx.moveTo(0, yPos);
+        ctx.lineTo(displayWidth, yPos);
         ctx.stroke();
       }
     }
   };
 
-  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  // Mouse event handlers for proper drawing
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return;
 
     const rect = canvasRef.current.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) / (320 / canvasSize.width));
-    const y = Math.floor((e.clientY - rect.top) / (320 / canvasSize.height));
+    const displayPoint: Point = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
 
     const brushSettings: BrushSettings = {
       size: brushSize[0],
@@ -92,7 +121,68 @@ export default function TextureCreator() {
       color: selectedColor
     };
 
-    drawOnCanvas(x, y, selectedTool, brushSettings);
+    if (selectedTool === 'rectangle' || selectedTool === 'circle' || selectedTool === 'line') {
+      // For shape tools, start drag operation
+      setIsDrawing(true);
+      setDragStart(displayPoint);
+    } else {
+      // For drawing tools, start immediate drawing
+      setIsDrawing(true);
+      startDrawing(displayPoint, selectedTool, brushSettings);
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing || !canvasRef.current) return;
+
+    const rect = canvasRef.current.getBoundingClientRect();
+    const displayPoint: Point = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+
+    const brushSettings: BrushSettings = {
+      size: brushSize[0],
+      opacity: brushOpacity[0] / 100,
+      hardness: brushHardness[0] / 100,
+      color: selectedColor
+    };
+
+    if (selectedTool === 'rectangle' || selectedTool === 'circle' || selectedTool === 'line') {
+      // For shape tools, show preview (we'll implement this later)
+      // For now, just store the current position
+    } else {
+      // For drawing tools, continue drawing
+      continueDrawing(displayPoint, selectedTool, brushSettings);
+    }
+  };
+
+  const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing || !canvasRef.current) return;
+
+    const rect = canvasRef.current.getBoundingClientRect();
+    const displayPoint: Point = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+
+    const brushSettings: BrushSettings = {
+      size: brushSize[0],
+      opacity: brushOpacity[0] / 100,
+      hardness: brushHardness[0] / 100,
+      color: selectedColor
+    };
+
+    if ((selectedTool === 'rectangle' || selectedTool === 'circle' || selectedTool === 'line') && dragStart) {
+      // For shape tools, complete the shape
+      const startTexture = displayToTexture(dragStart.x, dragStart.y);
+      const endTexture = displayToTexture(displayPoint.x, displayPoint.y);
+      drawShape(startTexture, endTexture, selectedTool, brushSettings, fillShapes);
+      setDragStart(null);
+    }
+
+    setIsDrawing(false);
+    endDrawing();
   };
 
   const tools = [
@@ -107,69 +197,82 @@ export default function TextureCreator() {
   ];
 
   const minecraftPalette = [
-    '#000000', '#1a1a1a', '#0d47a1', '#1976d2',
-    '#388e3c', '#689f38', '#fbc02d', '#ff8f00',
-    '#d32f2f', '#7b1fa2', '#5d4037', '#424242',
-    '#37474f', '#263238', '#ffffff', '#f5f5f5'
+    '#000000', '#1a1a1a', '#333333', '#4a4a4a',
+    '#8b4513', '#cd853f', '#daa520', '#ffd700',
+    '#228b22', '#32cd32', '#90ee90', '#98fb98',
+    '#0000cd', '#1e90ff', '#87ceeb', '#b0e0e6',
+    '#8b0000', '#dc143c', '#ff6347', '#ff7f50',
+    '#800080', '#9370db', '#dda0dd', '#ffffff'
   ];
 
+  // Layer management functions
   const addLayer = () => {
-    const newLayer: LayerData = {
-      id: `layer-${Date.now()}`,
-      name: `Layer ${layers.length + 1}`,
-      visible: true,
-      opacity: 100
-    };
-    setLayers([...layers, newLayer]);
-    setActiveLayer(newLayer.id);
+    if (!layerManager) return;
+    const layerId = layerManager.addLayer(`Layer ${layers.length + 1}`, true);
+    updateDisplay();
   };
 
   const removeLayer = (layerId: string) => {
-    if (layers.length === 1) return;
-    setLayers(layers.filter(layer => layer.id !== layerId));
-    if (activeLayer === layerId) {
-      setActiveLayer(layers.find(layer => layer.id !== layerId)?.id || layers[0].id);
-    }
+    if (!layerManager || layers.length <= 1) return;
+    layerManager.removeLayer(layerId);
+    updateDisplay();
+  };
+
+  const setActiveLayer = (layerId: string) => {
+    if (!layerManager) return;
+    layerManager.setActiveLayer(layerId);
+    updateDisplay();
   };
 
   const toggleLayerVisibility = (layerId: string) => {
-    setLayers(layers.map(layer =>
-      layer.id === layerId ? { ...layer, visible: !layer.visible } : layer
-    ));
+    if (!layerManager) return;
+    layerManager.toggleLayerVisibility(layerId);
+    updateDisplay();
   };
 
   const updateLayerOpacity = (layerId: string, opacity: number) => {
-    setLayers(layers.map(layer =>
-      layer.id === layerId ? { ...layer, opacity } : layer
-    ));
+    if (!layerManager) return;
+    layerManager.setLayerOpacity(layerId, opacity);
+    updateDisplay();
   };
 
-  const exportTexture = async (format: 'png' | 'resource-pack') => {
+  const moveLayer = (layerId: string, direction: 'up' | 'down') => {
+    if (!layerManager) return;
+    layerManager.moveLayer(layerId, direction);
+    updateDisplay();
+  };
+
+  const duplicateLayer = (layerId: string) => {
+    if (!layerManager) return;
+    layerManager.duplicateLayer(layerId);
+    updateDisplay();
+  };
+
+  const handleExportTexture = async (format: 'png' | 'resource-pack') => {
     if (format === 'png') {
-      const blob = await exportCanvas('png');
+      const blob = await exportTexture();
       if (blob) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `texture_${canvasSize.width}x${canvasSize.height}.png`;
+        a.download = `texture_${textureWidth}x${textureHeight}.png`;
         a.style.display = 'none';
         
-        // Append to DOM before clicking (required for some browsers)
         document.body.appendChild(a);
         a.click();
         
-        // Clean up
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       }
     } else {
-      // Export as resource pack structure
+      // Resource pack export implementation can be added later
       console.log('Resource pack export will be implemented');
     }
   };
 
-  const resizeCanvas = (width: number, height: number) => {
-    setCanvasSize({ width, height });
+  const handleResizeCanvas = (value: string) => {
+    const [width, height] = value.split('x').map(Number);
+    resizeCanvas(width, height);
   };
 
   return (
@@ -222,6 +325,18 @@ export default function TextureCreator() {
                   </button>
                 ))}
               </div>
+              
+              {/* Fill/Stroke toggle for shapes */}
+              {(selectedTool === 'rectangle' || selectedTool === 'circle') && (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Fill Shapes</span>
+                  <Switch
+                    checked={fillShapes}
+                    onCheckedChange={setFillShapes}
+                    data-testid="switch-fill-shapes"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Brush Settings */}
@@ -233,7 +348,7 @@ export default function TextureCreator() {
                   value={brushSize}
                   onValueChange={setBrushSize}
                   min={1}
-                  max={50}
+                  max={20}
                   step={1}
                   data-testid="slider-brush-size"
                 />
@@ -243,23 +358,25 @@ export default function TextureCreator() {
                 <Slider
                   value={brushOpacity}
                   onValueChange={setBrushOpacity}
-                  min={0}
+                  min={1}
                   max={100}
                   step={1}
                   data-testid="slider-brush-opacity"
                 />
               </div>
-              <div>
-                <Label>Hardness: {brushHardness[0]}%</Label>
-                <Slider
-                  value={brushHardness}
-                  onValueChange={setBrushHardness}
-                  min={0}
-                  max={100}
-                  step={1}
-                  data-testid="slider-brush-hardness"
-                />
-              </div>
+              {selectedTool === 'brush' && (
+                <div>
+                  <Label>Hardness: {brushHardness[0]}%</Label>
+                  <Slider
+                    value={brushHardness}
+                    onValueChange={setBrushHardness}
+                    min={0}
+                    max={100}
+                    step={1}
+                    data-testid="slider-brush-hardness"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
@@ -270,14 +387,11 @@ export default function TextureCreator() {
                 <h3 className="text-lg font-semibold text-foreground">Canvas</h3>
                 <div className="flex items-center space-x-2">
                   <span className="text-sm text-muted-foreground">
-                    {canvasSize.width}x{canvasSize.height}
+                    {textureWidth}x{textureHeight}
                   </span>
                   <Select
-                    value={`${canvasSize.width}x${canvasSize.height}`}
-                    onValueChange={(value) => {
-                      const [width, height] = value.split('x').map(Number);
-                      resizeCanvas(width, height);
-                    }}
+                    value={`${textureWidth}x${textureHeight}`}
+                    onValueChange={handleResizeCanvas}
                   >
                     <SelectTrigger className="w-24" data-testid="select-canvas-size">
                       <SelectValue />
@@ -287,26 +401,31 @@ export default function TextureCreator() {
                       <SelectItem value="32x32">32x32</SelectItem>
                       <SelectItem value="64x64">64x64</SelectItem>
                       <SelectItem value="128x128">128x128</SelectItem>
+                      <SelectItem value="256x256">256x256</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
               
-              <div className="texture-canvas-container rounded-lg p-4 flex items-center justify-center min-h-[400px]">
+              <div className="texture-canvas-container rounded-lg p-4 flex items-center justify-center min-h-[400px] bg-gray-100 dark:bg-gray-800">
                 <div className="relative">
                   <canvas
                     ref={canvasRef}
-                    width={320}
-                    height={320}
-                    className="border border-border rounded cursor-crosshair"
+                    className="border border-border rounded cursor-crosshair bg-white"
                     style={{ imageRendering: 'pixelated' }}
-                    onClick={handleCanvasClick}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={() => {
+                      if (isDrawing) {
+                        setIsDrawing(false);
+                        endDrawing();
+                      }
+                    }}
                     data-testid="texture-canvas"
                   />
                   <canvas
                     ref={overlayRef}
-                    width={320}
-                    height={320}
                     className="absolute top-0 left-0 pointer-events-none rounded"
                     data-testid="grid-overlay"
                   />
@@ -320,7 +439,7 @@ export default function TextureCreator() {
                     variant="secondary"
                     size="sm"
                     onClick={undo}
-                    disabled={historyIndex === 0}
+                    disabled={!canUndo}
                     data-testid="button-undo"
                   >
                     <Undo className="mr-2" size={16} />
@@ -330,7 +449,7 @@ export default function TextureCreator() {
                     variant="secondary"
                     size="sm"
                     onClick={redo}
-                    disabled={historyIndex === history.length - 1}
+                    disabled={!canRedo}
                     data-testid="button-redo"
                   >
                     <Redo className="mr-2" size={16} />
@@ -371,17 +490,21 @@ export default function TextureCreator() {
                     className="w-8 h-8 border-none rounded cursor-pointer bg-transparent"
                     data-testid="color-picker"
                   />
+                  <span className="text-sm font-mono">{selectedColor.toUpperCase()}</span>
                 </div>
                 
                 {/* Palette Grid */}
-                <div className="grid grid-cols-8 gap-1">
+                <div className="grid grid-cols-6 gap-1">
                   {minecraftPalette.map((color, index) => (
                     <div
                       key={index}
-                      className="w-6 h-6 border border-border rounded cursor-pointer hover:scale-110 transition-transform"
+                      className={`w-8 h-8 border rounded cursor-pointer hover:scale-110 transition-transform ${
+                        selectedColor === color ? 'border-primary border-2' : 'border-border'
+                      }`}
                       style={{ backgroundColor: color }}
                       onClick={() => setSelectedColor(color)}
                       data-testid={`palette-color-${index}`}
+                      title={color.toUpperCase()}
                     />
                   ))}
                 </div>
@@ -402,36 +525,92 @@ export default function TextureCreator() {
               </div>
               
               <div className="space-y-2">
-                {layers.map((layer) => (
+                {layers.slice().reverse().map((layer, index) => (
                   <div
                     key={layer.id}
-                    className={`p-2 rounded flex items-center justify-between ${
-                      activeLayer === layer.id 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'bg-muted'
+                    className={`p-3 rounded-lg border transition-colors ${
+                      activeLayer?.id === layer.id 
+                        ? 'bg-primary/10 border-primary' 
+                        : 'bg-muted border-border hover:bg-muted/80'
                     }`}
+                    onClick={() => setActiveLayer(layer.id)}
                     data-testid={`layer-${layer.id}`}
                   >
-                    <div className="flex items-center">
-                      <button
-                        onClick={() => toggleLayerVisibility(layer.id)}
-                        className="mr-2"
-                        data-testid={`button-toggle-layer-${layer.id}`}
-                      >
-                        {layer.visible ? <Eye size={16} /> : <EyeOff size={16} />}
-                      </button>
-                      <span className="text-sm">{layer.name}</span>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleLayerVisibility(layer.id);
+                          }}
+                          className="mr-2 hover:text-primary"
+                          data-testid={`button-toggle-layer-${layer.id}`}
+                        >
+                          {layer.visible ? <Eye size={16} /> : <EyeOff size={16} />}
+                        </button>
+                        <Input
+                          value={layer.name}
+                          onChange={(e) => {
+                            if (layerManager) {
+                              layerManager.updateLayerProperty(layer.id, 'name', e.target.value);
+                              updateDisplay();
+                            }
+                          }}
+                          className="text-sm border-none p-0 h-auto bg-transparent"
+                          data-testid={`input-layer-name-${layer.id}`}
+                        />
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            moveLayer(layer.id, 'up');
+                          }}
+                          className="hover:text-primary"
+                          disabled={index === 0}
+                          data-testid={`button-move-layer-up-${layer.id}`}
+                        >
+                          <ChevronUp size={14} />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            moveLayer(layer.id, 'down');
+                          }}
+                          className="hover:text-primary"
+                          disabled={index === layers.length - 1}
+                          data-testid={`button-move-layer-down-${layer.id}`}
+                        >
+                          <ChevronDown size={14} />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeLayer(layer.id);
+                          }}
+                          className="hover:text-destructive"
+                          disabled={layers.length === 1}
+                          data-testid={`button-remove-layer-${layer.id}`}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xs">{layer.opacity}%</span>
-                      <button
-                        onClick={() => removeLayer(layer.id)}
-                        className="text-xs hover:text-destructive"
-                        disabled={layers.length === 1}
-                        data-testid={`button-remove-layer-${layer.id}`}
-                      >
-                        <Trash2 size={12} />
-                      </button>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Opacity</span>
+                        <span className="text-xs">{layer.opacity}%</span>
+                      </div>
+                      <Slider
+                        value={[layer.opacity]}
+                        onValueChange={(value) => updateLayerOpacity(layer.id, value[0])}
+                        min={0}
+                        max={100}
+                        step={1}
+                        className="w-full"
+                        data-testid={`slider-layer-opacity-${layer.id}`}
+                      />
                     </div>
                   </div>
                 ))}
@@ -444,7 +623,7 @@ export default function TextureCreator() {
               <div className="space-y-3">
                 <Button
                   className="w-full"
-                  onClick={() => exportTexture('png')}
+                  onClick={() => handleExportTexture('png')}
                   data-testid="button-export-png"
                 >
                   <Download className="mr-2" size={16} />
@@ -453,7 +632,7 @@ export default function TextureCreator() {
                 <Button
                   variant="secondary"
                   className="w-full"
-                  onClick={() => exportTexture('resource-pack')}
+                  onClick={() => handleExportTexture('resource-pack')}
                   data-testid="button-export-resource-pack"
                 >
                   <Save className="mr-2" size={16} />
