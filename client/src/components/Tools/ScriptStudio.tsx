@@ -2487,14 +2487,35 @@ class MessageFormData {
                       monaco.editor.setTheme('vs-dark');
                     }}
                     options={{
-                      // Basic editor appearance
+                      // Basic editor appearance - OPTIMIZED FOR CURSOR POSITIONING
                       fontSize: 14,
-                      lineHeight: 20,
-                      fontFamily: 'JetBrains Mono, Consolas, Monaco, Courier New, monospace',
+                      lineHeight: 21,  // Optimal ratio (1.5x) for precise cursor positioning
+                      fontFamily: 'Consolas, Monaco, "Courier New", monospace',  // More reliable font stack
+                      fontLigatures: false,  // Disable ligatures to prevent positioning issues
+                      fontWeight: '400',  // Consistent font weight
+                      letterSpacing: 0,  // No extra letter spacing
                       minimap: { enabled: false },
                       roundedSelection: false,
-                      padding: { top: 16, bottom: 16 },
+                      padding: { top: 8, bottom: 8, left: 0, right: 0 },  // Minimal padding
                       automaticLayout: true,
+                      
+                      // CURSOR AND MOUSE POSITIONING - CRITICAL FIXES
+                      mouseStyle: 'text',  // Ensure text cursor on hover
+                      multiCursorModifier: 'ctrlCmd',  // Standard multi-cursor behavior
+                      multiCursorMergeOverlapping: true,  // Merge overlapping cursors
+                      multiCursorPaste: 'spread',  // Handle multi-cursor paste properly
+                      disableMonospaceOptimizations: false,  // Keep monospace optimizations
+                      
+                      // PRECISE CHARACTER POSITIONING
+                      renderWhitespace: 'none',  // Don't render whitespace that affects positioning
+                      renderControlCharacters: false,  // Don't render control chars
+                      renderIndentGuides: false,  // Disable indent guides that might interfere
+                      
+                      // CONTAINER AND LAYOUT FIXES
+                      dimension: undefined,  // Let Monaco handle dimensions
+                      overviewRulerLanes: 0,  // Disable overview ruler to save space
+                      hideCursorInOverviewRuler: true,  // Hide cursor in overview
+                      overviewRulerBorder: false,  // No overview border
                       
                       // SCROLLING CONFIGURATION - FIXED FOR PROPER SCROLLING
                       scrollBeyondLastLine: true,  // Allow scrolling beyond last line
@@ -2513,26 +2534,66 @@ class MessageFormData {
                       smoothScrolling: true,              // Smooth scroll animation
                       disableLayerHinting: false,         // Keep layer hinting for performance
                       
-                      // Cursor and selection
-                      cursorStyle: 'line',
-                      cursorWidth: 2,
-                      cursorBlinking: 'blink',
-                      renderLineHighlight: 'line',
-                      selectOnLineNumbers: true,
+                      // CURSOR CONFIGURATION - ENHANCED FOR PRECISION
+                      cursorStyle: 'line',  // Line cursor for precision
+                      cursorWidth: 2,  // Standard width
+                      cursorBlinking: 'blink',  // Visible blinking
+                      cursorSmoothCaretAnimation: true,  // Smooth cursor movement
+                      renderLineHighlight: 'line',  // Highlight current line
+                      renderLineHighlightOnlyWhenFocus: false,  // Always show line highlight
+                      selectOnLineNumbers: true,  // Allow line number selection
+                      selectionHighlight: true,  // Highlight selections
+                      occurrencesHighlight: true,  // Highlight word occurrences
                       
-                      // Line numbers and margins
-                      lineNumbersMinChars: 4,
-                      glyphMargin: false,
+                      // MOUSE INTERACTION FIXES
+                      mouseWheelZoom: false,  // Disable zoom to prevent positioning issues
+                      links: false,  // Disable automatic link detection
+                      find: {
+                        seedSearchStringFromSelection: 'selection',  // Use selection for search
+                        autoFindInSelection: 'multiline'  // Auto-find in multiline selections
+                      },
                       
-                      // Code folding
-                      folding: true,
-                      foldingStrategy: 'indentation',
-                      showFoldingControls: 'mouseover',
+                      // LINE NUMBERS AND MARGINS - OPTIMIZED
+                      lineNumbers: 'on',  // Always show line numbers
+                      lineNumbersMinChars: 4,  // Minimum width for line numbers
+                      glyphMargin: false,  // No glyph margin to save space
+                      lineDecorationsWidth: 0,  // No decoration width
+                      folding: true,  // Enable code folding
+                      foldingMaximumRegions: 5000,  // Allow many folding regions
+                      foldingStrategy: 'indentation',  // Use indentation for folding
                       
-                      // Word wrapping
-                      wordWrap: 'off',
-                      wordWrapColumn: 80,
-                      wrappingIndent: 'indent',
+                      showFoldingControls: 'mouseover',  // Show folding on hover
+                      
+                      // WORD WRAPPING - CURSOR-FRIENDLY
+                      wordWrap: 'off',  // No wrapping to maintain cursor accuracy
+                      wordWrapColumn: 120,  // Wider wrap column if enabled
+                      wrappingIndent: 'indent',  // Proper indentation for wrapped lines
+                      wrappingStrategy: 'advanced',  // Better wrapping algorithm
+                      
+                      // PERFORMANCE OPTIMIZATIONS FOR CURSOR TRACKING
+                      suggest: {
+                        insertMode: 'replace',  // Replace mode for suggestions
+                        filterGraceful: true,  // Graceful filtering
+                        showIcons: true,  // Show suggestion icons
+                        showSnippets: true,  // Show snippets
+                        showWords: false,  // Don't show word suggestions (reduces interference)
+                        localityBonus: true  // Boost local suggestions
+                      },
+                      
+                      // EDITOR BEHAVIOR FOR ACCURATE POSITIONING
+                      stickyTabStops: false,  // Don't use sticky tab stops
+                      tabCompletion: 'on',  // Enable tab completion
+                      useTabStops: true,  // Use tab stops for indentation
+                      detectIndentation: true,  // Auto-detect indentation
+                      insertSpaces: true,  // Use spaces instead of tabs
+                      tabSize: 2,  // 2-space tabs
+                      trimAutoWhitespace: true,  // Trim auto whitespace
+                      
+                      // ACCESSIBILITY AND FOCUS
+                      ariaLabel: 'Script Studio Code Editor',
+                      readOnly: false,
+                      domReadOnly: false,
+                      accessibilitySupport: 'auto'
                     }}
                     data-testid="monaco-editor"
                   />
