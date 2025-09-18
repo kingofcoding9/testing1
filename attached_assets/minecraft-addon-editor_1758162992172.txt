@@ -1,0 +1,2509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Minecraft Bedrock Creator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .builder-section, .component-section, .property-section, .component-group-section, .event-section, .action-section, .render-controller-section, .permutation-section, .block-state-section { background-color: #374151; border: 1px solid #4b5563; }
+        .builder-input, .builder-select, .builder-textarea, .builder-file-input { background-color: #4b5563; border: 1px solid #6b7280; color: #e5e7eb; transition: all 0.2s ease; }
+        .builder-input:focus, .builder-select:focus, .builder-textarea:focus { border-color: #10b981; outline: none; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.5); }
+        .builder-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em;
+            padding-right: 2.5rem; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+        }
+        .builder-file-input::file-selector-button {
+            background-color: #374151; border: 0; color: #e5e7eb; padding: 0.5rem 1rem; margin-right: 1rem;
+            border-right: 1px solid #6b7280; cursor: pointer;
+        }
+        .builder-file-input::file-selector-button:hover { background-color: #4b5563; }
+        .code-block { position: relative; }
+        .copy-button {
+            position: absolute; top: 0.5rem; right: 0.5rem; background-color: #4b5563; color: #e5e7eb;
+            border: 1px solid #6b7280; padding: 0.25rem 0.75rem; border-radius: 0.375rem;
+            cursor: pointer; font-size: 0.875rem; transition: all 0.2s ease-in-out; z-index: 10;
+        }
+        .copy-button:hover { background-color: #6b7280; }
+        .copy-button.copied { background-color: #10b981; color: white; }
+        .guide-code { background-color: #1f2937; color: #d1d5db; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace; }
+        .recipe-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 0.5rem;
+            width: 150px;
+            margin: 0 auto;
+        }
+        .recipe-grid .builder-select { 
+            aspect-ratio: 1 / 1; 
+            text-align: center; 
+            padding: 0.25rem;
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            background-image: none; padding-right: 0.25rem;
+            font-size: 1.25rem;
+        }
+        .dynamic-list-item { display: flex; align-items: center; gap: 0.5rem; }
+        .remove-button { background-color: #ef4444; color: white; border: none; border-radius: 9999px; width: 1.5rem; height: 1.5rem; font-weight: bold; cursor: pointer; flex-shrink: 0; }
+        .remove-button:hover { background-color: #dc2626; }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; }
+        .tooltip .tooltip-text {
+            visibility: hidden; width: 250px; background-color: #1f2937; color: #fff; text-align: left;
+            border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%;
+            margin-left: -125px; opacity: 0; transition: opacity 0.3s; font-size: 0.875rem; font-weight: normal;
+            border: 1px solid #4b5563;
+        }
+        .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .info-icon {
+            display: inline-block; width: 1rem; height: 1rem; border-radius: 50%; background-color: #4b5563;
+            color: #e5e7eb; text-align: center; font-size: 0.75rem; line-height: 1rem; font-weight: bold; margin-left: 0.5rem;
+        }
+        .sub-section { border-left: 2px solid #4b5563; padding-left: 1rem; margin-top: 1rem; }
+        .action-container { border-left: 2px solid #6b7280; padding-left: 1rem; margin-left: 0.5rem; margin-top: 0.5rem;}
+        
+        /* Collapsible Sidebar */
+        #sidebar {
+            transition: width 0.3s ease, padding 0.3s ease;
+            overflow: hidden;
+        }
+        #sidebar.collapsed {
+            width: 0;
+            padding: 0;
+        }
+        
+        /* Texture Creator UI */
+        #texture-canvas-container {
+            background-image: 
+                linear-gradient(45deg, #4b5563 25%, transparent 25%), 
+                linear-gradient(-45deg, #4b5563 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #4b5563 75%),
+                linear-gradient(-45deg, transparent 75%, #4b5563 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            position: relative;
+        }
+        .layer-item.active {
+            background-color: #10b981;
+            color: white;
+        }
+        #grid-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        .tool-btn.active {
+             background-color: #10b981;
+             box-shadow: 0 0 0 2px #374151, 0 0 0 4px #10b981;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-300">
+
+    <div class="flex h-screen">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-72 bg-gray-800 text-gray-200 p-4 overflow-y-auto flex-shrink-0 relative">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-xl font-bold text-emerald-400">Creator Tool</h1>
+                <button id="sidebar-toggle" class="p-1 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+            <nav id="main-nav">
+                <ul class="space-y-1">
+                    <li><a href="#welcome" class="nav-link block py-2 px-3 rounded bg-gray-700">Welcome</a></li>
+                    
+                    <li class="pt-2"><p class="px-3 text-xs font-bold uppercase text-gray-500">Guides</p></li>
+                    <li><a href="#guide-concepts" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Core Concepts</a></li>
+                    <li><a href="#guide-entities" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Entities & Client Entities</a></li>
+                    <li><a href="#guide-items" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Items</a></li>
+                    <li><a href="#guide-blocks" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Blocks</a></li>
+                    <li><a href="#guide-recipes" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Recipes</a></li>
+                    <li><a href="#guide-spawn-rules" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Spawn Rules</a></li>
+                    <li><a href="#guide-loot-tables" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Loot Tables</a></li>
+                    <li><a href="#guide-biomes" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Biomes</a></li>
+                    <li><a href="#guide-features" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Features & Feature Rules</a></li>
+
+
+                    <li class="pt-2"><p class="px-3 text-xs font-bold uppercase text-gray-500">Builders</p></li>
+                    <li><a href="#builder-entities" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Entity Builder</a></li>
+                    <li><a href="#builder-client-entity" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Client Entity Builder</a></li>
+                    <li><a href="#builder-items" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Item Builder</a></li>
+                    <li><a href="#builder-blocks" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Block Builder</a></li>
+                    <li><a href="#builder-texture-creator" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Texture Creator</a></li>
+                    <li><a href="#builder-recipes" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Recipe Builder</a></li>
+                    <li><a href="#builder-spawn-rules" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Spawn Rule Builder</a></li>
+                    <li><a href="#builder-loot-tables" class="nav-link block py-2 px-3 rounded hover:bg-gray-700">Loot Table Builder</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 p-6 md:p-10 overflow-y-auto">
+            <!-- Pages will be dynamically injected here from templates -->
+        </main>
+    </div>
+    
+    <!-- TEMPLATES -->
+    <template id="template-welcome">
+        <div id="page-welcome" class="page">
+            <h2 class="text-4xl font-bold mb-4 text-white">All-in-One Creator Tool</h2>
+            <p class="text-lg text-gray-400">Welcome to the ultimate guide and interactive builder for Minecraft: Bedrock Edition!</p>
+            <p class="text-sm text-gray-500 mt-1">Created by king_of_coding, owned by omni-science.</p>
+            <div class="mt-6 p-4 bg-gray-800 border border-emerald-500 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-semibold text-emerald-400 text-lg mb-2">In-Depth Guides</h3>
+                    <p>Use the "Guides" section in the sidebar to learn the core concepts. Each guide provides detailed explanations on how files work, where they go, and what the different properties mean.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-emerald-400 text-lg mb-2">Powerful Builders</h3>
+                    <p>Use the "Builders" section to create your own custom content. Select a builder, add and configure components with built-in documentation, and watch the JSON code generate in real-time. Then, just copy the code and add it to your addon packs!</p>
+                </div>
+            </div>
+             <div class="mt-8 p-6 bg-gray-800 rounded-lg">
+                <h3 class="text-2xl font-bold text-white mb-4">How to Use This Tool</h3>
+                <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                    <li><strong class="text-emerald-400">Learn:</strong> Start with the <a href="#guide-concepts" class="nav-link-inline underline">Core Concepts</a> guide to understand Behavior and Resource packs.</li>
+                    <li><strong class="text-emerald-400">Build:</strong> Navigate to a <a href="#builder-entities" class="nav-link-inline underline">Builder</a>, for example, the Entity Builder.</li>
+                    <li><strong class="text-emerald-400">Customize:</strong> Define a unique identifier (e.g., <code class="guide-code">my_addon:golem</code>). Add components like health, movement, and attack. Hover over the <span class="info-icon">i</span> icons for explanations.</li>
+                    <li><strong class="text-emerald-400">Generate:</strong> As you make changes, the JSON code on the right updates automatically. This is the code Minecraft reads.</li>
+                    <li><strong class="text-emerald-400">Implement:</strong> Copy the generated code. Place it in the correct folder within your addon pack (e.g., an entity's code goes into <code class="guide-code">Your_Behavior_Pack/entities/</code>).</li>
+                    <li><strong class="text-emerald-400">Test:</strong> Apply the Behavior and Resource packs to a world in Minecraft and test your creation!</li>
+                </ol>
+            </div>
+            <div class="mt-8 p-6 bg-gray-800 rounded-lg text-center">
+                 <h3 class="text-2xl font-bold text-white mb-2">Join the Community!</h3>
+                 <p class="text-gray-400 mb-4">Have questions or want to share your creations? Join the omni-science Discord server!</p>
+                 <a href="https://discord.gg/xMy34mQCJ3" target="_blank" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                     Join Discord
+                 </a>
+            </div>
+        </div>
+    </template>
+
+    <template id="template-builder-texture-creator">
+        <div id="page-builder-texture-creator" class="page">
+            <h2 class="text-3xl font-bold mb-4 border-b-2 border-emerald-500 pb-2 text-white">Texture Creator</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Tools & Options Column -->
+                <div class="lg:col-span-1 space-y-4">
+                     <div class="builder-section p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2 text-gray-100">Canvas Size</h3>
+                        <div class="grid grid-cols-2 gap-4 items-center">
+                            <div>
+                                <label for="canvas-width" class="text-sm">Width</label>
+                                <input type="number" id="canvas-width" value="16" min="1" max="128" class="builder-input w-full p-2 rounded mt-1">
+                            </div>
+                             <div>
+                                <label for="canvas-height" class="text-sm">Height</label>
+                                <input type="number" id="canvas-height" value="16" min="1" max="128" class="builder-input w-full p-2 rounded mt-1">
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-3">
+                             <input type="checkbox" id="aspect-ratio-lock" checked class="h-4 w-4 rounded">
+                             <label for="aspect-ratio-lock" class="ml-2 text-sm">Lock Proportions</label>
+                        </div>
+                         <button id="resize-canvas-btn" class="mt-3 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded">Apply Size</button>
+                    </div>
+
+                    <div class="builder-section p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2 text-gray-100">Tools</h3>
+                        <div class="grid grid-cols-4 gap-2 text-center" id="tool-palette">
+                            <button data-tool="pencil" class="tool-btn p-2 rounded bg-emerald-600" title="Pencil">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <button data-tool="eraser" class="tool-btn p-2 rounded bg-gray-600 hover:bg-gray-700" title="Eraser">
+                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <button data-tool="fill" class="tool-btn p-2 rounded bg-gray-600 hover:bg-gray-700" title="Fill Bucket">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 16a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z" /></svg>
+                            </button>
+                            <button data-tool="picker" class="tool-btn p-2 rounded bg-gray-600 hover:bg-gray-700" title="Color Picker">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 2a.5.5 0 01.5.5v1.293l6.793 6.793a.5.5 0 01-.353.853h-2.828a.5.5 0 01-.5-.5V8.5a.5.5 0 00-1 0v2.5a.5.5 0 01-.5.5H7.5a.5.5 0 000 1h2.5a.5.5 0 01.5.5v2.828a.5.5 0 01-.854.353L3.146 9.854A.5.5 0 013 9.5V3h4.5a.5.5 0 01.5.5z" clip-rule="evenodd"/><path d="M8 2a1 1 0 00-1 1v.5a.5.5 0 01-1 0V3a2 2 0 012-2h4a2 2 0 012 2v4a2 2 0 01-2 2h-.5a.5.5 0 010-1H13a1 1 0 001-1V3a1 1 0 00-1-1H8z" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                     <div class="builder-section p-4 rounded-lg">
+                         <h3 class="font-bold text-lg mb-2 text-gray-100">Brush Settings</h3>
+                         <div>
+                             <label for="brush-size" class="text-sm">Size: <span id="brush-size-value">1</span>px</label>
+                             <input type="range" id="brush-size" min="1" max="32" value="1" class="w-full">
+                         </div>
+                         <div class="mt-2">
+                             <label for="brush-opacity" class="text-sm">Opacity: <span id="brush-opacity-value">100</span>%</label>
+                             <input type="range" id="brush-opacity" min="1" max="100" value="100" class="w-full">
+                         </div>
+                    </div>
+                    
+                    <div class="builder-section p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2 text-gray-100">Color</h3>
+                        <input type="color" id="color-picker" value="#ff0000" class="w-full h-12 p-1 rounded cursor-pointer">
+                         <div id="color-history" class="grid grid-cols-8 gap-1 mt-2"></div>
+                    </div>
+                </div>
+
+                 <!-- Canvas Area -->
+                <div class="lg:col-span-2 bg-gray-800 p-4 rounded-lg flex items-center justify-center relative" id="texture-canvas-container">
+                     <canvas id="texture-canvas" class="cursor-crosshair" style="width: 100%; max-width: 512px; aspect-ratio: 1/1;"></canvas>
+                     <canvas id="grid-canvas" class="cursor-crosshair" style="width: 100%; max-width: 512px; aspect-ratio: 1/1;"></canvas>
+                </div>
+                
+                 <!-- Layers & Export -->
+                 <div class="space-y-4">
+                     <div class="builder-section p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2 text-gray-100">Layers</h3>
+                        <div id="layers-container" class="space-y-1 max-h-64 overflow-y-auto"></div>
+                        <div class="flex gap-2 mt-2">
+                            <button id="add-layer-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 text-sm rounded">Add</button>
+                            <button id="delete-layer-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 text-sm rounded">Delete</button>
+                        </div>
+                    </div>
+
+                     <div class="builder-section p-4 rounded-lg">
+                         <h3 class="font-bold text-lg mb-2 text-gray-100">Options</h3>
+                         <div class="flex items-center">
+                             <input type="checkbox" id="grid-toggle" checked class="h-4 w-4 rounded">
+                             <label for="grid-toggle" class="ml-2 text-sm">Show Pixel Grid</label>
+                        </div>
+                    </div>
+
+                    <div class="builder-section p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2 text-gray-100">Export</h3>
+                        <button id="export-png-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Download as PNG</button>
+                    </div>
+                 </div>
+
+            </div>
+        </div>
+    </template>
+
+    <template id="template-guide-concepts">
+        <div id="page-guide-concepts" class="page">
+             <h2 class="text-3xl font-bold mb-4 border-b-2 border-emerald-500 pb-2 text-white">Guide: Core Concepts</h2>
+             <p class="mb-4">Minecraft addons are split into two packs: <strong class="text-emerald-400">Behavior Packs</strong> and <strong class="text-emerald-400">Resource Packs</strong>. They are simple folders that you add to your <code class="guide-code">development_behavior_packs</code> and <code class="guide-code">development_resource_packs</code> folders in your Minecraft installation. They must work together to create a complete experience.</p>
+             <div class="space-y-8">
+                  <div>
+                       <h3 class="text-xl font-semibold mb-2">Behavior Pack (BP)</h3>
+                       <p>This pack controls the logic and behavior of custom content. It's where you define how things act. It contains JSON files for entities, items, blocks, recipes, spawn rules, loot tables, and more. The folder structure is critical for the game to find your files. For example, entity behavior files must go in the <code class="guide-code">BP/entities</code> folder.</p>
+                  </div>
+                  <div>
+                       <h3 class="text-xl font-semibold mb-2">Resource Pack (RP)</h3>
+                       <p>This pack controls the appearance, sounds, and text. It contains textures (<code class="guide-code">.png</code>), models (<code class="guide-code">.geo.json</code>), sounds (<code class="guide-code">.ogg</code>), language files (<code class="guide-code">.lang</code>), and UI files (<code class="guide-code">.json</code>). It tells the game what your custom creations look, sound, and feel like.</p>
+                  </div>
+                   <div>
+                       <h3 class="text-xl font-semibold mb-2">The <code class="guide-code">manifest.json</code> File</h3>
+                       <p>Both the Behavior Pack and the Resource Pack <strong class="text-emerald-400">must</strong> each have a file called <code class="guide-code">manifest.json</code> at their root level. This file tells Minecraft that the folder is a pack and provides essential information like the pack's name, description, and unique IDs (UUIDs). You can generate UUIDs using an online generator. Each pack needs its own manifest with unique UUIDs.</p>
+                  </div>
+                  <div>
+                       <h3 class="text-xl font-semibold mb-2">Identifiers</h3>
+                       <p>Every custom thing you create needs a unique identifier. It's composed of a <strong class="text-emerald-400">namespace</strong> and an object name, separated by a colon, like <code class="guide-code">wiki:ruby_golem</code>. The namespace, which you should define for your addon, prevents your content from conflicting with vanilla Minecraft content or other addons. All of your custom content should use the same namespace.</p>
+                  </div>
+                  <div>
+                       <h3 class="text-xl font-semibold mb-2">Components & Component Groups</h3>
+                       <p>Components are the fundamental building blocks of entities, items, and blocks. They are JSON objects that define a specific characteristic or behavior. For example, the <code class="guide-code">minecraft:health</code> component gives an entity health points, while the <code class="guide-code">minecraft:digger</code> component allows an item to break blocks efficiently.</p>
+                       <p class="mt-2"><strong class="text-emerald-400">Component Groups</strong> are collections of components that can be dynamically added or removed from an entity to change its state. This is managed through <strong class="text-emerald-400">Events</strong>. For example, you could have a component group named <code class="guide-code">wiki:enraged</code> that increases an entity's damage and speed. Then, you can define an event called <code class="guide-code">wiki:become_enraged</code> that adds this group when the entity is attacked.</p>
+                  </div>
+             </div>
+        </div>
+    </template>
+    
+    <template id="template-guide-entities">
+        <div id="page-guide-entities" class="page">
+             <h2 class="text-3xl font-bold mb-4 border-b-2 border-emerald-500 pb-2 text-white">Guide: Entities & Client Entities</h2>
+             <p class="mb-4">An entity is any "thing" in the game that is not a block, such as mobs, projectiles, or items on the ground. Creating a new entity requires at least two files:</p>
+             <ul class="list-disc list-inside mb-6 pl-4 space-y-2">
+                  <li><strong class="text-emerald-400">Behavior File:</strong> Located in <code class="guide-code">BP/entities/my_entity.json</code>, this file defines the entity's components and behavior. The <strong class="text-emerald-400">Entity Builder</strong> creates this file.</li>
+                  <li><strong class="text-emerald-400">Client Entity File:</strong> Located in <code class="guide-code">RP/entity/my_entity.json</code>, this file links the entity's identifier to its model, texture, animations, and render controllers. The <strong class="text-emerald-400">Client Entity Builder</strong> helps create this.</li>
+             </ul>
+             <h3 class="text-xl font-semibold mt-6 mb-2">The Behavior File</h3>
+             <p>This is the "brain" of the entity. Its structure includes:</p>
+             <ul class="list-disc list-inside pl-4 space-y-2">
+                <li><code class="guide-code">description</code>: Contains the unique <code class="guide-code">identifier</code> for your entity (e.g., <code class="guide-code">wiki:golem</code>) and other properties like <code class="guide-code">is_spawnable</code>.</li>
+                <li><code class="guide-code">properties</code>: Custom variables for your entity that can be used in Molang queries to create dynamic behavior.</li>
+                <li><code class="guide-code">components</code>: A list of all the base components the entity has by default, like <code class="guide-code">minecraft:health</code> or <code class="guide-code">minecraft:movement</code>.</li>
+                <li><code class="guide-code">component_groups</code>: Named sets of components that can be added or removed to change the entity's state (e.g., a "baby" group that applies a scale component).</li>
+                <li><code class="guide-code">events</code>: Triggers that add or remove component groups. For example, the <code class="guide-code">minecraft:entity_spawned</code> event can be used to add an initial component group.</li>
+             </ul>
+             <h3 class="text-xl font-semibold mt-6 mb-2">The Client Entity File</h3>
+             <p>This file is the "body" of the entity, defining how it looks and animates. It uses "shortnames" to reference other files, which helps keep things organized. For example, instead of a full file path, you'll reference <code class="guide-code">geometry.my_golem</code>. These shortnames are defined in separate files like <code class="guide-code">RP/models/entity/my_model.geo.json</code> and texture files in <code class="guide-code">RP/textures/entity/my_texture.png</code>. You must also define a shortname for your texture in <code class="guide-code">RP/textures/texture_list.json</code>.</p>
+        </div>
+    </template>
+    
+    <template id="template-guide-items">
+        <div id="page-guide-items" class="page">
+            <h2 class="text-3xl font-bold mb-4 border-b-2 border-emerald-500 pb-2 text-white">Guide: Custom Items</h2>
+             <p class="mb-4">An item file defines a new item's properties and behaviors. It's a single JSON file located in your behavior pack at <code class="guide-code">BP/items/my_item.json</code>. This file controls everything from the item's stack size and durability to what happens when a player uses it.</p>
+             <p class="mb-4">To give your item a texture, you must create a <code class="guide-code">.png</code> file in <code class="guide-code">RP/textures/items/</code>. Then, you must create an <code class="guide-code">item_texture.json</code> file in <code class="guide-code">RP/textures/</code> and assign a shortname to your texture. This shortname is what you'll use in the <code class="guide-code">minecraft:icon</code> component in the item's behavior file.</p>
+             <h3 class="text-xl font-semibold mt-6 mb-2">Key Concepts</h3>
+             <ul class="list-disc list-inside pl-4 space-y-3">
+                  <li><strong class="text-emerald-400">Description Object:</strong> The first part of the file defines the item's unique identifier (e.g., <code class="guide-code">wiki:ruby_sword</code>) and its <code class="guide-code">category</code>. The category determines which tab the item appears in within the creative inventory (e.g., <code class="guide-code">equipment</code>, <code class="guide-code">items</code>, <code class="guide-code">nature</code>).</li>
+                  <li><strong class="text-emerald-400">Components:</strong> These give the item its functionality. An item with no components is just a simple, unusable object. Add components to define its core features:
+                      <ul class="list-['-_'] list-inside pl-6 mt-2 space-y-2">
+                          <li><code class="guide-code">minecraft:max_stack_size</code>: How many of the item can fit in one stack.</li>
+                          <li><code class="guide-code">minecraft:hand_equipped</code>: If true, the item renders larger in the player's hand, like a tool.</li>
+                          <li><code class="guide-code">minecraft:food</code>: Makes the item edible, restoring hunger.</li>
+                          <li><code class="guide-code">minecraft:digger</code>: Allows the item to efficiently break a specific set of blocks.</li>
+                          <li><code class="guide-code">minecraft:durability</code>: Gives the item a health bar that depletes with use.</li>
+                          <li><code class="guide-code">minecraft:wearable</code>: Allows the item to be equipped in an armor slot.</li>
+                      </ul>
+                  </li>
+             </ul>
+        </div>
+    </template>
+    
+    <template id="template-guide-blocks">
+        <div id="page-guide-blocks" class="page">
+            <h2 class="text-3xl font-bold mb-4 border-b-2 border-emerald-500 pb-2 text-white">Guide: Custom Blocks</h2>
+            <p class="mb-4">Block files define a new block's properties and behaviors. It's a single JSON file in your behavior pack at <code class="guide-code">BP/blocks/my_block.json</code>. To give the block a texture, you must add an entry to the <code class="guide-code">RP/textures/terrain_texture.json</code> file, which assigns a shortname to your texture file (e.g., <code class="guide-code">"my_ore_texture": { "textures": "textures/blocks/my_ore" }</code>).</p>
+             <p class="mb-4">You also need to add the block's name to your <code class="guide-code">.lang</code> file, for example: <code class="guide-code">tile.wiki:my_block.name=My Custom Block</code>.</p>
+            <h3 class="text-xl font-semibold mt-6 mb-2">Key Concepts</h3>
+            <ul class="list-disc list-inside pl-4 space-y-3">
+                <li><strong class="text-emerald-400">Permutations:</strong> These allow a block to have different properties or appearances based on its state, defined by Block States. For example, a furnace can have a "lit" state that makes it emit light and change its texture. You define a condition (e.g., <code class="guide-code">"query.block_state('lit') == true"</code>) and the components that apply when that condition is met.</li>
+                <li><strong class="text-emerald-400">Material Instances:</strong> This required component defines the block's texture, render method, and other visual properties for each face (e.g., <code class="guide-code">up</code>, <code class="guide-code">down</code>, <code class="guide-code">north</code>, <code class="guide-code">south</code>, etc.). The <code class="guide-code">*</code> wildcard can be used to apply the same material to all faces.</li>
+                <li><strong class="text-emerald-400">Components:</strong> Like items and entities, blocks are defined by their components.
+                    <ul class="list-['-_'] list-inside pl-6 mt-2 space-y-2">
+                        <li><code class="guide-code">minecraft:destructible_by_mining</code>: The time in seconds it takes to break the block. Replaces the older `destroy_time`.</li>
+                        <li><code class="guide-code">minecraft:explosion_resistance</code>: How well it resists explosions.</li>
+                        <li><code class="guide-code">minecraft:loot</code>: A path to a loot table file that defines what the block drops when broken.</li>
+                        <li><code class="guide-code">minecraft:map_color</code>: The hex color code for how the block will appear on an in-game map.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </template>
+
+    <template id="template-guide-recipes">
+        <div id="page-guide-recipes" class="page">
+            <h2 class="text-3xl font-bold mb-4 border-b-2 border-emerald-500 pb-2 text-white">Guide: Recipes</h2>
+            <p class="mb-4">Recipes define how items are crafted, smelted, or brewed. They are JSON files located in <code class="guide-code">BP/recipes/</code>. The filename doesn't matter, but the identifier inside the recipe must be unique. You can have multiple recipes in a single file.</p>
+            <h3 class="text-xl font-semibold mt-6 mb-2">Recipe Types</h3>
+            <ul class="list-disc list-inside pl-4 space-y-4">
+                <li><strong class="text-emerald-400">Shaped Crafting:</strong> The most common type. The ingredients must be placed in a specific pattern in the crafting grid. You define a <code class="guide-code">"pattern"</code> (e.g., <code class="guide-code">[" S ", " S ", " I "]</code> for a sword) and a <code class="guide-code">"key"</code> that assigns an item to each character in the pattern.</li>
+                <li><strong class="text-emerald-400">Shapeless Crafting:</strong> The ingredients can be placed anywhere in the crafting grid, and the order doesn't matter. You simply list the required <code class="guide-code">"ingredients"</code> in an array.</li>
+                <li><strong class="text-emerald-400">Furnace/Smelting:</strong> Defines a smelting recipe with an <code class="guide-code">"input"</code> item and an <code class="guide-code">"output"</code> item. You can tag these recipes with <code class="guide-code">"furnace"</code>, <code class="guide-code">"blast_furnace"</code>, or <code class="guide-code">"smoker"</code> to make them work in specific blocks.</li>
+                <li><strong class="text-emerald-400">Unlocking:</strong> You can add an `unlock` array to the recipe's description. It contains a list of items that, when acquired by the player, will unlock this recipe in their recipe book. This is great for progression.</li>
+            </ul>
+        </div>
+    </template>
+    
+    <template id="template-guide-spawn-rules">
+        <div id="page-guide-spawn-rules" class="page">
+            <h2 class="text-3xl font-bold mb-4 border-b-2 border-emerald-500 pb-2 text-white">Guide: Spawn Rules</h2>
+            <p class="mb-4">Spawn rules control where and how entities naturally spawn in the world. They are JSON files located in <code class="guide-code">BP/spawn_rules/</code>. The file must be named after the entity it affects (e.g., <code class="guide-code">wiki_golem.json</code> for an entity with the identifier <code class="guide-code">wiki:golem</code>).</p>
+            <p class="mb-4">A spawn rule file consists of an identifier that matches the entity and a list of conditions. <strong class="text-emerald-400">All conditions</strong> in the list must be met for the entity to have a chance to spawn.</p>
+             <h3 class="text-xl font-semibold mt-6 mb-2">Key Conditions</h3>
+            <ul class="list-disc list-inside pl-4 space-y-3">
+                <li><strong class="text-emerald-400">minecraft:spawns_on_surface:</strong> If present, the entity can only spawn on the top-most solid block that can see the sky.</li>
+                <li><strong class="text-emerald-400">minecraft:spawns_underwater:</strong> If present, the entity can only spawn in water.</li>
+                <li><strong class="text-emerald-400">minecraft:brightness_filter:</strong> Sets the required light levels (min/max) for a spawn to occur. A monster might spawn from 0-7, while an animal might spawn from 8-15.</li>
+                <li><strong class="text-emerald-400">minecraft:weight:</strong> Determines the spawning priority. In a group of potential spawns, entities with a higher weight are more likely to be chosen.</li>
+                 <li><strong class="text-emerald-400">minecraft:herd:</strong> Allows entities to spawn in groups. You can define the min and max size of the herd.</li>
+                <li><strong class="text-emerald-400">minecraft:biome_filter:</strong> Restricts spawning to specific biomes. This is powerful for making your world feel alive. You can filter by biome tags (like <code class="guide-code">"jungle"</code> or <code class="guide-code">"monster"</code>) or specific biome names.</li>
+            </ul>
+        </div>
+    </template>
+
+    <template id="template-guide-loot-tables">
+        <div id="page-guide-loot-tables" class="page">
+            <h2 class="text-3xl font-bold mb-4 border-b-2 border-emerald-500 pb-2 text-white">Guide: Loot Tables</h2>
+            <p class="mb-4">Loot tables define the items that are dropped when an entity is killed, a block is broken, or a chest is generated. They are JSON files located in <code class="guide-code">BP/loot_tables/</code>. You link to a loot table from an entity or block's behavior file using the <code class="guide-code">minecraft:loot</code> component.</p>
+            <h3 class="text-xl font-semibold mt-6 mb-2">Structure</h3>
+            <ul class="list-disc list-inside pl-4 space-y-3">
+                <li><strong class="text-emerald-400">Pools:</strong> A loot table is made of one or more pools. The game processes each pool independently. This allows you to guarantee certain drops from one pool while having random drops from another.</li>
+                <li><strong class="text-emerald-400">Rolls:</strong> Each pool has a number of rolls, which is how many times the game will attempt to select an entry from that pool. You can set a min/max for a random number of rolls.</li>
+                <li><strong class="text-emerald-400">Entries:</strong> Inside each pool is a list of entries. An entry can be an <code class="guide-code">item</code>, another <code class="guide-code">loot_table</code> (for nesting), or <code class="guide-code">empty</code> (to have a chance of dropping nothing). Each entry has a <code class="guide-code">weight</code>, which makes it more or less likely to be chosen relative to other entries in the same pool.</li>
+                <li><strong class="text-emerald-400">Conditions:</strong> You can add conditions to pools or entries, such as <code class="guide-code">killed_by_player</code>, to make them only apply in specific circumstances.</li>
+                <li><strong class="text-emerald-400">Functions:</strong> You can apply functions to item entries to modify the output. Common functions include <code class="guide-code">set_count</code> to specify how many items should drop, <code class="guide-code">looting_enchant</code> to increase drops based on the player's looting level, or <code class="guide-code">enchant_with_levels</code> to add random enchantments to a dropped tool or weapon.</li>
+            </ul>
+        </div>
+    </template>
+    
+    <template id="template-guide-biomes">
+        <div id="page-guide-biomes" class="page">
+            <h2 class="text-3xl font-bold mb-4 border-b-2 border-emerald-500 pb-2 text-white">Guide: Biomes</h2>
+            <p class="mb-4">Biomes define the environment of a specific region in the world, including its blocks, features, colors, and mobs. Biome files are located in <code class="guide-code">BP/biomes/</code>. Creating a custom biome is an advanced topic that allows for incredible world customization.</p>
+            <p class="mb-4">A biome file is a large JSON that combines many different aspects of world generation into one place. Modifying biomes can have a huge impact on the game feel.</p>
+             <h3 class="text-xl font-semibold mt-6 mb-2">Key Components</h3>
+            <ul class="list-disc list-inside pl-4 space-y-3">
+                <li><strong class="text-emerald-400">minecraft:climate:</strong> Defines temperature, humidity, and downfall (rain/snow). These values affect things like plant color, whether snow falls, and how the biome blends with its neighbors.</li>
+                <li><strong class="text-emerald-400">minecraft:surface_parameters:</strong> Controls the blocks that make up the surface of the world, such as the top soil (grass), mid material (dirt), and foundation material (stone). You can customize the entire crust of your world here.</li>
+                <li><strong class="text-emerald-400">minecraft:world_generation_rules:</strong> This is a massive object that controls how everything generates. It allows you to place features (like trees and ores), define carvers (for caves and canyons), and shape the terrain itself.</li>
+                <li><strong class="text-emerald-400">tags:</strong> Biomes are categorized by tags (e.g., <code class="guide-code">"animal"</code>, <code class="guide-code">"monster"</code>, <code class="guide-code">"overworld"</code>, <code class="guide-code">"jungle"</code>). These tags are used by spawn rules and feature rules to determine which mobs and structures can appear there. Adding the right tags is crucial for integrating your biome with the rest of the game.</li>
+            </ul>
+        </div>
+    </template>
+    
+    <template id="template-guide-features">
+        <div id="page-guide-features" class="page">
+            <h2 class="text-3xl font-bold mb-4 border-b-2 border-emerald-500 pb-2 text-white">Guide: Features & Feature Rules</h2>
+            <p class="mb-4">Features are the structures and decorations that generate in the world, such as trees, ore veins, dungeons, and geodes. Feature files are located in <code class="guide-code">BP/features/</code>, and the rules that govern their placement are in <code class="guide-code">BP/feature_rules/</code>.</p>
+             <h3 class="text-xl font-semibold mt-6 mb-2">Features</h3>
+             <p class="mb-4">A feature file describes the structure or decoration itself. There are many types of features:</p>
+             <ul class="list-disc list-inside pl-4 space-y-2">
+                <li><code class="guide-code">minecraft:ore_feature</code>: Defines a vein of ore, including which block to replace (e.g., stone) and how large the vein can be.</li>
+                <li><code class="guide-code">minecraft:tree_feature</code>: Describes a custom tree, from its trunk and leaves to extra decorations like vines or cocoa beans.</li>
+                <li><code class="guide-code">minecraft:structure_template_feature</code>: Allows you to place a structure saved in a <code class="guide-code">.mcstructure</code> file, which you can create in-game with a structure block.</li>
+             </ul>
+            <h3 class="text-xl font-semibold mt-6 mb-2">Feature Rules</h3>
+             <p class="mb-4">A feature rule file is the logic that places a feature in the world. It links a feature (e.g., <code class="guide-code">wiki:custom_tree_feature</code>) to the biomes it can generate in and defines the precise conditions for its placement. This includes its rarity, the number of placement attempts per chunk, the Y-axis range it can spawn in, and other distribution constraints.</p>
+        </div>
+    </template>
+    
+    <!-- Generic template for builders -->
+    <template id="template-builder-generic">
+        <div class="page">
+            <h2 class="text-3xl font-bold mb-4 border-b-2 border-emerald-500 pb-2 text-white"></h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-4 form-container">
+                    <!-- Builder form sections will be injected here -->
+                </div>
+                <div>
+                    <div class="code-block sticky top-6">
+                        <button class="copy-button">Copy</button>
+                        <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto h-[80vh]"><code class="code-output"></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <script type="module">
+        // --- CONFIGURATION AND SETUP ---
+        const FORMAT_VERSIONS = {
+            'builder-entities': "1.21.0",
+            'builder-items': "1.21.0",
+            'builder-blocks': "1.21.0",
+            'builder-client-entity': "1.10.0",
+            'builder-recipes': "1.20.0",
+            'builder-spawn-rules': "1.8.0",
+            'builder-loot-tables': "1.21.0",
+        };
+
+        function getFormatVersion(builderId) {
+            return FORMAT_VERSIONS[builderId] || "1.21.0";
+        }
+
+        // --- COMPONENT DEFINITIONS ---
+        const entityComponentDefinitions = {
+            "minecraft:addrider": { entity_type: { type: 'text', default: 'minecraft:pig' }, spawn_event: { type: 'text', default: 'minecraft:entity_spawned' } },
+            "minecraft:ageable": { duration: { type: 'number', default: 1200 }, grow_up: { type: 'event' } },
+            "minecraft:angry": { duration: { type: 'number', default: 25 }, broadcast_anger: { type: 'boolean', default: true } },
+            "minecraft:attack": { damage: { type: 'number', default: 3 } },
+            "minecraft:breathable": { total_supply: { type: 'number', default: 15 }, suffocate_time: { type: 'number', default: -1 } },
+            "minecraft:collision_box": { width: { type: 'number', default: 0.6 }, height: { type: 'number', default: 1.8 } },
+            "minecraft:explode": { fuse_length: { type: 'number', default: 1.5 }, power: { type: 'number', default: 3 } },
+            "minecraft:health": { value: { type: 'number', default: 20 } },
+            "minecraft:inventory": { container_type: { type: 'select', options: ['inventory', 'horse', 'minecart_chest'] }, inventory_size: { type: 'number', default: 5 } },
+            "minecraft:is_baby": {},
+            "minecraft:is_charged": {},
+            "minecraft:is_chested": {},
+            "minecraft:is_dyeable": {},
+            "minecraft:is_hidden_when_invisible": {},
+            "minecraft:is_ignited": {},
+            "minecraft:is_illager_captain": {},
+            "minecraft:is_saddled": {},
+            "minecraft:is_shaking": {},
+            "minecraft:is_sheared": {},
+            "minecraft:is_stackable": {},
+            "minecraft:is_stunned": {},
+            "minecraft:is_tamed": {},
+            "minecraft:leashable": { soft_distance: { type: 'number', default: 4.0 }, hard_distance: { type: 'number', default: 6.0 } },
+            "minecraft:loot": { table: { type: 'text', default: 'loot_tables/entities/my_entity.json' } },
+            "minecraft:movement": { value: { type: 'number', default: 0.25 } },
+            "minecraft:nameable": { allow_name_tag_renaming: { type: 'boolean', default: true }, always_show: { type: 'boolean', default: false } },
+            "minecraft:navigation.walk": { can_pass_doors: { type: 'boolean', default: true }, can_open_doors: { type: 'boolean', default: false } },
+            "minecraft:physics": {},
+            "minecraft:pushable": { is_pushable: { type: 'boolean', default: true }, is_pushable_by_pistons: { type: 'boolean', default: true } },
+            "minecraft:rideable": { seat_count: { type: 'number', default: 1 }, family_types: { type: 'array', default: 'player' } },
+            "minecraft:scale": { value: { type: 'number', default: 1.0 } },
+            "minecraft:tameable": { probability: { type: 'number', default: 0.33 }, tame_items: { type: 'array', default: 'bone' } },
+            "minecraft:type_family": { family: { type: 'array', default: 'mob' } },
+            "minecraft:behavior.float": { priority: { type: 'number', default: 0 } },
+            "minecraft:behavior.panic": { priority: { type: 'number', default: 1 }, speed_multiplier: { type: 'number', default: 1.2 } },
+            "minecraft:behavior.tempt": { priority: { type: 'number', default: 2 }, items: { type: 'array', default: 'wheat' } },
+            "minecraft:behavior.random_stroll": { priority: { type: 'number', default: 6 }, speed_multiplier: { type: 'number', default: 1.0 } },
+            "minecraft:behavior.look_at_player": { priority: { type: 'number', default: 7 }, look_distance: { type: 'number', default: 6.0 } },
+            "minecraft:behavior.random_look_around": { priority: { type: 'number', default: 8 } },
+            "minecraft:behavior.hurt_by_target": { priority: { type: 'number', default: 1 } },
+            "minecraft:behavior.nearest_attackable_target": { priority: { type: 'number', default: 2 }, entity_types: { type: 'json-textarea', default: '[{ "filters": { "test": "is_family", "subject": "other", "value": "player" } }]' } }
+        };
+        const itemComponentDefinitions = {
+            "minecraft:icon": { texture: { type: 'text', default: 'my_item', description: 'The shortname of the item texture defined in item_texture.json.' } },
+            "minecraft:max_stack_size": { value: { type: 'number', default: 64, description: 'The maximum number of this item that can be in a single stack.' } },
+            "minecraft:hand_equipped": { value: { type: 'boolean', default: false, description: 'If true, the item is held like a tool or weapon.' } },
+            "minecraft:foil": { value: { type: 'boolean', default: false, description: 'If true, the item has the enchantment glint effect.'}},
+            "minecraft:durability": { max_durability: { type: 'number', default: 250, description: 'The maximum durability. Using the item will damage it.' }, damage_chance: {min: 0, max: 100, type: 'number', default: 100, description: 'The percentage chance the item takes damage when used.'}},
+            "minecraft:damage": { value: { type: 'number', default: 5, description: 'The amount of melee damage the item deals when used as a weapon.' } },
+            "minecraft:enchantable": { value: {type: 'number', default: 10, description: 'The enchantment value. Higher numbers give better enchantments.'}, slot: {type: 'select', options: ['all', 'sword', 'armor_head', 'armor_torso', 'armor_legs', 'armor_feet', 'bow', 'crossbow', 'fishing_rod', 'trident'], description: 'The type of enchantments the item can receive.'}},
+            "minecraft:food": { nutrition: {type: 'number', default: 4, description: 'How many hunger points the food restores.'}, saturation_modifier: {type: 'select', options: ['low', 'normal', 'good', 'max', 'supernatural'], description: 'How long the food keeps you full.'}},
+            "minecraft:use_duration": { value: {type: 'number', default: 1.6, step: 0.1, description: 'Time in seconds it takes to eat/use the item.'}},
+            "minecraft:wearable": {slot: {type: 'select', options: ['slot.armor.head', 'slot.armor.chest', 'slot.armor.legs', 'slot.armor.feet', 'slot.weapon.offhand'], description: 'The equipment slot the item can be worn in.'}, protection: { type: 'number', default: 0, description: 'The amount of damage protection this armor provides. Leather is 1-3, Iron is 2-6, Diamond is 3-8 per piece.' }},
+            "minecraft:digger": {destroy_speeds: {type: 'json-textarea', default: '[{\n  "block": "minecraft:stone",\n  "speed": 5\n}]', description: 'A list of blocks this tool can break quickly and the associated speed.'}},
+            "minecraft:fuel": { duration: {type: 'number', default: 10.0, step: 0.5, description: 'Time in seconds this item will fuel a furnace.'}},
+            "minecraft:block_placer": { block: { type: 'text', default: 'minecraft:cobblestone', description: 'The identifier of the block to place.' }, use_on: { type: 'array', default: 'minecraft:grass, minecraft:dirt, minecraft:stone', description: 'Comma-separated list of blocks this block can be placed on.' } },
+            "minecraft:entity_placer": { entity: { type: 'text', default: 'minecraft:pig', description: 'The identifier of the entity to spawn.' } },
+            "minecraft:item_storage": { capacity: { type: 'number', default: 16, description: 'The number of item stacks this item can store. Used for bundles.' } }
+        };
+        const blockComponentDefinitions = {
+            "minecraft:destructible_by_mining": {
+                seconds_to_destroy: { type: 'number', default: 2.0, step: 0.1, description: 'The time in seconds it takes to destroy the block with a bare hand.' },
+            },
+            "minecraft:explosion_resistance": { value: { type: 'number', default: 5.0, step: 0.1, description: 'How well the block resists explosions. Stone is 30.' } },
+            "minecraft:friction": { value: { type: 'number', default: 0.6, step: 0.01, description: 'How slippery the block is. Ice is 0.98. Default is 0.6.'}},
+            "minecraft:loot": { table: { type: 'text', default: 'loot_tables/blocks/my_block.json', description: 'Path to the loot table for this block\'s drops.' } },
+            "minecraft:map_color": { color: { type: 'color', default: '#FFFFFF', description: 'The HEX color code for how the block appears on a map.' } },
+            "minecraft:light_emission": { emission: { type: 'number', min: 0, max: 15, default: 0, description: 'How much light the block emits, from 0 to 15.' } },
+            "minecraft:flammable": { flame_odds: { type: 'number', default: 5, description: 'The chance the block will catch fire from a nearby fire.' }, burn_odds: { type: 'number', default: 5, description: 'The chance the block will be destroyed by fire each tick.'} },
+             "minecraft:collision_box": {
+                enabled: { type: 'boolean', default: true, description: 'Set to false to make the block passable, like air.' },
+                origin_x: { type: 'number', default: -8, description: 'Origin X of the box, in integer units from the block center.' },
+                origin_y: { type: 'number', default: 0, description: 'Origin Y of the box.' },
+                origin_z: { type: 'number', default: -8, description: 'Origin Z of the box.' },
+                size_w: { type: 'number', default: 16, description: 'Width (X size) of the box in integer units.' },
+                size_h: { type: 'number', default: 16, description: 'Height (Y size) of the box.' },
+                size_d: { type: 'number', default: 16, description: 'Depth (Z size) of the box.' },
+            },
+            "minecraft:selection_box": {
+                enabled: { type: 'boolean', default: true, description: 'Set to false to make the block unselectable.' },
+                origin_x: { type: 'number', default: -8, description: 'Origin X of the selection box outline.' },
+                origin_y: { type: 'number', default: 0, description: 'Origin Y of the selection box outline.' },
+                origin_z: { type: 'number', default: -8, description: 'Origin Z of the selection box outline.' },
+                size_w: { type: 'number', default: 16, description: 'Width of the selection box.' },
+                size_h: { type: 'number', default: 16, description: 'Height of the selection box.' },
+                size_d: { type: 'number', default: 16, description: 'Depth of the selection box.' },
+            },
+             "minecraft:crafting_table": {
+                grid_size: { type: 'number', default: 3, min: 2, max: 3, description: 'The size of the crafting grid (2x2 or 3x3).' },
+                crafting_tags: { type: 'array', default: 'crafting_table', description: 'A comma-separated list of tags that identify this crafter.'}
+            },
+            "minecraft:liquid_detection": {
+                liquid: { type: 'select', options: ['water', 'lava'], description: 'The type of liquid to detect.'},
+                rate: { type: 'number', default: 10, description: 'The rate at which to check for the liquid, in ticks.'},
+                liquid_range: { type: 'number', default: 1, description: 'The range in blocks to check for the liquid.'}
+            },
+            "minecraft:replaceable": {
+                 value: { type: 'boolean', default: false, description: 'If true, this block can be replaced by other blocks placed by a player (like tall grass).' }
+            }
+        };
+
+        // --- GUIDES & BUILDERS CONFIG ---
+        const guides = {
+            'welcome': {}, 'guide-concepts': {}, 'guide-entities': {}, 'guide-items': {}, 'guide-blocks': {},
+            'guide-recipes': {}, 'guide-spawn-rules': {}, 'guide-loot-tables': {}, 'guide-biomes': {}, 'guide-features': {}
+        };
+
+        const builders = {
+            'builder-entities': { title: 'Entity Builder', definitions: entityComponentDefinitions, generate: generateEntityJson },
+            'builder-items': { title: 'Item Builder', definitions: itemComponentDefinitions, generate: generateComponentJson },
+            'builder-blocks': { title: 'Block Builder', definitions: blockComponentDefinitions, generate: generateBlockJson },
+            'builder-texture-creator': { title: 'Texture Creator', custom: true, init: initializeTextureCreator },
+            'builder-client-entity': { title: 'Client Entity Builder', generate: generateClientEntityJson },
+            'builder-recipes': { title: 'Recipe Builder', generate: generateRecipeJson },
+            'builder-spawn-rules': { title: 'Spawn Rule Builder', generate: generateSpawnRuleJson },
+            'builder-loot-tables': { title: 'Loot Table Builder', generate: generateLootTableJson },
+        };
+        
+        // --- UTILITY FUNCTIONS ---
+        function setObjectValue(obj, path, value) {
+            let current = obj;
+            for (let i = 0; i < path.length - 1; i++) {
+                current = current[path[i]] = current[path[i]] || {};
+            }
+            current[path[path.length - 1]] = value;
+        }
+
+        // --- GENERIC COMPONENT BUILDER LOGIC ---
+        function generateComponentJson(builderId) { // For Items
+            const form = document.getElementById(`${builderId}-form`);
+            if(!form) return;
+            const type = builderId.split('-')[1].slice(0, -1);
+            let tempObj = {
+                "format_version": getFormatVersion(builderId),
+                [`minecraft:${type}`]: { "description": {}, "components": {} }
+            };
+
+            const identifierInput = form.querySelector(`[data-path$="description.identifier"]`);
+            if (identifierInput) {
+                tempObj[`minecraft:${type}`].description.identifier = identifierInput.value;
+            }
+            
+            if(type === 'item'){
+                 const categoryInput = form.querySelector(`[data-path$="description.category"]`);
+                 if(categoryInput) tempObj[`minecraft:${type}`].description.category = categoryInput.value;
+            }
+
+            form.querySelectorAll('.component-section').forEach(container => {
+                const componentName = container.dataset.component;
+                const definition = builders[builderId].definitions[componentName] || {};
+                
+                let componentData = {};
+                const inputs = container.querySelectorAll('[data-path]');
+                
+                if (Object.keys(definition).length === 0) {
+                    tempObj[`minecraft:${type}`].components[componentName] = {};
+                    return;
+                }
+                
+                inputs.forEach(input => {
+                    const prop = input.dataset.path.split('.').pop();
+                    let value;
+                    if (input.type === 'checkbox') value = input.checked;
+                    else if (input.type === 'number') value = parseFloat(input.value) || 0;
+                    else if (input.dataset.type === 'array') value = input.value.split(',').map(s => s.trim()).filter(Boolean);
+                    else if (input.dataset.type === 'json-textarea') {
+                        try { value = JSON.parse(input.value); } catch (e) { value = {}; }
+                    } else value = input.value;
+                    
+                    componentData[prop] = value;
+                });
+
+                if (Object.keys(definition).length === 1 && 'value' in definition) {
+                    tempObj[`minecraft:${type}`].components[componentName] = componentData.value;
+                } else {
+                    tempObj[`minecraft:${type}`].components[componentName] = componentData;
+                }
+            });
+
+            document.getElementById(`${builderId}-code-output`).textContent = JSON.stringify(tempObj, null, 2);
+        }
+
+        function addGenericComponent(builderId, container, onUpdate) {
+            const config = builders[builderId];
+            const componentSelector = container.parentElement.querySelector('.component-selector');
+            if (!componentSelector) return;
+            const componentName = componentSelector.value;
+             if (!componentName || container.querySelector(`[data-component="${componentName}"]`)) return;
+
+            const definition = config.definitions[componentName];
+            const componentDiv = document.createElement('div');
+            componentDiv.className = 'component-section p-3 rounded-lg';
+            componentDiv.dataset.component = componentName;
+
+            let innerHTML = `<div class="flex justify-between items-center"><label class="font-semibold text-gray-100">${componentName}</label><button class="remove-button">X</button></div>`;
+            
+            for (const [prop, details] of Object.entries(definition)) {
+                const path = `components.${componentName}.${prop}`; // Simplified path for generic use
+                innerHTML += `<div class="mt-2">
+                    <label class="text-sm">${prop}:
+                        <span class="tooltip">
+                            <span class="info-icon">i</span>
+                            <span class="tooltip-text">${details.description || 'No description available.'}</span>
+                        </span>
+                    </label>`;
+                if (details.type === 'select') {
+                    innerHTML += `<select data-path="${path}" class="builder-select w-full p-1 rounded mt-1">${details.options.map(o => `<option value="${o}">${o}</option>`).join('')}</select>`;
+                } else if (details.type === 'boolean') {
+                    innerHTML += `<div><input type="checkbox" data-path="${path}" ${details.default ? 'checked' : ''} class="mt-1 h-5 w-5 rounded"></div>`;
+                } else if (details.type === 'json-textarea') {
+                    innerHTML += `<textarea data-path="${path}" data-type="${details.type}" class="builder-textarea w-full p-1 rounded mt-1 h-32 font-mono text-sm">${details.default || ''}</textarea>`;
+                } else if (details.type === 'color') {
+                    innerHTML += `<div class="flex items-center gap-2 mt-1">
+                        <input type="color" value="${details.default}" class="h-8 w-8 p-0 border-none rounded cursor-pointer color-swatch">
+                        <input type="text" value="${details.default}" data-path="${path}" class="builder-input w-full p-1 rounded font-mono text-sm color-hex">
+                    </div>`;
+                } else {
+                    innerHTML += `<input type="${details.type}" value="${details.default}" ${details.step ? `step="${details.step}"` : ''} ${details.min ? `min="${details.min}"` : ''} ${details.max ? `max="${details.max}"` : ''} data-path="${path}" data-type="${details.type}" class="builder-input w-full p-1 rounded mt-1">`;
+                }
+                innerHTML += `</div>`;
+            }
+            componentDiv.innerHTML = innerHTML;
+            container.appendChild(componentDiv);
+            
+            // Add color picker sync logic
+            componentDiv.querySelectorAll('.color-swatch').forEach(swatch => {
+                const hexInput = swatch.nextElementSibling;
+                if (hexInput && hexInput.classList.contains('color-hex')) {
+                    swatch.addEventListener('input', () => {
+                        hexInput.value = swatch.value;
+                        hexInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    });
+                    hexInput.addEventListener('input', () => {
+                        if (/^#[0-9A-F]{6}$/i.test(hexInput.value)) {
+                            swatch.value = hexInput.value;
+                        }
+                    });
+                }
+            });
+
+            componentDiv.querySelector('.remove-button').addEventListener('click', () => {
+                componentDiv.remove();
+                onUpdate();
+            });
+            onUpdate();
+        }
+
+        // --- SPECIFIC BUILDER LOGIC ---
+
+        function generateEntityJson() {
+            const builderId = 'builder-entities';
+            const form = document.getElementById(`${builderId}-form`);
+            if (!form) return;
+            
+             const parseActions = (container) => {
+                let actions = [];
+                container.querySelectorAll(':scope > .action-section').forEach(actionDiv => {
+                    const type = actionDiv.dataset.actionType;
+                    let actionObj = {};
+                    let currentActionData = {};
+                     switch (type) {
+                        case 'add':
+                        case 'remove':
+                            const groups = Array.from(actionDiv.querySelectorAll('.component-group-checkbox:checked')).map(cb => cb.value);
+                            if (groups.length > 0) currentActionData.component_groups = groups;
+                            break;
+                        case 'set_property':
+                            const propSelect = actionDiv.querySelector('.property-selector');
+                            if (propSelect && propSelect.value) {
+                                const propName = propSelect.value;
+                                const propInput = actionDiv.querySelector('.property-value-input');
+                                if (propInput) {
+                                    if (propInput.type === 'checkbox') currentActionData[propName] = propInput.checked;
+                                    else if (propInput.type === 'number') currentActionData[propName] = parseFloat(propInput.value);
+                                    else currentActionData[propName] = propInput.value;
+                                }
+                            }
+                            break;
+                        case 'run_command':
+                            const commandInput = actionDiv.querySelector('.command-input');
+                            if(commandInput && commandInput.value) {
+                                currentActionData.command = [commandInput.value]; // Commands are always an array
+                                currentActionData.target = actionDiv.querySelector('.command-target-selector').value;
+                            }
+                            break;
+                        case 'trigger':
+                             const eventTriggerInput = actionDiv.querySelector('.event-trigger-input');
+                             if(eventTriggerInput && eventTriggerInput.value) {
+                                 currentActionData.event = eventTriggerInput.value;
+                                 currentActionData.target = actionDiv.querySelector('.event-trigger-target-selector').value;
+                             }
+                            break;
+                        case 'sequence':
+                        case 'randomize':
+                            const nestedContainer = actionDiv.querySelector('.action-container');
+                            const nestedActions = parseActions(nestedContainer);
+                            if (nestedActions.length > 0) {
+                                actionObj[type] = nestedActions;
+                                actions.push(actionObj);
+                            }
+                            return; // Skip default push
+                    }
+                    if (Object.keys(currentActionData).length > 0) {
+                        actionObj[type] = currentActionData;
+                        actions.push(actionObj);
+                    }
+                });
+                return actions;
+            };
+
+            const mergeActions = (actions) => {
+                if (actions.length === 0) return undefined;
+                if (actions.length === 1) return actions[0];
+                return { "sequence": actions };
+            };
+
+            let entityDescription = {
+                identifier: form.querySelector(`[data-path$="description.identifier"]`).value,
+                is_spawnable: form.querySelector(`[data-path$="description.is_spawnable"]`).checked,
+                is_summonable: form.querySelector(`[data-path$="description.is_summonable"]`).checked,
+                is_experimental: form.querySelector(`[data-path$="description.is_experimental"]`).checked,
+            };
+
+            // Properties
+            entityDescription.properties = {};
+            form.querySelectorAll('.property-section').forEach(propDiv => {
+                const name = propDiv.querySelector('.property-name').value;
+                if (!name) return;
+                const type = propDiv.querySelector('.property-type').value;
+                const clientSync = propDiv.querySelector('.property-client-sync').checked;
+                let propData = { type: type, client_sync: clientSync };
+
+                if (type === 'bool') {
+                    propData.default = propDiv.querySelector('.property-default-bool').checked;
+                } else if (type === 'enum') {
+                    propData.default = propDiv.querySelector('.property-default-enum').value;
+                    propData.values = propDiv.querySelector('.property-enum-values').value.split(',').map(s => s.trim()).filter(Boolean);
+                } else { // int or float
+                    propData.default = parseFloat(propDiv.querySelector('.property-default-range').value);
+                    propData.range = [
+                        parseFloat(propDiv.querySelector('.property-range-min').value),
+                        parseFloat(propDiv.querySelector('.property-range-max').value)
+                    ];
+                }
+                entityDescription.properties[name] = propData;
+            });
+
+            // Components
+            let components = {};
+            form.querySelector('#builder-entities-components-container').querySelectorAll('.component-section').forEach(compDiv => {
+                const compName = compDiv.dataset.component;
+                const definition = entityComponentDefinitions[compName] || {};
+                let compData = {};
+                
+                if (Object.keys(definition).length === 0) {
+                    components[compName] = {};
+                    return;
+                }
+
+                compDiv.querySelectorAll('[data-path]').forEach(input => {
+                    const prop = input.dataset.path.split('.').pop();
+                    let value;
+                    if (input.type === 'checkbox') value = input.checked;
+                    else if (input.type === 'number') value = parseFloat(input.value) || 0;
+                    else if (input.dataset.type === 'array') value = input.value.split(',').map(s => s.trim()).filter(Boolean);
+                    else if (input.dataset.type === 'json-textarea') {
+                        try { value = JSON.parse(input.value); } catch (e) { value = {}; }
+                    } else value = input.value;
+                    compData[prop] = value;
+                });
+
+                if (Object.keys(definition).length === 1 && 'value' in definition) {
+                     components[compName] = compData.value;
+                } else {
+                     components[compName] = compData;
+                }
+            });
+            
+            // Component Groups
+            let componentGroups = {};
+             form.querySelectorAll('.component-group-section').forEach(groupDiv => {
+                const groupName = groupDiv.querySelector('.component-group-name').value;
+                if (!groupName) return;
+                let groupData = {};
+                groupDiv.querySelectorAll('.component-section').forEach(compDiv => {
+                    const compName = compDiv.dataset.component;
+                     const definition = entityComponentDefinitions[compName] || {};
+                     let compData = {};
+                      
+                     if (Object.keys(definition).length === 0) {
+                         groupData[compName] = {};
+                         return;
+                     }
+
+                     compDiv.querySelectorAll('[data-path]').forEach(input => {
+                        const prop = input.dataset.path.split('.').pop();
+                        let value;
+                        if (input.type === 'checkbox') value = input.checked;
+                        else if (input.type === 'number') value = parseFloat(input.value) || 0;
+                        else if (input.dataset.type === 'array') value = input.value.split(',').map(s => s.trim()).filter(Boolean);
+                         else if (input.dataset.type === 'json-textarea') {
+                            try { value = JSON.parse(input.value); } catch (e) { value = {}; }
+                        } else value = input.value;
+                         compData[prop] = value;
+                    });
+                     if (Object.keys(definition).length === 1 && 'value' in definition) {
+                          groupData[compName] = compData.value;
+                     } else {
+                          groupData[compName] = compData;
+                     }
+                });
+                componentGroups[groupName] = groupData;
+            });
+
+            // Events
+            let events = {};
+            form.querySelectorAll('.event-section').forEach(eventDiv => {
+                const eventName = eventDiv.querySelector('.event-name').value;
+                if (!eventName) return;
+                const actionsContainer = eventDiv.querySelector('.actions-container');
+                const parsedActions = parseActions(actionsContainer);
+                const eventData = mergeActions(parsedActions);
+
+                 if (eventData && Object.keys(eventData).length > 0) {
+                     events[eventName] = eventData;
+                 }
+            });
+
+
+            let tempObj = {
+                "format_version": getFormatVersion(builderId),
+                "minecraft:entity": {
+                    "description": entityDescription,
+                    "components": components,
+                    "component_groups": componentGroups,
+                    "events": events
+                }
+            };
+            
+            if (Object.keys(entityDescription.properties).length === 0) delete tempObj['minecraft:entity'].description.properties;
+            if (Object.keys(componentGroups).length === 0) delete tempObj['minecraft:entity'].component_groups;
+            if (Object.keys(events).length === 0) delete tempObj['minecraft:entity'].events;
+
+
+            document.getElementById(`${builderId}-code-output`).textContent = JSON.stringify(tempObj, null, 2);
+        }
+
+        function generateClientEntityJson() {
+            const form = document.getElementById('builder-client-entity-form');
+            if (!form) return;
+
+            let desc = {
+                identifier: form.querySelector('[data-path$="identifier"]').value,
+                materials: {},
+                textures: {},
+                geometry: {},
+                animations: {},
+                scripts: {},
+                particle_effects: {},
+                sound_effects: {},
+                render_controllers: []
+            };
+
+            try { desc.materials = JSON.parse(form.querySelector('[data-path$="materials"]').value); } catch (e) {}
+            try { desc.textures = JSON.parse(form.querySelector('[data-path$="textures"]').value); } catch (e) {}
+            try { desc.geometry = JSON.parse(form.querySelector('[data-path$="geometry"]').value); } catch (e) {}
+            try { desc.animations = JSON.parse(form.querySelector('[data-path$="animations"]').value); } catch (e) {}
+            
+            const baseColorInput = form.querySelector('[data-path$="spawn_egg.base_color"]');
+            const overlayColorInput = form.querySelector('[data-path$="spawn_egg.overlay_color"]');
+            if (baseColorInput && overlayColorInput && (baseColorInput.value || overlayColorInput.value)) {
+                desc.spawn_egg = {
+                    base_color: baseColorInput.value,
+                    overlay_color: overlayColorInput.value
+                };
+            }
+            
+            form.querySelectorAll('.particle-effect-item').forEach(item => {
+                const key = item.querySelector('.particle-key').value;
+                const value = item.querySelector('.particle-value').value;
+                if (key && value) desc.particle_effects[key] = value;
+            });
+
+            form.querySelectorAll('.sound-effect-item').forEach(item => {
+                const key = item.querySelector('.sound-key').value;
+                const value = item.querySelector('.sound-value').value;
+                if (key && value) desc.sound_effects[key] = value;
+            });
+            
+            form.querySelectorAll('.render-controller-section').forEach(rcSection => {
+                const id = rcSection.querySelector('.render-controller-id').value;
+                if (!id) return;
+
+                let textureStates = [];
+                rcSection.querySelectorAll('.rc-texture-item').forEach(item => {
+                    const query = item.querySelector('.rc-molang-query').value;
+                    const value = item.querySelector('.rc-texture-value').value;
+                    if (query && value) {
+                        textureStates.push({ query, value });
+                    }
+                });
+
+                let geometryStates = [];
+                rcSection.querySelectorAll('.rc-geometry-item').forEach(item => {
+                    const query = item.querySelector('.rc-molang-query').value;
+                    const value = item.querySelector('.rc-geometry-value').value;
+                    if (query && value) {
+                        geometryStates.push({ query, value });
+                    }
+                });
+
+                const buildTernary = (states, type, defaultVal) => {
+                    return states.reduceRight((acc, state) => `${state.query} ? ${type}.${state.value} : ${acc}`, `${type}.${defaultVal}`);
+                };
+                
+                let controller = {
+                    geometry: buildTernary(geometryStates, "Geometry", "default"),
+                    materials: [{ "*": "Material.default" }],
+                    textures: [buildTernary(textureStates, "Texture", "default")]
+                };
+                
+                desc.render_controllers.push({ [id]: controller });
+            });
+
+
+            let tempObj = {
+                "format_version": getFormatVersion('builder-client-entity'),
+                "minecraft:client_entity": { "description": desc }
+            };
+
+            // Cleanup empty objects
+            for(const key of ['materials', 'textures', 'geometry', 'animations', 'particle_effects', 'sound_effects', 'spawn_egg']) {
+                if (Object.keys(desc[key] || {}).length === 0) delete desc[key];
+            }
+            if (desc.render_controllers.length === 0) delete desc.render_controllers;
+
+
+            document.getElementById('builder-client-entity-code-output').textContent = JSON.stringify(tempObj, null, 2);
+        }
+        
+        function generateRecipeJson() {
+            const form = document.getElementById('builder-recipes-form');
+            if(!form) return;
+
+            const type = form.querySelector('#recipe-type-selector').value;
+            
+            let tempObj = { "format_version": getFormatVersion('builder-recipes') };
+            let recipeKey = `minecraft:recipe_${type}`;
+            let recipeObj = { description: {}, tags: [] };
+            
+            recipeObj.description.identifier = form.querySelector('[data-path-base="description.identifier"]').value;
+            recipeObj.tags = form.querySelector('[data-path-base="tags"]').value.split(',').map(s => s.trim()).filter(Boolean);
+            
+            const unlockItems = [];
+            form.querySelectorAll('.unlock-item-input').forEach(input => {
+                if (input.value) unlockItems.push({ "item": input.value });
+            });
+            if(unlockItems.length > 0) {
+                recipeObj.unlock = unlockItems;
+            }
+
+            if (type === 'shaped') {
+                recipeObj.pattern = ["", "", ""];
+                const key = {};
+                
+                form.querySelectorAll('.recipe-key-item').forEach(item => {
+                    const char = item.querySelector('.key-char-input').value;
+                    const id = item.querySelector('.key-id-input').value;
+                    if (char && id) key[char] = { item: id };
+                });
+                recipeObj.key = key;
+
+                form.querySelectorAll('.recipe-grid .builder-select').forEach((select, i) => {
+                    const row = Math.floor(i / 3);
+                    recipeObj.pattern[row] += select.value || " ";
+                });
+                recipeObj.pattern = recipeObj.pattern.filter(row => row.trim().length > 0);
+
+                const resultItemInput = form.querySelector('[data-path-base="result.item"]');
+                if(resultItemInput) {
+                    recipeObj.result = { 
+                        item: resultItemInput.value, 
+                        count: parseInt(form.querySelector('[data-path-base="result.count"]').value) 
+                    };
+                }
+
+            } else if (type === 'shapeless') {
+                recipeObj.ingredients = [];
+                 form.querySelectorAll('.ingredient-item-input').forEach(input => {
+                    if(input.value) recipeObj.ingredients.push({ item: input.value });
+                 });
+                const resultItemInput = form.querySelector('[data-path-base="result.item"]');
+                 if(resultItemInput) {
+                    recipeObj.result = { 
+                        item: resultItemInput.value, 
+                        count: parseInt(form.querySelector('[data-path-base="result.count"]').value) 
+                    };
+                 }
+            } else if (type === 'furnace') {
+                const inputEl = form.querySelector('[data-path-base="furnace.input"]');
+                const outputEl = form.querySelector('[data-path-base="furnace.output"]');
+                if (inputEl && outputEl) {
+                    recipeObj.input = inputEl.value;
+                    recipeObj.output = outputEl.value;
+                }
+            }
+            
+            tempObj[recipeKey] = recipeObj;
+            document.getElementById('builder-recipes-code-output').textContent = JSON.stringify(tempObj, null, 2);
+        }
+
+        function generateSpawnRuleJson() {
+            const form = document.getElementById('builder-spawn-rules-form');
+            if(!form) return;
+            let tempObj = {
+                "format_version": getFormatVersion('builder-spawn-rules'),
+                "minecraft:spawn_rules": {
+                    "description": {
+                        "identifier": form.querySelector('[data-path$="identifier"]').value,
+                        "population_control": form.querySelector('[data-path$="population_control"]').value
+                    },
+                    "conditions": []
+                }
+            };
+            
+            form.querySelectorAll('.spawn-condition-group').forEach(group => {
+                let condition = {};
+                const type = group.dataset.conditionType;
+                
+                if (type === "minecraft:spawns_on_surface" || type === "minecraft:spawns_underwater") {
+                    condition[type] = {};
+                } else if (type === "minecraft:brightness_filter") {
+                    condition[type] = {
+                        min: parseInt(group.querySelector('[data-prop="min"]').value),
+                        max: parseInt(group.querySelector('[data-prop="max"]').value),
+                        adjust_for_weather: group.querySelector('[data-prop="adjust_for_weather"]').checked
+                    };
+                } else if (type === "minecraft:weight") {
+                    condition[type] = {
+                        default: parseInt(group.querySelector('[data-prop="default"]').value)
+                    };
+                } else if (type === "minecraft:herd") {
+                     condition[type] = {
+                        min_size: parseInt(group.querySelector('[data-prop="min_size"]').value),
+                        max_size: parseInt(group.querySelector('[data-prop="max_size"]').value)
+                    };
+                }
+                else if (type === "minecraft:biome_filter") {
+                    condition[type] = {
+                        "test": "has_biome_tag",
+                        "operator": "==",
+                        "value": group.querySelector('[data-prop="value"]').value
+                    };
+                }
+                
+                tempObj["minecraft:spawn_rules"].conditions.push(condition);
+            });
+
+            document.getElementById('builder-spawn-rules-code-output').textContent = JSON.stringify(tempObj, null, 2);
+        }
+        
+        function generateLootTableJson() {
+            const form = document.getElementById('builder-loot-tables-form');
+            if (!form) return;
+            let tempObj = { pools: [] };
+            form.querySelectorAll('.loot-pool-section').forEach((poolDiv) => {
+                const pool = {
+                    rolls: parseInt(poolDiv.querySelector('.pool-rolls-input').value),
+                    entries: []
+                };
+                poolDiv.querySelectorAll('.loot-entry-item').forEach(entryDiv => {
+                    const entry = {
+                        type: "item",
+                        name: entryDiv.querySelector('.entry-name-input').value,
+                        weight: parseInt(entryDiv.querySelector('.entry-weight-input').value),
+                        functions: []
+                    };
+                    const setCountChecked = entryDiv.querySelector('.set-count-toggle').checked;
+                    if(setCountChecked) {
+                        entry.functions.push({
+                            function: "set_count",
+                            count: {
+                                min: parseInt(entryDiv.querySelector('.set-count-min').value),
+                                max: parseInt(entryDiv.querySelector('.set-count-max').value)
+                            }
+                        });
+                    }
+                     const lootingEnchantChecked = entryDiv.querySelector('.looting-enchant-toggle').checked;
+                    if(lootingEnchantChecked) {
+                         entry.functions.push({
+                            function: "looting_enchant",
+                            count: {
+                                min: parseInt(entryDiv.querySelector('.looting-enchant-min').value),
+                                max: parseInt(entryDiv.querySelector('.looting-enchant-max').value)
+                            }
+                        });
+                    }
+                    if(entry.functions.length === 0) delete entry.functions;
+
+                    pool.entries.push(entry);
+                });
+                tempObj.pools.push(pool);
+            });
+             document.getElementById('builder-loot-tables-code-output').textContent = JSON.stringify(tempObj, null, 2);
+        }
+
+        // --- PAGE INITIALIZATION & DYNAMIC UI ---
+        function initializePage(builderId, config) {
+            const form = document.getElementById(`${builderId}-form`);
+            if (!form) return;
+
+            if (config.custom && config.init) {
+                // For custom builders like the texture creator
+                config.init();
+                return;
+            }
+
+            if (builderId === 'builder-entities') {
+                initializeEntityBuilder(form);
+            } else if (builderId === 'builder-client-entity') { 
+                initializeClientEntityBuilder(form);
+            } else if (builderId === 'builder-blocks') {
+                initializeBlockBuilder(form);
+            } else if (config.definitions) { // Item builder
+                let categoryHtml = '';
+                if(builderId === 'builder-items') {
+                    const options = ['construction', 'equipment', 'items', 'nature'];
+                    categoryHtml = `
+                        <label class="block mt-2">Creative Category:</label>
+                        <select class="builder-select w-full p-2 rounded mt-1" data-path="minecraft:item.description.category">
+                            ${options.map(o => `<option value="${o}">${o.charAt(0).toUpperCase() + o.slice(1)}</option>`).join('')}
+                        </select>
+                    `;
+                }
+                form.innerHTML = `
+                    <div class="builder-section p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2 text-gray-100">Description</h3>
+                        <label class="block">Identifier:</label>
+                        <input type="text" value="wiki:my_item" class="builder-input w-full p-2 rounded mt-1" data-path="minecraft:item.description.identifier">
+                        ${categoryHtml}
+                    </div>
+                    <div class="builder-section p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2 text-gray-100">Components</h3>
+                        <div id="${builderId}-components-container" class="space-y-3"></div>
+                        <div class="mt-3">
+                            <select class="builder-select w-full p-2 rounded component-selector">${Object.keys(config.definitions).map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                            <button class="mt-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded add-component-btn">Add Component</button>
+                        </div>
+                    </div>`;
+                const container = form.querySelector(`#${builderId}-components-container`);
+                form.querySelector('.add-component-btn').onclick = () => addGenericComponent(builderId, container, () => generateComponentJson(builderId));
+            } else if (builderId === 'builder-recipes') {
+                form.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="builder-section p-4 rounded-lg">
+                            <h3 class="font-bold text-lg mb-2 text-gray-100">Recipe Details</h3>
+                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                 <div>
+                                     <label class="block">Identifier:</label>
+                                     <input type="text" value="wiki:recipe_id" class="builder-input w-full p-2 rounded mt-1" data-path-base="description.identifier">
+                                 </div>
+                                 <div>
+                                     <label class="block">Tags (e.g., crafting_table):</label>
+                                     <input type="text" value="crafting_table" class="builder-input w-full p-2 rounded mt-1" data-path-base="tags" data-type="array">
+                                 </div>
+                            </div>
+                        </div>
+                        <div class="builder-section p-4 rounded-lg">
+                            <h3 class="font-bold text-lg mb-2 text-gray-100">Unlocking (Optional)</h3>
+                            <p class="text-sm text-gray-400 mb-2">Add items that will unlock this recipe for the player when they obtain them.</p>
+                            <div id="recipe-unlock-container" class="space-y-2"></div>
+                            <button id="add-unlock-item" class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">Add Unlock Item</button>
+                        </div>
+                         <div class="builder-section p-4 rounded-lg">
+                            <h3 class="font-bold text-lg mb-2 text-gray-100">Type</h3>
+                            <select id="recipe-type-selector" class="builder-select w-full p-2 rounded">
+                                <option value="shaped">Shaped Crafting</option>
+                                <option value="shapeless">Shapeless Crafting</option>
+                                <option value="furnace">Smelting</option>
+                            </select>
+                        </div>
+                        <div id="recipe-builder-main-area"></div>
+                    </div>`;
+                setupRecipeBuilderListeners(form);
+                updateRecipeUI();
+            } else if (builderId === 'builder-spawn-rules') { 
+                form.innerHTML = `
+                    <div class="builder-section p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2 text-gray-100">Description</h3>
+                        <label class="block">Identifier (must match entity):</label>
+                        <input type="text" value="wiki:my_entity" class="builder-input w-full p-2 rounded mt-1" data-path="minecraft:spawn_rules.description.identifier">
+                        <label class="block mt-2">Population Control:</label>
+                        <select class="builder-select w-full p-2 rounded mt-1" data-path="minecraft:spawn_rules.description.population_control">
+                            <option value="animal">Animal</option>
+                            <option value="monster">Monster</option>
+                            <option value="water_animal">Water Animal</option>
+                        </select>
+                    </div>
+                    <div class="builder-section p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2 text-gray-100">Conditions</h3>
+                        <p class="text-sm text-gray-400 mb-2">All conditions added must be true for the entity to spawn.</p>
+                        <div id="spawn-conditions-container" class="space-y-3"></div>
+                         <div class="mt-3">
+                            <select id="spawn-condition-selector" class="builder-select w-full p-2 rounded">
+                                <option value="minecraft:spawns_on_surface">Spawns on Surface</option>
+                                <option value="minecraft:spawns_underwater">Spawns Underwater</option>
+                                <option value="minecraft:brightness_filter">Brightness Filter</option>
+                                <option value="minecraft:weight">Weight</option>
+                                <option value="minecraft:herd">Herd</option>
+                                <option value="minecraft:biome_filter">Biome Filter</option>
+                            </select>
+                            <button id="add-spawn-condition" class="mt-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded">Add Condition</button>
+                        </div>
+                    </div>`;
+                document.getElementById('add-spawn-condition').addEventListener('click', addSpawnCondition);
+            } else if (builderId === 'builder-loot-tables') { 
+                form.innerHTML = `
+                    <div id="loot-table-pools-container" class="space-y-4"></div>
+                    <button id="add-loot-pool" class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded">Add Pool</button>
+                `;
+                document.getElementById('add-loot-pool').addEventListener('click', addLootPool);
+            }
+
+            form.addEventListener('input', () => { if (config.generate) config.generate(builderId) });
+            if (config.generate) config.generate(builderId);
+        }
+        
+        // --- DYNAMIC UI HANDLERS ---
+        function setupRecipeBuilderListeners(form) {
+             form.querySelector('#recipe-type-selector').addEventListener('change', updateRecipeUI);
+             form.addEventListener('click', e => {
+                 if (e.target.id === 'add-recipe-ingredient') addRecipeIngredient();
+                 if (e.target.id === 'add-unlock-item') addUnlockItem();
+                 if (e.target.classList.contains('remove-dynamic-item')) {
+                     e.target.closest('.dynamic-list-item').remove();
+                     updateRecipeGridOptions(); // Also handles shapeless and unlock items
+                     generateRecipeJson();
+                 }
+             });
+        }
+        
+        function updateRecipeUI() {
+            const form = document.getElementById('builder-recipes-form');
+            if(!form) return;
+            const type = form.querySelector('#recipe-type-selector').value;
+            const mainArea = form.querySelector('#recipe-builder-main-area');
+            
+            let content = '';
+            switch(type) {
+                case 'shaped':
+                    content = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="builder-section p-4 rounded-lg space-y-3">
+                                <h3 class="font-bold text-lg text-gray-100">Key Items</h3>
+                                <div id="recipe-ingredients-container" class="space-y-2"></div>
+                                <button id="add-recipe-ingredient" class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">Add Key Item</button>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="builder-section p-4 rounded-lg">
+                                    <h3 class="font-bold text-lg text-gray-100 mb-2">Crafting Pattern</h3>
+                                    <div class="recipe-grid">
+                                        ${Array(9).fill(0).map((_, i) => `<select class="builder-select" data-pattern-index="${i}"><option value=" "></option></select>`).join('')}
+                                    </div>
+                                </div>
+                                <div class="builder-section p-4 rounded-lg">
+                                    <h3 class="font-bold text-lg mb-2">Result</h3>
+                                    <label class="text-sm">Item ID:</label>
+                                    <input type="text" value="wiki:my_item" class="builder-input w-full p-1 rounded" data-path-base="result.item">
+                                    <label class="text-sm mt-2 block">Count:</label>
+                                    <input type="number" value="1" min="1" class="builder-input w-full p-1 rounded" data-path-base="result.count">
+                                </div>
+                            </div>
+                        </div>`;
+                    break;
+                case 'shapeless':
+                     content = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="builder-section p-4 rounded-lg space-y-3">
+                                <h3 class="font-bold text-lg text-gray-100">Ingredients</h3>
+                                <div id="recipe-ingredients-container" class="space-y-2"></div>
+                                <button id="add-recipe-ingredient" class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">Add Ingredient</button>
+                            </div>
+                             <div class="builder-section p-4 rounded-lg">
+                                <h3 class="font-bold text-lg mb-2">Result</h3>
+                                <label class="text-sm">Item ID:</label>
+                                <input type="text" value="wiki:my_item" class="builder-input w-full p-1 rounded" data-path-base="result.item">
+                                <label class="text-sm mt-2 block">Count:</label>
+                                <input type="number" value="1" min="1" class="builder-input w-full p-1 rounded" data-path-base="result.count">
+                            </div>
+                        </div>`;
+                    break;
+                case 'furnace':
+                     content = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="builder-section p-4 rounded-lg">
+                                <h3 class="font-bold text-lg mb-2">Input</h3>
+                                <label class="text-sm">Item ID:</label>
+                                <input type="text" value="minecraft:iron_ore" class="builder-input w-full p-1 rounded" data-path-base="furnace.input">
+                            </div>
+                            <div class="builder-section p-4 rounded-lg">
+                                <h3 class="font-bold text-lg mb-2">Result</h3>
+                                <label class="text-sm">Item ID:</label>
+                                <input type="text" value="minecraft:iron_ingot" class="builder-input w-full p-1 rounded" data-path-base="furnace.output">
+                            </div>
+                        </div>`;
+                    break;
+            }
+            mainArea.innerHTML = content;
+            if (type !== 'furnace') addRecipeIngredient();
+            generateRecipeJson();
+        }
+
+        function addRecipeIngredient() {
+            const type = document.getElementById('recipe-type-selector').value;
+            const container = document.getElementById('recipe-ingredients-container');
+            if (!container) return;
+            const div = document.createElement('div');
+            div.className = 'dynamic-list-item recipe-key-item';
+            if (type === 'shaped') {
+                 div.innerHTML = `
+                    <input type="text" placeholder="#" maxlength="1" class="builder-input w-12 text-center font-bold text-lg key-char-input">
+                    <input type="text" placeholder="minecraft:item_id" class="builder-input w-full p-1 rounded key-id-input">
+                    <button class="remove-button remove-dynamic-item">X</button>`;
+                 div.querySelector('.key-char-input').addEventListener('input', updateRecipeGridOptions);
+            } else { // shapeless
+                 div.innerHTML = `
+                    <input type="text" placeholder="minecraft:item_id" class="builder-input w-full p-1 rounded ingredient-item-input">
+                    <button class="remove-button remove-dynamic-item">X</button>`;
+            }
+            container.appendChild(div);
+        }
+        
+        function addUnlockItem() {
+            const container = document.getElementById('recipe-unlock-container');
+            const div = document.createElement('div');
+            div.className = 'dynamic-list-item';
+            div.innerHTML = `
+                <input type="text" placeholder="minecraft:item_id" class="builder-input w-full p-1 rounded unlock-item-input">
+                <button class="remove-button remove-dynamic-item">X</button>`;
+            container.appendChild(div);
+        }
+
+        function updateRecipeGridOptions() {
+            const keyItems = document.querySelectorAll('.recipe-key-item');
+            const options = ['<option value=" "></option>'];
+            keyItems.forEach(item => {
+                const char = item.querySelector('.key-char-input')?.value;
+                if(char) options.push(`<option value="${char}">${char}</option>`);
+            });
+            
+            document.querySelectorAll('.recipe-grid .builder-select').forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = options.join('');
+                select.value = currentValue;
+            });
+        }
+        
+        function addSpawnCondition() {
+            const container = document.getElementById('spawn-conditions-container');
+            const type = document.getElementById('spawn-condition-selector').value;
+            if (container.querySelector(`[data-condition-type="${type}"]`)) return;
+
+            const div = document.createElement('div');
+            div.className = 'builder-section p-3 rounded-lg spawn-condition-group';
+            div.dataset.conditionType = type;
+            let specificUi = '';
+
+             if (type === "minecraft:brightness_filter") {
+                 specificUi = `<div class="grid grid-cols-2 gap-2">
+                        <div><label class="text-sm">Min Light:</label><input type="number" class="builder-input w-full p-1 rounded" data-prop="min" value="0" min="0" max="15"></div>
+                        <div><label class="text-sm">Max Light:</label><input type="number" class="builder-input w-full p-1 rounded" data-prop="max" value="7" min="0" max="15"></div>
+                        </div>
+                        <div class="mt-2 flex items-center"><input type="checkbox" class="h-4 w-4 rounded" data-prop="adjust_for_weather"><label class="ml-2 text-sm">Adjust for Weather</label></div>
+                        `;
+            } else if (type === "minecraft:weight") {
+                 specificUi = `<div><label class="text-sm">Weight:</label><input type="number" class="builder-input w-full p-1 rounded" data-prop="default" value="100"></div>`;
+            } else if (type === "minecraft:herd") {
+                 specificUi = `<div class="grid grid-cols-2 gap-2">
+                        <div><label class="text-sm">Min Herd Size:</label><input type="number" class="builder-input w-full p-1 rounded" data-prop="min_size" value="2"></div>
+                        <div><label class="text-sm">Max Herd Size:</label><input type="number" class="builder-input w-full p-1 rounded" data-prop="max_size" value="4"></div>
+                </div>`;
+            } else if (type === "minecraft:biome_filter") {
+                 specificUi = `<div><label class="text-sm">Biome Tag:</label><input type="text" class="builder-input w-full p-1 rounded" data-prop="value" value="overworld"></div>`;
+            }
+            
+            div.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <h4 class="font-semibold">${type.split(':')[1]}</h4>
+                    <button class="remove-button remove-dynamic-item">X</button>
+                </div>
+                ${specificUi}
+            `;
+            container.appendChild(div);
+            div.querySelector('.remove-button').addEventListener('click', () => {
+                 div.remove();
+                 generateSpawnRuleJson();
+            });
+            generateSpawnRuleJson();
+        }
+        
+        function addLootPool() {
+            const container = document.getElementById('loot-table-pools-container');
+            const poolIndex = container.children.length;
+            const div = document.createElement('div');
+            div.className = 'builder-section p-4 rounded-lg loot-pool-section';
+            div.innerHTML = `
+                 <div class="flex justify-between items-center mb-2">
+                     <h3 class="font-bold text-lg">Pool ${poolIndex + 1}</h3>
+                     <button class="remove-button remove-pool-btn">X</button>
+                 </div>
+                 <label class="block text-sm">Rolls:</label>
+                 <input type="number" value="1" min="1" class="builder-input w-full p-1 rounded pool-rolls-input">
+                 <div class="mt-3 space-y-2 loot-entries-container"></div>
+                 <button class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm add-loot-entry-btn">Add Entry (Item)</button>
+            `;
+            container.appendChild(div);
+            div.querySelector('.remove-pool-btn').addEventListener('click', () => {
+                div.remove();
+                generateLootTableJson();
+            });
+            div.querySelector('.add-loot-entry-btn').addEventListener('click', addLootEntry);
+            addLootEntry({ target: div.querySelector('.add-loot-entry-btn') }); // Add one entry by default
+            generateLootTableJson();
+        }
+        
+        function addLootEntry(event) {
+            const entriesContainer = event.target.previousElementSibling;
+            const entryDiv = document.createElement('div');
+            entryDiv.className = 'dynamic-list-item loot-entry-item border-t border-gray-600 pt-2';
+            entryDiv.innerHTML = `
+                <div class="flex-grow space-y-2">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="text-xs">Item Name:</label><input type="text" placeholder="minecraft:diamond" class="builder-input w-full p-1 rounded text-sm entry-name-input"></div>
+                        <div><label class="text-xs">Weight:</label><input type="number" value="1" min="1" class="builder-input w-full p-1 rounded text-sm entry-weight-input"></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center"><input type="checkbox" class="h-4 w-4 rounded set-count-toggle"><label class="ml-2 text-sm">Set Count</label></div>
+                        <div class="hidden grid grid-cols-2 gap-2 pl-6 set-count-options">
+                             <div><label class="text-xs">Min:</label><input type="number" class="builder-input w-full p-1 rounded text-sm set-count-min" value="1"></div>
+                             <div><label class="text-xs">Max:</label><input type="number" class="builder-input w-full p-1 rounded text-sm set-count-max" value="1"></div>
+                        </div>
+                        <div class="flex items-center"><input type="checkbox" class="h-4 w-4 rounded looting-enchant-toggle"><label class="ml-2 text-sm">Looting Enchant</label></div>
+                         <div class="hidden grid grid-cols-2 gap-2 pl-6 looting-enchant-options">
+                             <div><label class="text-xs">Min:</label><input type="number" class="builder-input w-full p-1 rounded text-sm looting-enchant-min" value="0"></div>
+                             <div><label class="text-xs">Max:</label><input type="number" class="builder-input w-full p-1 rounded text-sm looting-enchant-max" value="1"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="remove-button remove-dynamic-item">X</button>
+            `;
+            entriesContainer.appendChild(entryDiv);
+            entryDiv.querySelector('.remove-dynamic-item').addEventListener('click', () => {
+                entryDiv.remove();
+                generateLootTableJson();
+            });
+
+            entryDiv.querySelector('.set-count-toggle').addEventListener('change', (e) => {
+                entryDiv.querySelector('.set-count-options').classList.toggle('hidden', !e.target.checked);
+            });
+             entryDiv.querySelector('.looting-enchant-toggle').addEventListener('change', (e) => {
+                entryDiv.querySelector('.looting-enchant-options').classList.toggle('hidden', !e.target.checked);
+            });
+            generateLootTableJson();
+        }
+
+        // --- ENTITY BUILDER SPECIFIC UI ---
+        function initializeEntityBuilder(form) {
+             const builderId = 'builder-entities';
+             form.innerHTML = `
+                <div class="builder-section p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2 text-gray-100">Description</h3>
+                    <label class="block">Identifier:</label>
+                    <input type="text" value="wiki:my_entity" class="builder-input w-full p-2 rounded mt-1" data-path="minecraft:entity.description.identifier">
+                    <div class="grid grid-cols-3 gap-4 mt-2">
+                        <div class="flex items-center"><input type="checkbox" id="is_spawnable" data-path="minecraft:entity.description.is_spawnable" checked class="h-5 w-5 rounded"><label for="is_spawnable" class="ml-2">Is Spawnable?</label></div>
+                        <div class="flex items-center"><input type="checkbox" id="is_summonable" data-path="minecraft:entity.description.is_summonable" checked class="h-5 w-5 rounded"><label for="is_summonable" class="ml-2">Is Summonable?</label></div>
+                        <div class="flex items-center"><input type="checkbox" id="is_experimental" data-path="minecraft:entity.description.is_experimental" class="h-5 w-5 rounded"><label for="is_experimental" class="ml-2">Is Experimental?</label></div>
+                    </div>
+                </div>
+                <div class="builder-section p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2 text-gray-100">Properties</h3>
+                    <div id="entity-properties-container" class="space-y-3"></div>
+                    <button id="add-entity-property" class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Property</button>
+                </div>
+                <div class="builder-section p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2 text-gray-100">Base Components</h3>
+                    <div id="builder-entities-components-container" class="space-y-3"></div>
+                    <div class="mt-3">
+                        <select class="builder-select w-full p-2 rounded component-selector">${Object.keys(entityComponentDefinitions).map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                        <button class="mt-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded add-component-btn">Add Component</button>
+                    </div>
+                </div>
+                <div class="builder-section p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2 text-gray-100">Component Groups</h3>
+                    <div id="entity-component-groups-container" class="space-y-3"></div>
+                    <button id="add-entity-component-group" class="mt-2 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">Add Component Group</button>
+                </div>
+                 <div class="builder-section p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2 text-gray-100">Events</h3>
+                    <div id="entity-events-container" class="space-y-3"></div>
+                    <button id="add-entity-event" class="mt-2 w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Add Event</button>
+                </div>
+            `;
+            const baseComponentsContainer = form.querySelector('#builder-entities-components-container');
+            form.querySelector('.add-component-btn').addEventListener('click', () => addGenericComponent(builderId, baseComponentsContainer, generateEntityJson));
+            form.querySelector('#add-entity-property').addEventListener('click', addEntityProperty);
+            form.querySelector('#add-entity-component-group').addEventListener('click', addEntityComponentGroup);
+            form.querySelector('#add-entity-event').addEventListener('click', addEntityEvent);
+        }
+
+        function addEntityProperty() {
+            const container = document.getElementById('entity-properties-container');
+            const div = document.createElement('div');
+            div.className = 'property-section p-3 rounded-lg';
+            div.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <h4 class="font-semibold text-gray-100">New Property</h4>
+                    <button class="remove-button">X</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                    <input type="text" placeholder="wiki:property_name" class="builder-input w-full p-1 rounded property-name">
+                    <select class="builder-select w-full p-1 rounded property-type">
+                        <option value="bool">Boolean</option>
+                        <option value="int">Integer</option>
+                        <option value="float">Float</option>
+                        <option value="enum">Enum</option>
+                    </select>
+                </div>
+                <div class="property-options mt-2"></div>
+                <div class="flex items-center mt-2">
+                    <input type="checkbox" class="h-4 w-4 rounded property-client-sync">
+                    <label class="ml-2 text-sm">Client Sync</label>
+                </div>
+            `;
+            container.appendChild(div);
+            div.querySelector('.remove-button').addEventListener('click', () => { div.remove(); generateEntityJson(); });
+            div.querySelector('.property-type').addEventListener('change', updatePropertyOptions);
+            updatePropertyOptions({target: div.querySelector('.property-type')});
+        }
+
+        function updatePropertyOptions(event) {
+            const select = event.target;
+            const optionsDiv = select.closest('.property-section').querySelector('.property-options');
+            const type = select.value;
+            let html = '';
+            if (type === 'bool') {
+                html = `<div class="flex items-center"><label class="mr-2">Default:</label><input type="checkbox" class="h-5 w-5 rounded property-default-bool"></div>`;
+            } else if (type === 'enum') {
+                html = `
+                    <label>Enum Values (comma-separated):</label>
+                    <input type="text" placeholder="a,b,c" class="builder-input w-full p-1 rounded mt-1 property-enum-values">
+                    <label class="mt-2 block">Default Value:</label>
+                    <input type="text" placeholder="a" class="builder-input w-full p-1 rounded mt-1 property-default-enum">
+                `;
+            } else { // int or float
+                 html = `
+                    <label>Default Value:</label>
+                    <input type="number" value="0" class="builder-input w-full p-1 rounded mt-1 property-default-range">
+                    <div class="grid grid-cols-2 gap-4 mt-2">
+                        <div><label>Min Range:</label><input type="number" value="0" class="builder-input w-full p-1 rounded property-range-min"></div>
+                        <div><label>Max Range:</label><input type="number" value="10" class="builder-input w-full p-1 rounded property-range-max"></div>
+                    </div>
+                 `;
+            }
+            optionsDiv.innerHTML = html;
+        }
+        
+        function addEntityComponentGroup() {
+            const container = document.getElementById('entity-component-groups-container');
+            const div = document.createElement('div');
+            div.className = 'component-group-section p-3 rounded-lg';
+            div.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <input type="text" placeholder="wiki:group_name" class="builder-input w-full p-1 rounded component-group-name">
+                    <button class="remove-button ml-2">X</button>
+                </div>
+                <div class="sub-section">
+                    <div class="component-group-components-container space-y-3"></div>
+                    <div class="mt-3">
+                        <select class="builder-select w-full p-2 rounded component-selector">${Object.keys(entityComponentDefinitions).map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                        <button class="mt-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1 px-2 text-sm rounded add-component-to-group-btn">Add Component to Group</button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+            div.querySelector('.remove-button').addEventListener('click', () => { 
+                div.remove();
+                generateEntityJson();
+            });
+            const componentsContainer = div.querySelector('.component-group-components-container');
+            div.querySelector('.add-component-to-group-btn').addEventListener('click', () => addGenericComponent('builder-entities', componentsContainer, generateEntityJson));
+        }
+
+        function addEntityEvent() {
+            const container = document.getElementById('entity-events-container');
+            const div = document.createElement('div');
+            div.className = 'event-section p-3 rounded-lg';
+            div.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <input type="text" placeholder="minecraft:entity_spawned" class="builder-input w-full p-1 rounded event-name">
+                    <button class="remove-button ml-2">X</button>
+                </div>
+                <div class="actions-container mt-2 space-y-2"></div>
+                <button class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 text-sm rounded add-action-btn">Add Action</button>
+            `;
+            container.appendChild(div);
+            div.querySelector('.remove-button').addEventListener('click', () => { div.remove(); generateEntityJson(); });
+            div.querySelector('.add-action-btn').addEventListener('click', (e) => addEventAction(e.target));
+        }
+
+        function addEventAction(button) {
+            const container = button.closest('.event-section, .action-section').querySelector('.actions-container, .action-container');
+            if(!container) return;
+
+            const actionDiv = document.createElement('div');
+            actionDiv.className = 'action-section p-3 rounded-lg';
+            
+            actionDiv.innerHTML = `
+                <div class="flex items-center">
+                     <select class="builder-select w-full p-1 rounded action-type-selector">
+                        <option value="">-- Select Action --</option>
+                        <option value="add">Add Component Group(s)</option>
+                        <option value="remove">Remove Component Group(s)</option>
+                        <option value="set_property">Set Property</option>
+                        <option value="run_command">Run Command</option>
+                        <option value="trigger">Trigger Event</option>
+                        <option value="sequence">Sequence</option>
+                        <option value="randomize">Randomize</option>
+                    </select>
+                    <button class="remove-button ml-2">X</button>
+                </div>
+                <div class="action-options mt-2"></div>
+            `;
+            container.appendChild(actionDiv);
+            actionDiv.querySelector('.remove-button').addEventListener('click', () => { actionDiv.remove(); generateEntityJson(); });
+            actionDiv.querySelector('.action-type-selector').addEventListener('change', (e) => updateActionOptions(e.target));
+        }
+
+        function updateActionOptions(selectElement) {
+            const actionType = selectElement.value;
+            const optionsContainer = selectElement.closest('.action-section').querySelector('.action-options');
+            const actionSection = selectElement.closest('.action-section');
+            actionSection.dataset.actionType = actionType;
+
+            let html = '';
+            const groupNames = Array.from(document.querySelectorAll('.component-group-name')).map(input => input.value).filter(Boolean);
+            const propertyNames = Array.from(document.querySelectorAll('.property-name')).map(input => input.value).filter(Boolean);
+
+            switch (actionType) {
+                case 'add':
+                case 'remove':
+                    html = groupNames.map(name => `<div class="flex items-center"><input type="checkbox" value="${name}" class="h-4 w-4 rounded component-group-checkbox"><label class="ml-2">${name}</label></div>`).join('');
+                    if (!html) html = `<p class="text-xs text-gray-400">No component groups defined.</p>`;
+                    break;
+                case 'set_property':
+                    if (propertyNames.length === 0) {
+                         html = `<p class="text-xs text-gray-400">No properties defined.</p>`;
+                    } else {
+                         html = `<select class="builder-select w-full p-1 rounded property-selector">${propertyNames.map(p => `<option value="${p}">${p}</option>`).join('')}</select>
+                                  <div class="property-value-container mt-2"></div>
+                                 `;
+                    }
+                    break;
+                case 'run_command':
+                     html = `
+                        <input type="text" placeholder="/say hello" class="builder-input w-full p-1 rounded command-input">
+                        <select class="builder-select w-full p-1 rounded mt-2 command-target-selector">
+                            <option value="self">self</option><option value="player">player</option><option value="target">target</option><option value="other">other</option>
+                        </select>
+                       `;
+                    break;
+                case 'trigger':
+                     html = `
+                        <input type="text" placeholder="wiki:my_other_event" class="builder-input w-full p-1 rounded event-trigger-input">
+                        <select class="builder-select w-full p-1 rounded mt-2 event-trigger-target-selector">
+                            <option value="self">self</option><option value="player">player</option><option value="target">target</option><option value="other">other</option>
+                        </select>
+                       `;
+                    break;
+                case 'sequence':
+                case 'randomize':
+                    html = `
+                        <div class="action-container space-y-2"></div>
+                        <button class="mt-2 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 text-xs rounded add-nested-action-btn">Add Action to ${actionType}</button>
+                    `;
+                    break;
+            }
+
+            optionsContainer.innerHTML = html;
+
+            if (actionType === 'set_property' && propertyNames.length > 0) {
+                const propSelect = optionsContainer.querySelector('.property-selector');
+                propSelect.addEventListener('change', (e) => updatePropertyValueInput(e.target));
+                updatePropertyValueInput(propSelect); // Initial call
+            }
+             if (actionType === 'sequence' || actionType === 'randomize') {
+                optionsContainer.querySelector('.add-nested-action-btn').addEventListener('click', (e) => addEventAction(e.target));
+            }
+        }
+
+         function updatePropertyValueInput(propertySelect) {
+            const propertyName = propertySelect.value;
+            const valueContainer = propertySelect.closest('.action-options').querySelector('.property-value-container');
+            
+            // Find the original property definition to determine its type
+            let propertyDef = null;
+            document.querySelectorAll('.property-section').forEach(propDiv => {
+                if (propDiv.querySelector('.property-name').value === propertyName) {
+                    propertyDef = {
+                        type: propDiv.querySelector('.property-type').value,
+                        values: propDiv.querySelector('.property-enum-values')?.value.split(',').map(s => s.trim()).filter(Boolean)
+                    };
+                }
+            });
+
+            if (!propertyDef) {
+                valueContainer.innerHTML = '';
+                return;
+            }
+
+            if (propertyDef.type === 'bool') {
+                 valueContainer.innerHTML = `<input type="checkbox" class="h-5 w-5 rounded property-value-input">`;
+            } else if (propertyDef.type === 'enum' && propertyDef.values.length > 0) {
+                 valueContainer.innerHTML = `<select class="builder-select w-full p-1 rounded property-value-input">${propertyDef.values.map(v => `<option value="${v}">${v}</option>`).join('')}</select>`;
+            } else if (propertyDef.type === 'int' || propertyDef.type === 'float') {
+                 valueContainer.innerHTML = `<input type="number" value="0" class="builder-input w-full p-1 rounded property-value-input">`;
+            } else {
+                 valueContainer.innerHTML = `<input type="text" class="builder-input w-full p-1 rounded property-value-input">`;
+            }
+        }
+        
+        // --- CLIENT ENTITY BUILDER UI ---
+        function initializeClientEntityBuilder(form) {
+            form.innerHTML = `
+                <div class="builder-section p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2 text-gray-100">Description</h3>
+                    <label class="block">Identifier:</label>
+                    <input type="text" value="wiki:my_entity" class="builder-input w-full p-2 rounded mt-1" data-path="minecraft:client_entity.description.identifier">
+                </div>
+                <div class="builder-section p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2 text-gray-100">Basic Render Files</h3>
+                     <p class="text-sm text-gray-400 mb-2">Define shortnames for your resources. These are simple key-value pairs.</p>
+                     <label class="block mt-2">Materials:</label>
+                    <textarea class="builder-textarea w-full p-2 rounded mt-1 font-mono text-sm h-20" data-path="minecraft:client_entity.description.materials" data-type="json">{ "default": "entity_alphatest" }</textarea>
+                    <label class="block mt-2">Textures:</label>
+                    <textarea class="builder-textarea w-full p-2 rounded mt-1 font-mono text-sm h-20" data-path="minecraft:client_entity.description.textures" data-type="json">{ "default": "textures/entity/my_entity" }</textarea>
+                    <label class="block mt-2">Geometry:</label>
+                    <textarea class="builder-textarea w-full p-2 rounded mt-1 font-mono text-sm h-20" data-path="minecraft:client_entity.description.geometry" data-type="json">{ "default": "geometry.my_entity" }</textarea>
+                </div>
+                <div class="builder-section p-4 rounded-lg">
+                     <h3 class="font-bold text-lg mb-2 text-gray-100">Animations & Sound</h3>
+                    <label class="block mt-2">Animations:</label>
+                    <textarea class="builder-textarea w-full p-2 rounded mt-1 font-mono text-sm h-24" data-path="minecraft:client_entity.description.animations" data-type="json">{ "walk": "animation.my_entity.walk",\n "look_at_target": "animation.common.look_at_target" }</textarea>
+                     <label class="block mt-2">Sound Effects:</label>
+                    <div id="sound-effects-container" class="space-y-2"></div>
+                    <button id="add-sound-effect" class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">Add Sound Effect</button>
+                </div>
+                 <div class="builder-section p-4 rounded-lg">
+                     <h3 class="font-bold text-lg mb-2 text-gray-100">Particles & Spawn Egg</h3>
+                     <label class="block mt-2">Particle Effects:</label>
+                    <div id="particle-effects-container" class="space-y-2"></div>
+                    <button id="add-particle-effect" class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">Add Particle Effect</button>
+                    <div class="mt-4">
+                        <h4 class="font-semibold text-gray-100">Spawn Egg Colors</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                            <div>
+                                <label class="block text-sm">Base Color:</label>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <input type="color" value="#FF0000" class="h-8 w-8 p-0 border-none rounded cursor-pointer color-swatch" data-sync-target="spawn-egg-base-hex">
+                                    <input type="text" value="#FF0000" data-path="minecraft:client_entity.description.spawn_egg.base_color" class="builder-input w-full p-1 rounded font-mono text-sm color-hex" id="spawn-egg-base-hex">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm">Overlay Color:</label>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <input type="color" value="#00FF00" class="h-8 w-8 p-0 border-none rounded cursor-pointer color-swatch" data-sync-target="spawn-egg-overlay-hex">
+                                    <input type="text" value="#00FF00" data-path="minecraft:client_entity.description.spawn_egg.overlay_color" class="builder-input w-full p-1 rounded font-mono text-sm color-hex" id="spawn-egg-overlay-hex">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="builder-section p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2 text-gray-100">Render Controllers</h3>
+                     <div id="render-controllers-container" class="space-y-3"></div>
+                    <button id="add-render-controller" class="mt-2 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">Add Render Controller</button>
+                </div>
+            `;
+            form.querySelector('#add-particle-effect').addEventListener('click', addClientEffectItem);
+            form.querySelector('#add-sound-effect').addEventListener('click', addClientEffectItem);
+            form.querySelector('#add-render-controller').addEventListener('click', addRenderController);
+            
+            form.querySelectorAll('.color-swatch').forEach(swatch => {
+                const hexInput = document.getElementById(swatch.dataset.syncTarget);
+                if (hexInput) {
+                    swatch.addEventListener('input', () => {
+                        hexInput.value = swatch.value;
+                        hexInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    });
+                    hexInput.addEventListener('input', () => {
+                        if (/^#[0-9A-F]{6}$/i.test(hexInput.value)) {
+                            swatch.value = hexInput.value;
+                        }
+                    });
+                }
+            });
+        }
+
+        function addClientEffectItem(event) {
+            const isParticle = event.target.id === 'add-particle-effect';
+            const containerId = isParticle ? 'particle-effects-container' : 'sound-effects-container';
+            const keyPlaceholder = isParticle ? 'wiki:my_particle' : 'idle';
+            const valuePlaceholder = isParticle ? 'head' : 'mob.my_entity.idle';
+            const className = isParticle ? 'particle-effect-item' : 'sound-effect-item';
+            const keyClass = isParticle ? 'particle-key' : 'sound-key';
+            const valueClass = isParticle ? 'particle-value' : 'sound-value';
+
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `dynamic-list-item ${className}`;
+            div.innerHTML = `
+                <input type="text" placeholder="Shortname" value="${keyPlaceholder}" class="builder-input w-full p-1 rounded ${keyClass}">
+                <input type="text" placeholder="${isParticle ? 'Locator' : 'Sound Event'}" value="${valuePlaceholder}" class="builder-input w-full p-1 rounded ${valueClass}">
+                <button class="remove-button">X</button>
+            `;
+            container.appendChild(div);
+            div.querySelector('.remove-button').addEventListener('click', () => { div.remove(); generateClientEntityJson(); });
+        }
+
+        function addRenderController() {
+            const container = document.getElementById('render-controllers-container');
+            const div = document.createElement('div');
+            div.className = 'render-controller-section p-3 rounded-lg';
+            div.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <input type="text" placeholder="controller.render.my_entity" class="builder-input w-full p-1 rounded render-controller-id">
+                    <button class="remove-button ml-2">X</button>
+                </div>
+                <div class="sub-section">
+                    <h4 class="font-semibold text-gray-100">Texture States</h4>
+                    <div class="rc-textures-container space-y-2"></div>
+                    <button class="mt-2 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 text-xs rounded add-rc-texture">Add Texture State</button>
+                </div>
+                 <div class="sub-section">
+                    <h4 class="font-semibold text-gray-100">Geometry States</h4>
+                    <div class="rc-geometries-container space-y-2"></div>
+                    <button class="mt-2 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 text-xs rounded add-rc-geometry">Add Geometry State</button>
+                </div>
+            `;
+            container.appendChild(div);
+            div.querySelector('.remove-button').addEventListener('click', () => { div.remove(); generateClientEntityJson(); });
+            div.querySelector('.add-rc-texture').addEventListener('click', addRcStateItem);
+            div.querySelector('.add-rc-geometry').addEventListener('click', addRcStateItem);
+        }
+
+        function addRcStateItem(event) {
+            const isTexture = event.target.classList.contains('add-rc-texture');
+            const container = isTexture ? event.target.previousElementSibling : event.target.previousElementSibling;
+            const itemClass = isTexture ? 'rc-texture-item' : 'rc-geometry-item';
+            const valueClass = isTexture ? 'rc-texture-value' : 'rc-geometry-value';
+            const valuePlaceholder = isTexture ? 'angry' : 'baby'; // Using shortnames now
+
+            const div = document.createElement('div');
+            div.className = `dynamic-list-item ${itemClass}`;
+            div.innerHTML = `
+                 <input type="text" placeholder="Molang Query (e.g. q.is_angry)" class="builder-input w-full p-1 rounded rc-molang-query">
+                <input type="text" placeholder="Shortname (e.g. ${valuePlaceholder})" class="builder-input w-full p-1 rounded ${valueClass}">
+                <button class="remove-button">X</button>
+            `;
+             container.appendChild(div);
+            div.querySelector('.remove-button').addEventListener('click', () => { div.remove(); generateClientEntityJson(); });
+        }
+
+        // --- BLOCK BUILDER LOGIC (FIXED/ADDED) ---
+        function initializeBlockBuilder(form) {
+             const builderId = 'builder-blocks';
+             form.innerHTML = `
+                 <div class="builder-section p-4 rounded-lg">
+                     <h3 class="font-bold text-lg mb-2 text-gray-100">Description</h3>
+                     <label class="block">Identifier:</label>
+                     <input type="text" value="wiki:my_block" class="builder-input w-full p-2 rounded mt-1" data-path-base="description.identifier">
+                 </div>
+                 <div class="builder-section p-4 rounded-lg">
+                     <h3 class="font-bold text-lg mb-2 text-gray-100">Base Components</h3>
+                     <div id="${builderId}-components-container" class="space-y-3"></div>
+                     <div class="mt-3">
+                         <select class="builder-select w-full p-2 rounded component-selector">${Object.keys(blockComponentDefinitions).map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                         <button class="mt-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded add-component-btn">Add Component</button>
+                     </div>
+                 </div>
+             `;
+             const container = form.querySelector(`#${builderId}-components-container`);
+             form.querySelector('.add-component-btn').onclick = () => addGenericComponent(builderId, container, generateBlockJson);
+         }
+
+        function generateBlockJson() {
+            const builderId = 'builder-blocks';
+            const form = document.getElementById(`${builderId}-form`);
+            if(!form) return;
+            
+            let tempObj = {
+                "format_version": getFormatVersion(builderId),
+                "minecraft:block": {
+                    "description": {
+                        "identifier": form.querySelector('[data-path-base="description.identifier"]').value
+                    },
+                    "components": {}
+                }
+            };
+            
+            // This is a simplified block builder, so we add material_instances by default
+            tempObj["minecraft:block"].components["minecraft:material_instances"] = {
+                "*": {
+                    "texture": "my_block_texture", // Placeholder texture shortname
+                    "render_method": "opaque"
+                }
+            };
+
+            form.querySelectorAll('.component-section').forEach(container => {
+                const componentName = container.dataset.component;
+                const definition = builders[builderId].definitions[componentName] || {};
+                
+                let componentData = {};
+                
+                if (Object.keys(definition).length === 0) {
+                    tempObj["minecraft:block"].components[componentName] = {};
+                    return;
+                }
+                
+                container.querySelectorAll('[data-path]').forEach(input => {
+                    const prop = input.dataset.path.split('.').pop();
+                    let value;
+                    if (input.type === 'checkbox') value = input.checked;
+                    else if (input.type === 'number') value = parseFloat(input.value) || 0;
+                    else if (input.type === 'color') value = input.value;
+                    else if (input.dataset.type === 'array') value = input.value.split(',').map(s => s.trim()).filter(Boolean);
+                    else value = input.value;
+                    
+                    componentData[prop] = value;
+                });
+                 
+                if (Object.keys(definition).length === 1 && 'value' in definition) {
+                    tempObj["minecraft:block"].components[componentName] = componentData.value;
+                } else {
+                     tempObj["minecraft:block"].components[componentName] = componentData;
+                }
+            });
+
+            document.getElementById(`${builderId}-code-output`).textContent = JSON.stringify(tempObj, null, 2);
+        }
+        
+        // --- TEXTURE CREATOR LOGIC ---
+        function initializeTextureCreator() {
+            const canvas = document.getElementById('texture-canvas');
+            const gridCanvas = document.getElementById('grid-canvas');
+            const ctx = canvas.getContext('2d');
+            const gridCtx = gridCanvas.getContext('2d');
+            
+            let widthInput = document.getElementById('canvas-width');
+            let heightInput = document.getElementById('canvas-height');
+            const aspectRatioLock = document.getElementById('aspect-ratio-lock');
+            const resizeBtn = document.getElementById('resize-canvas-btn');
+            const toolPalette = document.getElementById('tool-palette');
+            const colorPicker = document.getElementById('color-picker');
+            const gridToggle = document.getElementById('grid-toggle');
+            const exportBtn = document.getElementById('export-png-btn');
+            const brushSizeSlider = document.getElementById('brush-size');
+            const brushSizeValue = document.getElementById('brush-size-value');
+            const brushOpacitySlider = document.getElementById('brush-opacity');
+            const brushOpacityValue = document.getElementById('brush-opacity-value');
+            const layersContainer = document.getElementById('layers-container');
+            const addLayerBtn = document.getElementById('add-layer-btn');
+            const deleteLayerBtn = document.getElementById('delete-layer-btn');
+            const colorHistoryContainer = document.getElementById('color-history');
+            
+            let state = {
+                width: 16,
+                height: 16,
+                isDrawing: false,
+                currentTool: 'pencil',
+                currentColor: '#ff0000',
+                showGrid: true,
+                brushSize: 1,
+                brushOpacity: 1, // 0 to 1
+                layers: [],
+                activeLayerIndex: -1,
+                colorHistory: []
+            };
+
+            const hexToRgba = (hex, alpha = 1) => {
+                let r = 0, g = 0, b = 0;
+                if (hex.length === 7) {
+                    r = parseInt(hex.substring(1, 3), 16);
+                    g = parseInt(hex.substring(3, 5), 16);
+                    b = parseInt(hex.substring(5, 7), 16);
+                } else if (hex.length === 4) {
+                    r = parseInt(hex[1] + hex[1], 16);
+                    g = parseInt(hex[2] + hex[2], 16);
+                    b = parseInt(hex[3] + hex[3], 16);
+                }
+                return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            };
+
+            const compositeLayers = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.imageSmoothingEnabled = false;
+                state.layers.forEach(layer => {
+                    if (layer.visible) {
+                        ctx.drawImage(layer.canvas, 0, 0);
+                    }
+                });
+            };
+
+            const drawGrid = () => {
+                gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+                if (!state.showGrid || state.width > 64) return;
+                
+                gridCtx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                gridCtx.lineWidth = 1;
+
+                for (let x = 0; x <= gridCanvas.width; x += gridCanvas.width / state.width) {
+                    gridCtx.beginPath();
+                    gridCtx.moveTo(x, 0);
+                    gridCtx.lineTo(x, gridCanvas.height);
+                    gridCtx.stroke();
+                }
+                for (let y = 0; y <= gridCanvas.height; y += gridCanvas.height / state.height) {
+                    gridCtx.beginPath();
+                    gridCtx.moveTo(0, y);
+                    gridCtx.lineTo(gridCanvas.width, y);
+                    gridCtx.stroke();
+                }
+            };
+            
+            const redraw = () => {
+                compositeLayers();
+                drawGrid();
+            };
+
+             const resizeCanvas = () => {
+                let newWidth = parseInt(widthInput.value);
+                let newHeight = parseInt(heightInput.value);
+                
+                const canvases = [canvas, gridCanvas];
+                canvases.forEach(c => {
+                    c.width = newWidth;
+                    c.height = newHeight;
+                });
+                
+                state.layers.forEach(layer => {
+                     const tempCanvas = document.createElement('canvas');
+                     tempCanvas.width = layer.canvas.width;
+                     tempCanvas.height = layer.canvas.height;
+                     const tempCtx = tempCanvas.getContext('2d');
+                     tempCtx.drawImage(layer.canvas, 0, 0);
+                     
+                     layer.canvas.width = newWidth;
+                     layer.canvas.height = newHeight;
+                     const layerCtx = layer.canvas.getContext('2d');
+                     layerCtx.imageSmoothingEnabled = false;
+                     layerCtx.drawImage(tempCanvas, 0, 0);
+                });
+
+                state.width = newWidth;
+                state.height = newHeight;
+                redraw();
+            };
+
+            const getMousePos = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const x = Math.floor((e.clientX - rect.left) * scaleX);
+                const y = Math.floor((e.clientY - rect.top) * scaleY);
+                return { x, y };
+            };
+
+            const drawOnLayer = (x, y) => {
+                if(state.activeLayerIndex < 0) return;
+                const layer = state.layers[state.activeLayerIndex];
+                const layerCtx = layer.canvas.getContext('2d');
+                layerCtx.imageSmoothingEnabled = false;
+
+                const startX = x - Math.floor(state.brushSize / 2);
+                const startY = y - Math.floor(state.brushSize / 2);
+
+                if (state.currentTool === 'pencil') {
+                     layerCtx.fillStyle = hexToRgba(state.currentColor, state.brushOpacity);
+                     layerCtx.fillRect(startX, startY, state.brushSize, state.brushSize);
+                } else if (state.currentTool === 'eraser') {
+                    layerCtx.clearRect(startX, startY, state.brushSize, state.brushSize);
+                }
+                redraw();
+            };
+            
+            const floodFill = (startX, startY) => {
+                 if(state.activeLayerIndex < 0) return;
+                const layer = state.layers[state.activeLayerIndex];
+                const layerCtx = layer.canvas.getContext('2d');
+                const imageData = layerCtx.getImageData(0, 0, state.width, state.height);
+                const startPixel = (startY * state.width + startX) * 4;
+                const startRgba = [
+                    imageData.data[startPixel],
+                    imageData.data[startPixel + 1],
+                    imageData.data[startPixel + 2],
+                    imageData.data[startPixel + 3]
+                ];
+                
+                const newRgba = hexToRgba(state.currentColor, 1).match(/\d+/g).map(Number);
+                if (colorsMatch(startRgba, newRgba)) return;
+
+                const pixelStack = [[startX, startY]];
+                while (pixelStack.length) {
+                    const [x, y] = pixelStack.pop();
+                    if (x < 0 || x >= state.width || y < 0 || y >= state.height) continue;
+                    
+                    const index = (y * state.width + x) * 4;
+                    const currentRgba = [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]];
+
+                    if (colorsMatch(currentRgba, startRgba)) {
+                        imageData.data[index] = newRgba[0];
+                        imageData.data[index + 1] = newRgba[1];
+                        imageData.data[index + 2] = newRgba[2];
+                        imageData.data[index + 3] = newRgba[3];
+                        
+                        pixelStack.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+                    }
+                }
+                layerCtx.putImageData(imageData, 0, 0);
+                redraw();
+            };
+
+            const colorsMatch = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+            const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+
+            const addToColorHistory = (color) => {
+                if (state.colorHistory.includes(color)) {
+                     state.colorHistory = state.colorHistory.filter(c => c !== color);
+                }
+                state.colorHistory.unshift(color);
+                if (state.colorHistory.length > 16) {
+                    state.colorHistory = state.colorHistory.slice(0, 16);
+                }
+                renderColorHistory();
+            };
+            
+            const renderColorHistory = () => {
+                colorHistoryContainer.innerHTML = '';
+                state.colorHistory.forEach(color => {
+                    const swatch = document.createElement('div');
+                    swatch.className = 'w-6 h-6 rounded border border-gray-600 cursor-pointer';
+                    swatch.style.backgroundColor = color;
+                    swatch.addEventListener('click', () => {
+                        colorPicker.value = color;
+                        state.currentColor = color;
+                    });
+                    colorHistoryContainer.appendChild(swatch);
+                });
+            };
+
+            const renderLayers = () => {
+                layersContainer.innerHTML = '';
+                state.layers.forEach((layer, index) => {
+                    const item = document.createElement('div');
+                    item.className = `layer-item flex justify-between items-center p-2 rounded cursor-pointer ${index === state.activeLayerIndex ? 'active' : 'hover:bg-gray-600'}`;
+                    item.dataset.index = index;
+                    item.textContent = layer.name;
+                    item.addEventListener('click', () => {
+                        state.activeLayerIndex = index;
+                        renderLayers();
+                    });
+                    layersContainer.appendChild(item);
+                });
+            };
+            
+            const addNewLayer = () => {
+                const newCanvas = document.createElement('canvas');
+                newCanvas.width = state.width;
+                newCanvas.height = state.height;
+                const newCtx = newCanvas.getContext('2d');
+                newCtx.imageSmoothingEnabled = false;
+                
+                state.layers.push({
+                    name: `Layer ${state.layers.length + 1}`,
+                    canvas: newCanvas,
+                    visible: true
+                });
+                state.activeLayerIndex = state.layers.length - 1;
+                renderLayers();
+            };
+
+            const deleteActiveLayer = () => {
+                if (state.layers.length <= 1) return;
+                state.layers.splice(state.activeLayerIndex, 1);
+                state.activeLayerIndex = Math.max(0, state.activeLayerIndex - 1);
+                renderLayers();
+                redraw();
+            };
+
+            // Event Listeners
+            canvas.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                state.isDrawing = true;
+                const { x, y } = getMousePos(e);
+                
+                if (state.currentTool === 'fill') {
+                    floodFill(x, y);
+                    addToColorHistory(state.currentColor);
+                    return;
+                } else if (state.currentTool === 'picker') {
+                    const layer = state.layers[state.activeLayerIndex];
+                    if(!layer) return;
+                    const pixel = layer.canvas.getContext('2d').getImageData(x, y, 1, 1).data;
+                    if(pixel[3] > 0) { // not transparent
+                        const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+                        colorPicker.value = hex;
+                        state.currentColor = hex;
+                    }
+                    return;
+                }
+                
+                drawOnLayer(x, y);
+            });
+            canvas.addEventListener('mousemove', (e) => {
+                if (!state.isDrawing) return;
+                 const { x, y } = getMousePos(e);
+                drawOnLayer(x, y);
+            });
+             canvas.addEventListener('mouseup', () => {
+                if(state.isDrawing && state.currentTool === 'pencil') {
+                    addToColorHistory(state.currentColor);
+                }
+                state.isDrawing = false
+            });
+            canvas.addEventListener('mouseleave', () => state.isDrawing = false);
+
+            toolPalette.addEventListener('click', (e) => {
+                const toolButton = e.target.closest('.tool-btn');
+                if (toolButton) {
+                    toolPalette.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+                    toolButton.classList.add('active');
+                    state.currentTool = toolButton.dataset.tool;
+                }
+            });
+
+            colorPicker.addEventListener('change', (e) => {
+                state.currentColor = e.target.value;
+                addToColorHistory(e.target.value);
+            });
+            
+            gridToggle.addEventListener('change', (e) => {
+                state.showGrid = e.target.checked;
+                redraw();
+            });
+
+            let aspectRatio = 1;
+            widthInput.addEventListener('input', () => {
+                if (aspectRatioLock.checked) {
+                    heightInput.value = Math.round(widthInput.value / aspectRatio);
+                }
+            });
+            heightInput.addEventListener('input', () => {
+                if (aspectRatioLock.checked) {
+                    widthInput.value = Math.round(heightInput.value * aspectRatio);
+                }
+            });
+             aspectRatioLock.addEventListener('change', (e) => {
+                if(e.target.checked) {
+                    aspectRatio = widthInput.value / heightInput.value || 1;
+                }
+            });
+
+            resizeBtn.addEventListener('click', () => resizeCanvas());
+            exportBtn.addEventListener('click', () => {
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = state.width;
+                finalCanvas.height = state.height;
+                const finalCtx = finalCanvas.getContext('2d');
+                finalCtx.imageSmoothingEnabled = false;
+                state.layers.forEach(layer => {
+                    if (layer.visible) {
+                        finalCtx.drawImage(layer.canvas, 0, 0);
+                    }
+                });
+
+                const link = document.createElement('a');
+                link.download = 'my_texture.png';
+                link.href = finalCanvas.toDataURL('image/png');
+                link.click();
+            });
+
+            brushSizeSlider.addEventListener('input', (e) => {
+                state.brushSize = parseInt(e.target.value);
+                brushSizeValue.textContent = state.brushSize;
+            });
+            brushOpacitySlider.addEventListener('input', (e) => {
+                state.brushOpacity = parseInt(e.target.value) / 100;
+                brushOpacityValue.textContent = e.target.value;
+            });
+            
+            addLayerBtn.addEventListener('click', addNewLayer);
+            deleteLayerBtn.addEventListener('click', deleteActiveLayer);
+
+            // Initial setup
+            addNewLayer();
+            resizeCanvas();
+            addToColorHistory('#ff0000');
+            addToColorHistory('#000000');
+        }
+
+        // --- MAIN INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainContent = document.querySelector('main');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+            });
+            
+            function initialize() {
+                // Clone all guide and builder templates into the main content area
+                for (const guide of Object.keys(guides)) {
+                    const template = document.getElementById(`template-guide-${guide}`) || document.getElementById(`template-${guide}`); // Handle welcome template
+                    if(template) mainContent.appendChild(template.content.cloneNode(true));
+                }
+
+                const genericBuilderTemplate = document.getElementById('template-builder-generic');
+                for (const [id, config] of Object.entries(builders)) {
+                     if (config.custom) { // Handle custom templates
+                        const customTemplate = document.getElementById(`template-${id}`);
+                        if(customTemplate) {
+                            mainContent.appendChild(customTemplate.content.cloneNode(true));
+                            config.init();
+                        }
+                        continue;
+                    }
+                    const builderClone = genericBuilderTemplate.content.cloneNode(true);
+                    const page = builderClone.querySelector('.page');
+                    page.id = `page-${id}`;
+                    page.querySelector('h2').textContent = config.title;
+                    page.querySelector('.copy-button').dataset.target = `${id}-code-output`;
+                    page.querySelector('.code-output').id = `${id}-code-output`;
+                    page.querySelector('.form-container').id = `${id}-form`;
+                    mainContent.appendChild(builderClone);
+                    initializePage(id, config);
+                }
+                
+                setupNavigation();
+                setupCopyButtons();
+            }
+
+            function setupNavigation() {
+                const navLinks = document.querySelectorAll('.nav-link, .nav-link-inline');
+                const pages = document.querySelectorAll('.page');
+                
+                const handleNavClick = (targetId) => {
+                    pages.forEach(p => p.classList.toggle('active', p.id === `page-${targetId}`));
+                    document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('bg-gray-700'));
+                    const activeNavLink = document.querySelector(`.nav-link[href="#${targetId}"]`);
+                    if(activeNavLink) activeNavLink.classList.add('bg-gray-700');
+                    
+                    const builderId = targetId.startsWith('builder-') ? targetId : null;
+                    if (builderId && builders[builderId]?.generate) {
+                        builders[builderId].generate(builderId);
+                    }
+                };
+
+                navLinks.forEach(link => {
+                    link.addEventListener('click', e => {
+                        e.preventDefault();
+                        const targetId = link.getAttribute('href').substring(1);
+                        handleNavClick(targetId);
+                        window.location.hash = targetId; // Update URL hash for linking
+                    });
+                });
+
+                // Handle initial page load from URL hash
+                const initialHash = window.location.hash.substring(1);
+                if (initialHash && (guides[initialHash] || builders[initialHash])) {
+                    handleNavClick(initialHash);
+                } else {
+                    handleNavClick('welcome');
+                }
+            }
+            
+            function setupCopyButtons() {
+                document.body.addEventListener('click', event => {
+                    if (event.target.classList.contains('copy-button')) {
+                        const button = event.target;
+                        const targetId = button.dataset.target;
+                        const codeElement = document.getElementById(targetId);
+                        if(navigator.clipboard && codeElement) {
+                            navigator.clipboard.writeText(codeElement.textContent).then(() => {
+                                button.textContent = 'Copied!';
+                                button.classList.add('copied');
+                                setTimeout(() => {
+                                    button.textContent = 'Copy';
+                                    button.classList.remove('copied');
+                                }, 2000);
+                            });
+                        }
+                    }
+                });
+            }
+            
+            initialize();
+        });
+    </script>
+</body>
+</html>
+
