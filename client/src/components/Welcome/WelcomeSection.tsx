@@ -12,43 +12,85 @@ export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
     {
       icon: "entityBuilder",
       title: "Entity Builder",
-      description: "Create custom mobs and NPCs with behaviors, animations, and AI components.",
+      description: "Create custom mobs with AI, components, and behaviors",
       section: "builder-entity",
       bgColor: "bg-primary"
     },
     {
       icon: "blockBuilder",
       title: "Block Builder", 
-      description: "Design custom blocks with unique properties, textures, and behaviors.",
+      description: "Design custom blocks with properties, states, and interactions",
       section: "builder-block",
       bgColor: "bg-accent"
     },
     {
-      icon: "textureCreator",
-      title: "Pixel Art Creator",
-      description: "Professional pixel art editor for creating custom textures and sprites (Pixilart).",
-      section: "pixilart-external",
+      icon: "itemBuilder",
+      title: "Item Builder",
+      description: "Craft custom items with textures, durability, and functionality",
+      section: "builder-item",
+      bgColor: "bg-primary"
+    },
+    {
+      icon: "recipeBuilder",
+      title: "Recipe Builder",
+      description: "Create crafting recipes for custom items and blocks",
+      section: "builder-recipe",
+      bgColor: "bg-accent"
+    },
+    {
+      icon: "lootBuilder",
+      title: "Loot Builder",
+      description: "Configure loot tables for blocks, entities, and chests",
+      section: "builder-loot",
+      bgColor: "bg-primary"
+    },
+    {
+      icon: "biomeBuilder",
+      title: "Biome Builder",
+      description: "Design custom biomes with terrain and spawn rules",
+      section: "builder-biome",
+      bgColor: "bg-accent"
+    },
+    {
+      icon: "spawnBuilder",
+      title: "Spawn Rules",
+      description: "Control when and where entities spawn in your world",
+      section: "builder-spawn",
       bgColor: "bg-primary"
     },
     {
       icon: "scriptStudio",
       title: "Script Studio",
-      description: "Interactive script builder with full Minecraft API explorer and code generation.",
+      description: "Interactive script builder with full Minecraft API explorer",
       section: "script-studio",
       bgColor: "bg-accent"
     },
     {
+      icon: "externalTools",
+      title: "External Tools",
+      description: "Professional suite of 7 external development tools",
+      section: "external-tools",
+      bgColor: "bg-primary"
+    },
+    {
       icon: "documentation",
       title: "Documentation",
-      description: "Comprehensive guides and references validated against official Minecraft docs.",
+      description: "Comprehensive guides and API references",
       section: "docs-concepts",
-      bgColor: "bg-primary"
+      bgColor: "bg-accent"
     },
     {
       icon: "addonPackager",
       title: "Addon Packager",
-      description: "Export complete addon packs with proper folder structure and manifests.",
+      description: "Export complete addon packs with proper structure",
       section: "addon-packager",
+      bgColor: "bg-primary"
+    },
+    {
+      icon: "validator",
+      title: "JSON Validator",
+      description: "Validate addon files and detect errors",
+      section: "json-validator",
       bgColor: "bg-accent"
     }
   ];
@@ -90,8 +132,8 @@ export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
               key={index}
               className="bg-card border border-border hover:border-primary transition-colors cursor-pointer"
               onClick={() => {
-                if (feature.section === 'pixilart-external') {
-                  window.open('https://www.pixilart.com/draw?ref=home-page', '_blank', 'noopener,noreferrer');
+                if (feature.section === 'external-tools') {
+                  onNavigate(feature.section);
                 } else {
                   onNavigate(feature.section);
                 }
@@ -114,11 +156,7 @@ export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
                   className="text-primary text-sm font-medium hover:underline flex items-center"
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (feature.section === 'pixilart-external') {
-                      window.open('https://www.pixilart.com/draw?ref=home-page', '_blank', 'noopener,noreferrer');
-                    } else {
-                      onNavigate(feature.section);
-                    }
+                    onNavigate(feature.section);
                   }}
                 >
                   Get Started <ArrowRight className="ml-1" size={14} />

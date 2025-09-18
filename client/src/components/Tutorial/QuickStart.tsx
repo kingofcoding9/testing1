@@ -35,12 +35,12 @@ export default function QuickStart({ onNavigate }: QuickStartProps) {
           section: 'builder-block'
         },
         {
-          title: 'Add Custom Texture',
-          description: 'Design a texture for your block using the texture creator',
+          title: 'Create Custom Textures',
+          description: 'Design textures for your block using external tools (Pixilart)',
           time: '10 min',
-          action: 'Open Texture Creator',
+          action: 'Open External Tools',
           actionType: 'navigate',
-          section: 'texture-creator'
+          section: 'external-tools'
         },
         {
           title: 'Package & Test',
@@ -99,10 +99,18 @@ export default function QuickStart({ onNavigate }: QuickStartProps) {
         {
           title: 'Advanced Scripting',
           description: 'Complex event handling and API integration',
-          time: '25 min',
+          time: '15 min',
           action: 'View Script Docs',
           actionType: 'navigate',
           section: 'docs-scripting'
+        },
+        {
+          title: 'External Tools Integration',
+          description: 'Use professional external development tools effectively',
+          time: '10 min',
+          action: 'Explore External Tools',
+          actionType: 'navigate',
+          section: 'external-tools'
         },
         {
           title: 'Performance Optimization',
@@ -154,6 +162,9 @@ export default function QuickStart({ onNavigate }: QuickStartProps) {
     } else if (step.actionType === 'download') {
       // Handle download action
       window.open('https://code.visualstudio.com/', '_blank');
+    } else if (step.actionType === 'docs') {
+      // Handle docs action by navigating to appropriate docs section
+      onNavigate('docs-concepts');
     }
   };
 
@@ -165,7 +176,7 @@ export default function QuickStart({ onNavigate }: QuickStartProps) {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-4">Quick Start Guide</h1>
           <p className="text-lg text-muted-foreground">
-            Fast track to creating your first addon - choose your experience level
+            Fast track to creating your first addon using our comprehensive suite of tools and external integrations
           </p>
         </div>
 
@@ -288,19 +299,23 @@ export default function QuickStart({ onNavigate }: QuickStartProps) {
                   </Button>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Blockbench (Models)</span>
-                  <Button variant="outline" size="sm" asChild>
-                    <a href="https://blockbench.net/" target="_blank" rel="noopener noreferrer">
-                      <ExternalLink size={14} />
-                    </a>
+                  <span className="text-sm">External Tools Suite</span>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => onNavigate('external-tools')}
+                  >
+                    <ExternalLink size={14} />
                   </Button>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Bridge. (IDE)</span>
-                  <Button variant="outline" size="sm" asChild>
-                    <a href="https://bridge-core.app/" target="_blank" rel="noopener noreferrer">
-                      <ExternalLink size={14} />
-                    </a>
+                  <span className="text-sm">7 Professional Tools</span>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => onNavigate('external-tools')}
+                  >
+                    <ExternalLink size={14} />
                   </Button>
                 </div>
               </CardContent>

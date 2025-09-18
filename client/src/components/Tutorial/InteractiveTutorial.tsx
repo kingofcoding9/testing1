@@ -48,12 +48,12 @@ export default function InteractiveTutorial({ onNavigate }: InteractiveTutorialP
     {
       id: 'create-texture',
       title: 'Create Custom Textures',
-      description: 'Design the visual appearance of your entity',
+      description: 'Design the visual appearance using external tools',
       icon: FileText,
-      task: 'Create a 16x16 texture for your custom entity using the texture creator',
+      task: 'Create a 16x16 texture for your custom entity using Pixilart (external tool)',
       completed: completedSteps.includes('create-texture'),
-      targetSection: 'texture-creator',
-      validation: 'Texture file exported as PNG'
+      targetSection: 'external-tools',
+      validation: 'Texture created and saved using external tool'
     },
     {
       id: 'create-client-entity',
@@ -62,7 +62,7 @@ export default function InteractiveTutorial({ onNavigate }: InteractiveTutorialP
       icon: Target,
       task: 'Create a client entity file that references your custom texture',
       completed: completedSteps.includes('create-client-entity'),
-      targetSection: 'builder-client-entity',
+      targetSection: 'builder-entity',
       validation: 'Client entity with texture reference'
     },
     {
@@ -140,7 +140,7 @@ export default function InteractiveTutorial({ onNavigate }: InteractiveTutorialP
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-4">Interactive Tutorial</h1>
           <p className="text-lg text-muted-foreground">
-            Learn by doing - create your first addon step by step
+            Learn by doing - create your first addon step by step using emoji-based navigation
           </p>
         </div>
 
@@ -302,7 +302,7 @@ export default function InteractiveTutorial({ onNavigate }: InteractiveTutorialP
               onClick={() => onNavigate('docs-concepts')}
             >
               documentation
-            </button>
+            </button> or explore external tools 🎨
           </div>
           
           <Button 

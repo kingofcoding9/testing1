@@ -184,7 +184,13 @@ export default function GettingStartedTab({ onNavigate, onProgressUpdate }: Gett
       id: 'development-workflow', 
       title: 'Development Workflow', 
       icon: Wrench,
-      description: 'Testing, debugging, and deployment strategies'
+      description: 'Testing, debugging, deployment, and external tools integration'
+    },
+    { 
+      id: 'external-tools-integration', 
+      title: 'External Tools Integration', 
+      icon: Globe,
+      description: 'Professional external development tools and workflow'
     },
     { 
       id: 'version-management', 
@@ -223,6 +229,24 @@ export default function GettingStartedTab({ onNavigate, onProgressUpdate }: Gett
     } catch (err) {
       console.error('Failed to copy code:', err);
     }
+  };
+
+  const handleTOCNavigation = (tocId: string) => {
+    // Map TOC IDs to appropriate navigation sections
+    const navigationMap: Record<string, string> = {
+      'environment-setup': 'docs-concepts',
+      'addon-basics': 'docs-concepts',
+      'behavior-vs-resource': 'docs-concepts',
+      'identifiers-namespaces': 'docs-concepts',
+      'manifest-files': 'docs-concepts',
+      'component-system': 'docs-concepts',
+      'development-workflow': 'docs-concepts',
+      'external-tools-integration': 'external-tools',
+      'version-management': 'docs-concepts'
+    };
+
+    const targetSection = navigationMap[tocId] || 'docs-concepts';
+    onNavigate?.(targetSection);
   };
 
   // Filter table of contents based on search
@@ -374,7 +398,12 @@ export default function GettingStartedTab({ onNavigate, onProgressUpdate }: Gett
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredTOC.map((item) => (
-                <Card key={item.id} className="hover:shadow-lg transition-all cursor-pointer group">
+                <Card 
+                  key={item.id} 
+                  className="hover:shadow-lg transition-all cursor-pointer group"
+                  onClick={() => handleTOCNavigation(item.id)}
+                  data-testid={`toc-${item.id}`}
+                >
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-3">
                       <item.icon className="h-5 w-5 text-blue-600" />
@@ -572,13 +601,13 @@ export default function GettingStartedTab({ onNavigate, onProgressUpdate }: Gett
                 Create Item
               </Button>
               <Button 
-                onClick={() => onNavigate?.('texture-creator')}
+                onClick={() => onNavigate?.('external-tools')}
                 className="h-auto flex-col gap-2 p-4"
                 variant="outline"
-                data-testid="quick-start-texture"
+                data-testid="quick-start-external-tools"
               >
                 <Eye className="h-6 w-6" />
-                Create Texture
+                External Tools
               </Button>
             </CardContent>
           </Card>
