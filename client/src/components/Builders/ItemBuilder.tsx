@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CollapsibleTabsContainer, CollapsibleTab } from "@/components/ui/collapsible-tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -62,7 +62,6 @@ export default function ItemBuilder() {
   ]);
 
   // UI state
-  const [activeTab, setActiveTab] = useState('basic');
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [showComponentSelector, setShowComponentSelector] = useState(false);
   const [showComponentForm, setShowComponentForm] = useState(false);
@@ -298,6 +297,294 @@ export default function ItemBuilder() {
     };
   };
 
+  // Create collapsible tabs array
+  const collapsibleTabs: CollapsibleTab[] = [
+    {
+      id: 'basic',
+      title: 'Basic',
+      icon: <Settings className="w-4 h-4" />,
+      description: 'Item identifier and basic settings',
+      content: (
+        <div className="space-y-4">
+          <div className="grid gap-4">
+            <div>
+              <Label htmlFor="item-identifier">Item Identifier *</Label>
+              <Input
+                id="item-identifier"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                placeholder="my_addon:custom_item"
+                data-testid="input-identifier"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Must include namespace (e.g., my_addon:item_name)
+              </p>
+            </div>
+
+            <div>
+              <Label htmlFor="item-display-name">Display Name</Label>
+              <Input
+                id="item-display-name"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="Custom Item"
+                data-testid="input-display-name"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="item-description">Description</Label>
+              <Input
+                id="item-description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="A custom item for my addon"
+                data-testid="input-description"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="menu-category">Menu Category</Label>
+              <Select value={menuCategory} onValueChange={setMenuCategory}>
+                <SelectTrigger data-testid="select-menu-category">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {menuCategories.map(cat => (
+                    <SelectItem key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'components',
+      title: 'Components',
+      badge: components.length,
+      icon: <Layers className="w-4 h-4" />,
+      description: 'Manage item components and their properties',
+      content: (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h4 className="font-medium">Item Components</h4>
+            <Button 
+              onClick={() => setShowComponentSelector(true)}
+              data-testid="button-add-component"
+            >
+              Add Component
+            </Button>
+          </div>
+
+          {recommendedComponents.length > 0 && (
+            <Alert>
+              <Info className="h-4 w-4" />
+              <AlertDescription>
+                <div className="space-y-2">
+                  <p className="font-medium">Recommended components:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {recommendedComponents.map(comp => (
+                      <Button
+                        key={comp.name}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => addComponent(comp.name)}
+                        data-testid={`button-add-recommended-${comp.name}`}
+                      >
+                        {comp.name}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <ScrollArea className="h-[400px]">
+            <Accordion type="single" collapsible className="space-y-2">
+              {Object.entries(componentsByCategory).map(([category, categoryComponents]) => (
+                <AccordionItem key={category} value={category}>
+                  <AccordionTrigger className="text-sm" data-testid={`accordion-${category}`}>
+                    {category} ({categoryComponents.length})
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-2">
+                      {categoryComponents.map((component) => {
+                        const def = getComponentDefinition(component.name);
+                        return (
+                          <Card key={component.name} className="p-3">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <Switch
+                                    checked={component.enabled}
+                                    onCheckedChange={() => toggleComponent(component.name)}
+                                    data-testid={`switch-${component.name}`}
+                                  />
+                                  <span className="font-medium text-sm truncate">
+                                    {component.name}
+                                  </span>
+                                  {def && (
+                                    <Badge 
+                                      variant="outline" 
+                                      className={`text-xs ${
+                                        def.difficulty === 'beginner' ? 'border-green-500' :
+                                        def.difficulty === 'intermediate' ? 'border-yellow-500' :
+                                        'border-red-500'
+                                      }`}
+                                    >
+                                      {def.difficulty}
+                                    </Badge>
+                                  )}
+                                </div>
+                                {def && (
+                                  <p className="text-xs text-muted-foreground line-clamp-2">
+                                    {def.description}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="flex gap-1">
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => openComponentForm(component)}
+                                      disabled={!component.enabled}
+                                      data-testid={`button-configure-${component.name}`}
+                                    >
+                                      <Settings className="w-3 h-3" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Configure properties</TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => removeComponent(component.name)}
+                                      data-testid={`button-remove-${component.name}`}
+                                    >
+                                      <AlertCircle className="w-3 h-3" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Remove component</TooltipContent>
+                                </Tooltip>
+                              </div>
+                            </div>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </ScrollArea>
+        </div>
+      ),
+    },
+    {
+      id: 'presets',
+      title: 'Presets',
+      icon: <Zap className="w-4 h-4" />,
+      description: 'Quick start with common item configurations',
+      content: (
+        <div className="space-y-4">
+          <div>
+            <h4 className="font-medium mb-3">Item Presets</h4>
+            <p className="text-sm text-muted-foreground mb-4">
+              Quick start with common item configurations
+            </p>
+            <div className="grid gap-3">
+              {Object.entries(ITEM_PRESETS).map(([presetName, componentList]) => (
+                <Card key={presetName} className="p-4 cursor-pointer hover:bg-muted/50">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h5 className="font-medium capitalize">
+                        {presetName.replace(/_/g, ' ')}
+                      </h5>
+                      <p className="text-xs text-muted-foreground">
+                        {componentList.length} components
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {presetName === 'basic_item' && 'Simple stackable item'}
+                        {presetName === 'food_item' && 'Consumable food with nutrition'}
+                        {presetName === 'tool_item' && 'Durable tool with mining capability'}
+                        {presetName === 'weapon_item' && 'Combat weapon with damage'}
+                        {presetName === 'armor_item' && 'Wearable protection gear'}
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => applyItemPreset(presetName)}
+                      data-testid={`button-preset-${presetName}`}
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'advanced',
+      title: 'Advanced',
+      icon: <FileText className="w-4 h-4" />,
+      description: 'Advanced configuration and statistics',
+      content: (
+        <div className="space-y-4">
+          <div>
+            <h4 className="font-medium mb-2">Actions</h4>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={resetItem}
+                data-testid="button-reset"
+              >
+                <RotateCcw className="w-4 h-4 mr-2" />
+                Reset
+              </Button>
+              <Button
+                variant="outline"
+                onClick={exportToClipboard}
+                data-testid="button-export"
+              >
+                <Copy className="w-4 h-4 mr-2" />
+                Copy JSON
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="font-medium">Component Statistics</h4>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="bg-muted p-3 rounded">
+                <div className="font-medium">Total Components</div>
+                <div className="text-2xl font-bold">{components.length}</div>
+              </div>
+              <div className="bg-muted p-3 rounded">
+                <div className="font-medium">Enabled Components</div>
+                <div className="text-2xl font-bold">{components.filter(c => c.enabled).length}</div>
+              </div>
+            </div>
+          </div>
+
+          <ValidationStatus validation={validation} />
+        </div>
+      ),
+    },
+  ];
+
   return (
     <TooltipProvider>
       <section className="p-6" data-testid="item-builder">
@@ -316,273 +603,14 @@ export default function ItemBuilder() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Tabs value={activeTab} onValueChange={setActiveTab}>
-                    <TabsList className="grid w-full grid-cols-4">
-                      <TabsTrigger value="basic" data-testid="tab-basic">Basic</TabsTrigger>
-                      <TabsTrigger value="components" data-testid="tab-components">
-                        Components ({components.length})
-                      </TabsTrigger>
-                      <TabsTrigger value="presets" data-testid="tab-presets">Presets</TabsTrigger>
-                      <TabsTrigger value="advanced" data-testid="tab-advanced">Advanced</TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="basic" className="space-y-4">
-                      <div className="grid gap-4">
-                        <div>
-                          <Label htmlFor="item-identifier">Item Identifier *</Label>
-                          <Input
-                            id="item-identifier"
-                            value={identifier}
-                            onChange={(e) => setIdentifier(e.target.value)}
-                            placeholder="my_addon:custom_item"
-                            data-testid="input-identifier"
-                          />
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Must include namespace (e.g., my_addon:item_name)
-                          </p>
-                        </div>
-
-                        <div>
-                          <Label htmlFor="item-display-name">Display Name</Label>
-                          <Input
-                            id="item-display-name"
-                            value={displayName}
-                            onChange={(e) => setDisplayName(e.target.value)}
-                            placeholder="Custom Item"
-                            data-testid="input-display-name"
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="item-description">Description</Label>
-                          <Input
-                            id="item-description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder="A custom item for my addon"
-                            data-testid="input-description"
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="menu-category">Menu Category</Label>
-                          <Select value={menuCategory} onValueChange={setMenuCategory}>
-                            <SelectTrigger data-testid="select-menu-category">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {menuCategories.map(cat => (
-                                <SelectItem key={cat.value} value={cat.value}>
-                                  {cat.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="components" className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-medium">Item Components</h4>
-                        <Button 
-                          onClick={() => setShowComponentSelector(true)}
-                          data-testid="button-add-component"
-                        >
-                          Add Component
-                        </Button>
-                      </div>
-
-                      {recommendedComponents.length > 0 && (
-                        <Alert>
-                          <Info className="h-4 w-4" />
-                          <AlertDescription>
-                            <div className="space-y-2">
-                              <p className="font-medium">Recommended components:</p>
-                              <div className="flex flex-wrap gap-1">
-                                {recommendedComponents.map(comp => (
-                                  <Button
-                                    key={comp.name}
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => addComponent(comp.name)}
-                                    data-testid={`button-add-recommended-${comp.name}`}
-                                  >
-                                    {comp.name}
-                                  </Button>
-                                ))}
-                              </div>
-                            </div>
-                          </AlertDescription>
-                        </Alert>
-                      )}
-
-                      <ScrollArea className="h-[400px]">
-                        <Accordion type="single" collapsible className="space-y-2">
-                          {Object.entries(componentsByCategory).map(([category, categoryComponents]) => (
-                            <AccordionItem key={category} value={category}>
-                              <AccordionTrigger className="text-sm" data-testid={`accordion-${category}`}>
-                                {category} ({categoryComponents.length})
-                              </AccordionTrigger>
-                              <AccordionContent>
-                                <div className="space-y-2">
-                                  {categoryComponents.map((component) => {
-                                    const def = getComponentDefinition(component.name);
-                                    return (
-                                      <Card key={component.name} className="p-3">
-                                        <div className="flex items-start justify-between gap-2">
-                                          <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-1">
-                                              <Switch
-                                                checked={component.enabled}
-                                                onCheckedChange={() => toggleComponent(component.name)}
-                                                data-testid={`switch-${component.name}`}
-                                              />
-                                              <span className="font-medium text-sm truncate">
-                                                {component.name}
-                                              </span>
-                                              {def && (
-                                                <Badge 
-                                                  variant="outline" 
-                                                  className={`text-xs ${
-                                                    def.difficulty === 'beginner' ? 'border-green-500' :
-                                                    def.difficulty === 'intermediate' ? 'border-yellow-500' :
-                                                    'border-red-500'
-                                                  }`}
-                                                >
-                                                  {def.difficulty}
-                                                </Badge>
-                                              )}
-                                            </div>
-                                            {def && (
-                                              <p className="text-xs text-muted-foreground line-clamp-2">
-                                                {def.description}
-                                              </p>
-                                            )}
-                                          </div>
-                                          <div className="flex gap-1">
-                                            <Tooltip>
-                                              <TooltipTrigger asChild>
-                                                <Button
-                                                  variant="ghost"
-                                                  size="sm"
-                                                  onClick={() => openComponentForm(component)}
-                                                  disabled={!component.enabled}
-                                                  data-testid={`button-configure-${component.name}`}
-                                                >
-                                                  <Settings className="w-3 h-3" />
-                                                </Button>
-                                              </TooltipTrigger>
-                                              <TooltipContent>Configure properties</TooltipContent>
-                                            </Tooltip>
-                                            <Tooltip>
-                                              <TooltipTrigger asChild>
-                                                <Button
-                                                  variant="ghost"
-                                                  size="sm"
-                                                  onClick={() => removeComponent(component.name)}
-                                                  data-testid={`button-remove-${component.name}`}
-                                                >
-                                                  <AlertCircle className="w-3 h-3" />
-                                                </Button>
-                                              </TooltipTrigger>
-                                              <TooltipContent>Remove component</TooltipContent>
-                                            </Tooltip>
-                                          </div>
-                                        </div>
-                                      </Card>
-                                    );
-                                  })}
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          ))}
-                        </Accordion>
-                      </ScrollArea>
-                    </TabsContent>
-
-                    <TabsContent value="presets" className="space-y-4">
-                      <div>
-                        <h4 className="font-medium mb-3">Item Presets</h4>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Quick start with common item configurations
-                        </p>
-                        <div className="grid gap-3">
-                          {Object.entries(ITEM_PRESETS).map(([presetName, componentList]) => (
-                            <Card key={presetName} className="p-4 cursor-pointer hover:bg-muted/50">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <h5 className="font-medium capitalize">
-                                    {presetName.replace(/_/g, ' ')}
-                                  </h5>
-                                  <p className="text-xs text-muted-foreground">
-                                    {componentList.length} components
-                                  </p>
-                                  <p className="text-xs text-muted-foreground mt-1">
-                                    {presetName === 'basic_item' && 'Simple stackable item'}
-                                    {presetName === 'food_item' && 'Consumable food with nutrition'}
-                                    {presetName === 'tool_item' && 'Durable tool with mining capability'}
-                                    {presetName === 'weapon_item' && 'Combat weapon with damage'}
-                                    {presetName === 'armor_item' && 'Wearable protection gear'}
-                                  </p>
-                                </div>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => applyItemPreset(presetName)}
-                                  data-testid={`button-preset-${presetName}`}
-                                >
-                                  Apply
-                                </Button>
-                              </div>
-                            </Card>
-                          ))}
-                        </div>
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="advanced" className="space-y-4">
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="font-medium mb-2">Actions</h4>
-                          <div className="flex gap-2">
-                            <Button
-                              variant="outline"
-                              onClick={resetItem}
-                              data-testid="button-reset"
-                            >
-                              <RotateCcw className="w-4 h-4 mr-2" />
-                              Reset
-                            </Button>
-                            <Button
-                              variant="outline"
-                              onClick={exportToClipboard}
-                              data-testid="button-export"
-                            >
-                              <Copy className="w-4 h-4 mr-2" />
-                              Copy JSON
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="space-y-3">
-                          <h4 className="font-medium">Component Statistics</h4>
-                          <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div className="bg-muted p-3 rounded">
-                              <div className="font-medium">Total Components</div>
-                              <div className="text-2xl font-bold">{components.length}</div>
-                            </div>
-                            <div className="bg-muted p-3 rounded">
-                              <div className="font-medium">Enabled Components</div>
-                              <div className="text-2xl font-bold">{components.filter(c => c.enabled).length}</div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <ValidationStatus validation={validation} />
-                      </div>
-                    </TabsContent>
-                  </Tabs>
+                  <CollapsibleTabsContainer
+                    tabs={collapsibleTabs}
+                    storageKey="item-builder-tabs"
+                    title="Item Builder"
+                    description="Build comprehensive Minecraft items with collapsible tabs"
+                    showGlobalControls={true}
+                    data-testid="item-builder-tabs"
+                  />
                 </CardContent>
               </Card>
             </div>
@@ -593,7 +621,6 @@ export default function ItemBuilder() {
                 code={JSON.stringify(itemJSON, null, 2)}
                 language="json"
                 title="Item JSON"
-                validation={validation}
               />
             </div>
           </div>

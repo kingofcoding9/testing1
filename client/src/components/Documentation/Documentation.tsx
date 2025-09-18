@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import { SimpleCollapsibleTabs, CollapsibleTab } from "@/components/ui/collapsible-tabs";
 
 // Import existing documentation components
 import CoreConcepts from "./CoreConcepts";
@@ -41,7 +42,6 @@ interface DocumentationProps {
 }
 
 export default function Documentation({ onNavigate, initialTab = 'getting-started' }: DocumentationProps) {
-  const [activeTab, setActiveTab] = useState(initialTab);
   const [searchTerm, setSearchTerm] = useState('');
   const [globalSearchResults, setGlobalSearchResults] = useState<any[]>([]);
   const [showGlobalSearch, setShowGlobalSearch] = useState(false);
@@ -215,9 +215,9 @@ export default function Documentation({ onNavigate, initialTab = 'getting-starte
     }
   };
 
-  // Render tab content
-  const renderTabContent = () => {
-    switch (activeTab) {
+  // Render individual tab content
+  const renderTabContent = (tabId: string) => {
+    switch (tabId) {
       case 'getting-started':
         return <GettingStartedTab onNavigate={onNavigate} onProgressUpdate={(progress) => updateProgress('getting-started', progress)} />;
       case 'entity-development':
@@ -243,7 +243,72 @@ export default function Documentation({ onNavigate, initialTab = 'getting-starte
     }
   };
 
-  const activeTabData = documentationTabs.find(tab => tab.id === activeTab);
+  // Convert documentation tabs to CollapsibleTab format
+  const collapsibleTabs: CollapsibleTab[] = documentationTabs.map((tab) => ({
+    id: tab.id,
+    title: tab.title,
+    description: `${tab.description} • ${tab.difficulty} • ${tab.estimatedTime}`,
+    icon: (
+      <div className="flex items-center gap-2">
+        <span className="text-lg">{tab.emoji}</span>
+        <tab.icon className="h-4 w-4" />
+      </div>
+    ),
+    badge: `${Math.round(tab.completion)}%`,
+    content: (
+      <div className="space-y-4">
+        {/* Section header with progress and bookmark */}
+        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-lg border">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">{tab.emoji}</span>
+              <tab.icon className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold">{tab.title}</h3>
+              <p className="text-sm text-muted-foreground">{tab.description}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <Badge variant="outline" className={getDifficultyColor(tab.difficulty)}>
+              {tab.difficulty}
+            </Badge>
+            <div className="text-right">
+              <div className="text-xs text-muted-foreground">Progress</div>
+              <div className="font-medium">{Math.round(tab.completion)}%</div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleBookmark(tab.id);
+              }}
+              className="p-2"
+              data-testid={`bookmark-${tab.id}`}
+            >
+              <Star className={`h-4 w-4 ${bookmarks.includes(tab.id) ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+            </Button>
+          </div>
+        </div>
+
+        {/* Progress bar */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">Reading Progress</span>
+            <span className="font-medium">{Math.round(tab.completion)}%</span>
+          </div>
+          <Progress value={tab.completion} className="h-2" />
+        </div>
+
+        {/* Tab content */}
+        <div className="min-h-96">
+          {renderTabContent(tab.id)}
+        </div>
+      </div>
+    )
+  }));
 
   return (
     <div className="w-full max-w-7xl mx-auto p-6 space-y-6" data-testid="documentation-hub">
@@ -287,7 +352,7 @@ export default function Documentation({ onNavigate, initialTab = 'getting-starte
                     variant="ghost"
                     className="w-full justify-start h-auto p-3"
                     onClick={() => {
-                      setActiveTab(result.id);
+                      // Close search and let user manually expand the section they want
                       setShowGlobalSearch(false);
                       setSearchTerm('');
                     }}
@@ -308,9 +373,9 @@ export default function Documentation({ onNavigate, initialTab = 'getting-starte
         </div>
       </div>
 
-      {/* Tab Navigation */}
-      <div className="border-b border-border">
-        <div className="flex items-center justify-between mb-4">
+      {/* Collapsible Documentation Sections */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-semibold">Documentation Sections</h2>
           <div className="flex items-center gap-2">
             <Badge variant="secondary" className="text-sm">
@@ -321,100 +386,17 @@ export default function Documentation({ onNavigate, initialTab = 'getting-starte
             </Badge>
           </div>
         </div>
-        
-        {/* Enhanced Tab Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
-          {documentationTabs.map((tab) => (
-            <Card 
-              key={tab.id}
-              className={`cursor-pointer transition-all hover:shadow-lg ${
-                activeTab === tab.id ? 'ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-950' : ''
-              }`}
-              onClick={() => setActiveTab(tab.id)}
-              data-testid={`tab-${tab.id}`}
-            >
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{tab.emoji}</span>
-                    <tab.icon className="h-4 w-4" />
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleBookmark(tab.id);
-                    }}
-                    className="p-1 h-auto"
-                    data-testid={`bookmark-${tab.id}`}
-                  >
-                    <Star className={`h-4 w-4 ${bookmarks.includes(tab.id) ? 'fill-yellow-400 text-yellow-400' : ''}`} />
-                  </Button>
-                </div>
-                <CardTitle className="text-sm leading-tight">{tab.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-xs text-muted-foreground leading-relaxed">{tab.description}</p>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Badge variant="outline" className={getDifficultyColor(tab.difficulty)}>
-                      {tab.difficulty}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {tab.estimatedTime}
-                    </span>
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">Progress</span>
-                      <span className="font-medium">{Math.round(tab.completion)}%</span>
-                    </div>
-                    <Progress value={tab.completion} className="h-1" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+
+        {/* Collapsible Documentation Tabs */}
+        <SimpleCollapsibleTabs
+          tabs={collapsibleTabs}
+          storageKey="documentation"
+          title="Interactive Documentation Hub"
+          description="Expand the sections you're working on. All sections can be open simultaneously for easy reference."
+          showGlobalControls={true}
+          data-testid="documentation-collapsible-tabs"
+        />
       </div>
-
-      {/* Active Tab Content */}
-      {activeTabData && (
-        <div className="space-y-4">
-          {/* Active Tab Header */}
-          <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-lg border">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-3xl">{activeTabData.emoji}</span>
-                <activeTabData.icon className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold">{activeTabData.title}</h3>
-                <p className="text-muted-foreground">{activeTabData.description}</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <Badge variant="outline" className={getDifficultyColor(activeTabData.difficulty)}>
-                {activeTabData.difficulty}
-              </Badge>
-              <div className="text-right">
-                <div className="text-sm text-muted-foreground">Estimated Time</div>
-                <div className="font-medium">{activeTabData.estimatedTime}</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Tab Content */}
-          <div className="min-h-96">
-            {renderTabContent()}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

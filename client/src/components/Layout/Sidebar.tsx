@@ -1,6 +1,11 @@
-import { BookOpen, Box, Crown, Eye, Gem, Hammer, Mountain, MapPin, Shovel, PaintbrushVertical, Terminal, Archive, CheckCircle, Home, GraduationCap, Rocket, ExternalLink, Users, MessageCircle, Globe } from "lucide-react";
+import { BookOpen, Box, Crown, Eye, Gem, Hammer, Mountain, MapPin, Shovel, PaintbrushVertical, Terminal, Archive, CheckCircle, Home, GraduationCap, Rocket, ExternalLink, Users, MessageCircle, Globe, ChevronDown, ChevronRight, Minimize2, Maximize2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect } from "react";
+import { useCollapsible } from "@/hooks/useCollapsible";
+import { CollapsibleSection } from "@/components/ui/collapsible-section";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 interface SidebarProps {
   currentSection: string;
@@ -18,6 +23,14 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
       onToggleCollapse();
     }
   }, [isMobile]);
+
+  // Collapsible state for navigation sections
+  const sectionNames = ['getting-started', 'documentation', 'builders', 'tools', 'community'];
+  const navCollapsible = useCollapsible({
+    storageKey: 'sidebar-sections',
+    defaultCollapsed: false,
+    initialSections: sectionNames
+  });
 
   const handleSectionChange = (section: string) => {
     onSectionChange(section);
@@ -127,34 +140,90 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
       </div>
 
       <nav className="p-2 flex-1 overflow-y-auto">
-        {navSections.map((section) => (
-          <div key={section.title} className="mb-4">
-            {(!collapsed || isMobile) && (
-              <h3 className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider nav-text">
-                {section.title}
-              </h3>
-            )}
-            <ul className="space-y-1">
-              {section.items.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <li key={item.id}>
-                    <button
-                      className={`nav-item w-full flex items-center space-x-3 px-3 py-3 sm:py-2 rounded-md text-left min-h-[44px] text-sm sm:text-base ${
-                        currentSection === item.id ? 'active' : ''
-                      }`}
-                      onClick={() => handleSectionChange(item.id)}
-                      data-testid={`nav-${item.id}`}
+        <TooltipProvider>
+          {/* Global collapse/expand controls */}
+          {(!collapsed || isMobile) && (
+            <div className="flex items-center justify-between mb-4 px-2">
+              <span className="text-xs text-muted-foreground">
+                Navigation Sections
+              </span>
+              <div className="flex gap-1">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={navCollapsible.expandAll}
+                      disabled={navCollapsible.getCollapsedCount() === 0}
+                      className="h-6 w-6 p-0"
+                      data-testid="sidebar-expand-all"
                     >
-                      <Icon size={18} className="w-5 flex-shrink-0" />
-                      {(!collapsed || isMobile) && <span className="nav-text">{item.label}</span>}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
+                      <Maximize2 className="w-3 h-3" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Expand all sections</TooltipContent>
+                </Tooltip>
+                
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={navCollapsible.collapseAll}
+                      disabled={navCollapsible.getExpandedCount() === 0}
+                      className="h-6 w-6 p-0"
+                      data-testid="sidebar-collapse-all"
+                    >
+                      <Minimize2 className="w-3 h-3" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Collapse all sections</TooltipContent>
+                </Tooltip>
+              </div>
+            </div>
+          )}
+
+          {navSections.map((section, index) => {
+            const sectionId = sectionNames[index];
+            const isCollapsed = navCollapsible.isCollapsed(sectionId);
+            
+            return (
+              <div key={section.title} className="mb-2">
+                <CollapsibleSection
+                  id={sectionId}
+                  title={section.title}
+                  badge={section.items.length}
+                  collapsed={isCollapsed}
+                  onToggle={(collapsed) => navCollapsible.setSection(sectionId, collapsed)}
+                  className="rounded-md border border-transparent hover:border-border/50 transition-colors"
+                  triggerClassName={`hover:bg-muted/50 ${(!collapsed || isMobile) ? "block" : "hidden"}`}
+                  showChevron={!collapsed || isMobile}
+                  data-testid={`nav-section-${sectionId}`}
+                >
+                  <ul className="space-y-1">
+                    {section.items.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <li key={item.id}>
+                          <button
+                            className={`nav-item w-full flex items-center space-x-3 px-3 py-3 sm:py-2 rounded-md text-left min-h-[44px] text-sm sm:text-base ${
+                              currentSection === item.id ? 'active' : ''
+                            }`}
+                            onClick={() => handleSectionChange(item.id)}
+                            data-testid={`nav-${item.id}`}
+                          >
+                            <Icon size={18} className="w-5 flex-shrink-0" />
+                            {(!collapsed || isMobile) && <span className="nav-text">{item.label}</span>}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </CollapsibleSection>
+              </div>
+            );
+          })}
+        </TooltipProvider>
       </nav>
     </aside>
     </>
