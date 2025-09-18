@@ -1,0 +1,141 @@
+{
+  "generatedAt": "2025-09-18T04:47:52.759Z",
+  "sourceFile": "all minecraft script info_1758169723748.txt",
+  "totalElements": 476,
+  "modules": [
+    {
+      "name": "@minecraft/server",
+      "elementCount": 438,
+      "types": [
+        {
+          "type": "enum",
+          "count": 52
+        },
+        {
+          "type": "type",
+          "count": 3
+        },
+        {
+          "type": "class",
+          "count": 313
+        },
+        {
+          "type": "interface",
+          "count": 70
+        }
+      ]
+    },
+    {
+      "name": "@minecraft/server-admin",
+      "elementCount": 9,
+      "types": [
+        {
+          "type": "class",
+          "count": 7
+        },
+        {
+          "type": "interface",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "name": "@minecraft/server-net",
+      "elementCount": 14,
+      "types": [
+        {
+          "type": "enum",
+          "count": 2
+        },
+        {
+          "type": "class",
+          "count": 11
+        },
+        {
+          "type": "interface",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "@minecraft/server-ui",
+      "elementCount": 15,
+      "types": [
+        {
+          "type": "enum",
+          "count": 2
+        },
+        {
+          "type": "class",
+          "count": 9
+        },
+        {
+          "type": "interface",
+          "count": 4
+        }
+      ]
+    }
+  ],
+  "elementsByType": [
+    {
+      "type": "enum",
+      "count": 56
+    },
+    {
+      "type": "type",
+      "count": 3
+    },
+    {
+      "type": "class",
+      "count": 340
+    },
+    {
+      "type": "interface",
+      "count": 77
+    }
+  ],
+  "categories": [
+    {
+      "category": "Enums",
+      "count": 56
+    },
+    {
+      "category": "Server",
+      "count": 438
+    },
+    {
+      "category": "Types",
+      "count": 3
+    },
+    {
+      "category": "Classes",
+      "count": 340
+    },
+    {
+      "category": "Interfaces",
+      "count": 77
+    },
+    {
+      "category": "Admin",
+      "count": 9
+    },
+    {
+      "category": "Networking",
+      "count": 14
+    },
+    {
+      "category": "UI",
+      "count": 15
+    }
+  ],
+  "tags": [
+    {
+      "tag": "readonly-restricted",
+      "count": 2
+    },
+    {
+      "tag": "beta",
+      "count": 2
+    }
+  ]
+}
