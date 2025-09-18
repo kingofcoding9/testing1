@@ -6,8 +6,7 @@ import { CollapsibleSection } from "@/components/ui/collapsible-section";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Icon } from "@/components/ui/Icon";
-import { getIconPath, type IconName } from "@/assets/icons";
+import { getEmojiWithFallback, type EmojiName } from "@/assets/emoji-mapping";
 
 interface SidebarProps {
   currentSection: string;
@@ -116,11 +115,9 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Icon 
-                name={getIconPath('omniScience')} 
-                size="sm"
-                className="brightness-0 invert"
-              />
+              <span className="text-lg text-primary-foreground">
+                {getEmojiWithFallback('omniScience')}
+              </span>
             </div>
             {(!collapsed || isMobile) && (
               <div className="nav-text">
@@ -216,11 +213,9 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
                             onClick={() => handleSectionChange(item.id)}
                             data-testid={`nav-${item.id}`}
                           >
-                            <Icon 
-                              name={getIconPath(item.icon as IconName)} 
-                              size="sm"
-                              className="w-5 flex-shrink-0"
-                            />
+                            <span className="w-5 flex-shrink-0 text-base flex items-center justify-center">
+                              {getEmojiWithFallback(item.icon as EmojiName)}
+                            </span>
                             {(!collapsed || isMobile) && <span className="nav-text">{item.label}</span>}
                           </button>
                         </li>

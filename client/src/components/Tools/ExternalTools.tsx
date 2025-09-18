@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { ExternalLink, Loader2, AlertTriangle, RefreshCw, Maximize2, Info, X } from "lucide-react";
-import { Icon } from "@/components/ui/Icon";
-import { getIconPath } from "@/assets/icons";
+import { getEmojiWithFallback, type EmojiName } from "@/assets/emoji-mapping";
 import { useCollapsible } from "@/hooks/useCollapsible";
 import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { Button } from "@/components/ui/button";
@@ -262,11 +261,9 @@ export default function ExternalTools() {
     <div className="mb-4 p-3 sm:p-4 bg-muted/50 rounded-lg border">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
         <div className="flex items-start space-x-3 min-w-0 flex-1">
-          <Icon 
-            name={getIconPath(tool.icon as keyof typeof import("@/assets/icons").iconMap)} 
-            size="xl" 
-            className="flex-shrink-0"
-          />
+          <span className="text-2xl flex-shrink-0">
+            {getEmojiWithFallback(tool.icon as EmojiName)}
+          </span>
           <div className="min-w-0 flex-1">
             <h3 className="font-semibold text-foreground text-sm sm:text-base">{tool.name}</h3>
             <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{tool.description}</p>
@@ -361,10 +358,9 @@ export default function ExternalTools() {
                 data-testid={`tab-${tool.id}`}
               >
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <Icon 
-                    name={getIconPath(tool.icon as keyof typeof import("@/assets/icons").iconMap)} 
-                    size="base" 
-                  />
+                  <span className="text-base">
+                    {getEmojiWithFallback(tool.icon as EmojiName)}
+                  </span>
                   <span className="text-xs sm:text-sm font-medium truncate">{tool.name}</span>
                 </div>
                 <div className="flex items-center gap-1">
@@ -402,10 +398,9 @@ export default function ExternalTools() {
                     <div className="h-full flex flex-col">
                       <div className="flex items-center justify-between p-3 sm:p-4 bg-background/95 backdrop-blur-sm border-b">
                         <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
-                          <Icon 
-                            name={getIconPath(tool.icon as keyof typeof import("@/assets/icons").iconMap)} 
-                            size="xl" 
-                          />
+                          <span className="text-2xl">
+                            {getEmojiWithFallback(tool.icon as EmojiName)}
+                          </span>
                           <div className="min-w-0">
                             <h3 className="font-semibold text-foreground text-sm sm:text-base truncate">{tool.name}</h3>
                             <p className="text-xs sm:text-sm text-muted-foreground">Fullscreen Mode</p>
@@ -454,10 +449,9 @@ export default function ExternalTools() {
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                           <div className="min-w-0 flex-1">
                             <CardTitle className="flex items-center space-x-2 text-sm sm:text-base">
-                              <Icon 
-                                name={getIconPath(tool.icon as keyof typeof import("@/assets/icons").iconMap)} 
-                                size="lg" 
-                              />
+                              <span className="text-lg">
+                                {getEmojiWithFallback(tool.icon as EmojiName)}
+                              </span>
                               <span className="truncate">{tool.name}</span>
                             </CardTitle>
                             <CardDescription className="text-xs sm:text-sm">

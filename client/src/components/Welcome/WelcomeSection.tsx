@@ -1,8 +1,7 @@
 import { Play, BookOpen, ArrowRight, MessageCircle, Globe, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Icon } from "@/components/ui/Icon";
-import { getIconPath } from "@/assets/icons";
+import { getEmojiWithFallback, type EmojiName } from "@/assets/emoji-mapping";
 
 interface WelcomeSectionProps {
   onNavigate: (section: string) => void;
@@ -102,11 +101,9 @@ export default function WelcomeSection({ onNavigate }: WelcomeSectionProps) {
               <CardContent className="pt-6">
                 <div className="flex items-center mb-4">
                   <div className={`w-10 h-10 ${feature.bgColor} rounded-lg flex items-center justify-center mr-3`}>
-                    <Icon 
-                      name={getIconPath(feature.icon as keyof typeof import("@/assets/icons").iconMap)} 
-                      size="lg"
-                      className="filter brightness-0 invert"
-                    />
+                    <span className="text-2xl text-primary-foreground">
+                      {getEmojiWithFallback(feature.icon as EmojiName)}
+                    </span>
                   </div>
                   <h3 className="text-lg font-semibold text-foreground">{feature.title}</h3>
                 </div>

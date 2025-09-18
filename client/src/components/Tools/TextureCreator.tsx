@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Undo, Redo, Download, Plus, Trash2, Eye, EyeOff, Grid, Save, Upload, Move, ChevronUp, ChevronDown, Settings, Palette } from "lucide-react";
-import { Icon } from "@/components/ui/Icon";
-import { getIconPath } from "@/assets/icons";
+import { getEmojiWithFallback, type EmojiName } from "@/assets/emoji-mapping";
 import { useCollapsible } from "@/hooks/useCollapsible";
 import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { Button } from "@/components/ui/button";
@@ -316,11 +315,9 @@ export default function TextureCreator() {
                     onClick={() => setSelectedTool(tool.id)}
                     data-testid={`tool-${tool.id}`}
                   >
-                    <Icon 
-                      name={getIconPath(tool.iconName as keyof typeof import("@/assets/icons").iconMap)} 
-                      size="base" 
-                      className="mb-1"
-                    />
+                    <span className="text-base mb-1">
+                      {getEmojiWithFallback(tool.iconName as EmojiName)}
+                    </span>
                     <span className="text-xs">{tool.name}</span>
                   </button>
                 ))}
@@ -342,11 +339,9 @@ export default function TextureCreator() {
                     onClick={() => setSelectedTool(tool.id)}
                     data-testid={`tool-${tool.id}`}
                   >
-                    <Icon 
-                      name={getIconPath(tool.iconName as keyof typeof import("@/assets/icons").iconMap)} 
-                      size="base" 
-                      className="mb-1"
-                    />
+                    <span className="text-base mb-1">
+                      {getEmojiWithFallback(tool.iconName as EmojiName)}
+                    </span>
                     <span className="text-xs">{tool.name}</span>
                   </button>
                 ))}
