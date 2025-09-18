@@ -181,6 +181,60 @@ world.sendMessage("Hello from Script Studio!");
   const setupMonacoEditor = useCallback((editor: Monaco.editor.IStandaloneCodeEditor, monaco: typeof Monaco) => {
     editorRef.current = { editor, monaco };
 
+    // Configure language-specific settings first
+    const updateLanguageSettings = (language: 'javascript' | 'typescript') => {
+      if (language === 'javascript') {
+        // JavaScript mode - more permissive, allow ES6 imports without strict checking
+        monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+          target: monaco.languages.typescript.ScriptTarget.ES2020,
+          allowNonTsExtensions: true,
+          moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+          module: monaco.languages.typescript.ModuleKind.ESNext,
+          noEmit: true,
+          esModuleInterop: true,
+          allowSyntheticDefaultImports: true,
+          allowJs: true,
+          checkJs: false,  // KEY: Don't check JS files strictly
+          strict: false,   // Disable strict type checking for JS
+          noImplicitAny: false,
+          noImplicitReturns: false,
+          noImplicitThis: false,
+          strictNullChecks: false,
+        });
+        
+        // Set diagnostic options for JavaScript - less strict
+        monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+          noSemanticValidation: true,  // Disable semantic validation for JS
+          noSyntaxValidation: false,   // Keep syntax validation
+          noSuggestionDiagnostics: true,
+        });
+      } else {
+        // TypeScript mode - strict checking with proper type validation
+        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+          target: monaco.languages.typescript.ScriptTarget.ES2020,
+          allowNonTsExtensions: true,
+          moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+          module: monaco.languages.typescript.ModuleKind.ESNext,
+          noEmit: true,
+          esModuleInterop: true,
+          allowSyntheticDefaultImports: true,
+          strict: true,    // Enable strict checking for TypeScript
+          noImplicitAny: true,
+          strictNullChecks: true,
+        });
+        
+        // Set diagnostic options for TypeScript - full validation
+        monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+          noSemanticValidation: false,  // Enable semantic validation for TS
+          noSyntaxValidation: false,    // Enable syntax validation
+          noSuggestionDiagnostics: false,
+        });
+      }
+    };
+    
+    // Store the update function on the editor reference for external access
+    (editorRef.current as any).updateLanguageSettings = updateLanguageSettings;
+    
     // Add comprehensive TypeScript definitions for Minecraft Bedrock APIs
     const minecraftServerTypes = `
 // Minecraft Server API Type Definitions
@@ -2044,6 +2098,24 @@ class MessageFormData {
     });
   }, [registryData]);
 
+  // Get active script before using it in effects
+  const activeScript = scripts.find(s => s.id === activeScriptId) || scripts[0];
+  
+  // Add useEffect to handle language changes dynamically
+  useEffect(() => {
+    if (editorRef.current.monaco && (editorRef.current as any).updateLanguageSettings) {
+      // Apply language settings when language changes
+      (editorRef.current as any).updateLanguageSettings(activeScript.language);
+    }
+  }, [activeScript.language]);
+
+  // Apply initial language configuration on mount or registry change
+  useEffect(() => {
+    if (editorRef.current.monaco && (editorRef.current as any).updateLanguageSettings) {
+      (editorRef.current as any).updateLanguageSettings(activeScript.language);
+    }
+  }, [registryData, activeScript.language]);
+
   // Search and filter logic
   const filteredElements = useMemo(() => {
     let filtered = registryData.elements;
@@ -2114,8 +2186,6 @@ class MessageFormData {
       script.id === scriptId ? { ...script, ...updates } : script
     ));
   };
-
-  const activeScript = scripts.find(s => s.id === activeScriptId) || scripts[0];
 
   // Element selection
   const selectElement = useCallback((element: any) => {
@@ -2434,6 +2504,7 @@ class MessageFormData {
                         verticalScrollbarSize: 14,  // Larger scrollbars for easier interaction
                         horizontalScrollbarSize: 14,
                         handleMouseWheel: true,     // Ensure mouse wheel events are handled
+                        alwaysConsumeMouseWheel: false,  // KEY FIX: Allow scroll chaining to parent
                         useShadows: false,          // Disable shadows for performance
                       },
                       mouseWheelScrollSensitivity: 1,     // Normal mouse wheel sensitivity
