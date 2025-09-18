@@ -15,11 +15,7 @@ import ScriptStudio from "@/components/Tools/ScriptStudio";
 import AddonPackager from "@/components/Tools/AddonPackager";
 import JSONValidator from "@/components/Tools/JSONValidator";
 import ExternalTools from "@/components/Tools/ExternalTools";
-import CoreConcepts from "@/components/Documentation/CoreConcepts";
-import EntityDocs from "@/components/Documentation/EntityDocs";
-import BlockDocs from "@/components/Documentation/BlockDocs";
-import ItemDocs from "@/components/Documentation/ItemDocs";
-import ScriptingDocs from "@/components/Documentation/ScriptingDocs";
+import Documentation from "@/components/Documentation/Documentation";
 import InteractiveTutorial from "@/components/Tutorial/InteractiveTutorial";
 import QuickStart from "@/components/Tutorial/QuickStart";
 import WelcomeSection from "@/components/Welcome/WelcomeSection";
@@ -29,11 +25,7 @@ type Section =
   | 'welcome'
   | 'tutorial'
   | 'quick-start'
-  | 'docs-concepts'
-  | 'docs-entities'
-  | 'docs-blocks'
-  | 'docs-items'
-  | 'docs-scripting'
+  | 'documentation'
   | 'builder-entity'
   | 'builder-client-entity'
   | 'builder-block'
@@ -78,16 +70,8 @@ export default function Home() {
         return <InteractiveTutorial onNavigate={handleNavigate} />;
       case 'quick-start':
         return <QuickStart onNavigate={handleNavigate} />;
-      case 'docs-concepts':
-        return <CoreConcepts onNavigate={handleNavigate} />;
-      case 'docs-entities':
-        return <EntityDocs />;
-      case 'docs-blocks':
-        return <BlockDocs />;
-      case 'docs-items':
-        return <ItemDocs />;
-      case 'docs-scripting':
-        return <ScriptingDocs />;
+      case 'documentation':
+        return <Documentation onNavigate={handleNavigate} />;
       case 'builder-entity':
         return <EntityBuilder />;
       case 'builder-client-entity':

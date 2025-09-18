@@ -2,9 +2,9 @@ import { useState } from "react";
 import { 
   Search, Box, Copy, ExternalLink, Filter, BookOpen, Layers, 
   Settings, Shield, Zap, Eye, Hammer, Pickaxe, Mountain,
-  Cube, Grid3X3, Palette, Cog, Target, ChevronRight,
+  Grid3X3, Palette, Cog, Target, ChevronRight,
   CheckCircle, AlertTriangle, Info, Lightbulb, Play,
-  Clock, Activity, BarChart3, Wrench, BuildingBlocks
+  Clock, Activity, BarChart3, Wrench, Building2
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
