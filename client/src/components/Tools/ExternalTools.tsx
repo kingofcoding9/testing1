@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ExternalLink, Loader2, AlertTriangle, RefreshCw, Maximize2, Info } from "lucide-react";
+import { ExternalLink, Loader2, AlertTriangle, RefreshCw, Maximize2, Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

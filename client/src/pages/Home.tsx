@@ -50,16 +50,20 @@ export default function Home() {
   const [currentSection, setCurrentSection] = useState<Section>('welcome');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  const handleNavigate = (section: string) => {
+    setCurrentSection(section as Section);
+  };
+
   const renderSection = () => {
     switch (currentSection) {
       case 'welcome':
-        return <WelcomeSection onNavigate={setCurrentSection} />;
+        return <WelcomeSection onNavigate={handleNavigate} />;
       case 'tutorial':
-        return <InteractiveTutorial onNavigate={setCurrentSection} />;
+        return <InteractiveTutorial onNavigate={handleNavigate} />;
       case 'quick-start':
-        return <QuickStart onNavigate={setCurrentSection} />;
+        return <QuickStart onNavigate={handleNavigate} />;
       case 'docs-concepts':
-        return <CoreConcepts onNavigate={setCurrentSection} />;
+        return <CoreConcepts onNavigate={handleNavigate} />;
       case 'docs-entities':
         return <EntityDocs />;
       case 'docs-blocks':
@@ -95,7 +99,7 @@ export default function Home() {
       case 'external-tools':
         return <ExternalTools />;
       default:
-        return <WelcomeSection onNavigate={setCurrentSection} />;
+        return <WelcomeSection onNavigate={handleNavigate} />;
     }
   };
 
@@ -103,7 +107,7 @@ export default function Home() {
     <div className="flex h-screen bg-background text-foreground">
       <Sidebar 
         currentSection={currentSection}
-        onSectionChange={setCurrentSection}
+        onSectionChange={handleNavigate}
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
