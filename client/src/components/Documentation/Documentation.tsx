@@ -49,6 +49,36 @@ export default function Documentation({ onNavigate, initialTab = 'getting-starte
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const { toast } = useToast();
 
+  // Handle initialTab for auto-expanding specific sections
+  useEffect(() => {
+    if (initialTab && initialTab !== 'getting-started') {
+      // When navigating from sidebar, expand the specific tab
+      const storageKey = 'simple-tabs-documentation';
+      const currentCollapsed = localStorage.getItem(storageKey);
+      let collapsedState: Record<string, boolean> = {};
+      
+      if (currentCollapsed) {
+        try {
+          collapsedState = JSON.parse(currentCollapsed);
+        } catch (e) {
+          collapsedState = {};
+        }
+      }
+      
+      // Ensure the target tab is expanded
+      collapsedState[initialTab] = false;
+      localStorage.setItem(storageKey, JSON.stringify(collapsedState));
+      
+      // Small delay to ensure the component renders with updated state
+      setTimeout(() => {
+        const targetElement = document.querySelector(`[data-testid="simple-tab-trigger-${initialTab}"]`);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
+  }, [initialTab]);
+
   // Documentation tab configuration
   const documentationTabs = [
     {

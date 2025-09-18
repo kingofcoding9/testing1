@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { CollapsibleTabsContainer, CollapsibleTab } from "@/components/ui/collapsible-tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -20,8 +20,6 @@ import ComponentForm, { ComponentDefinition } from "@/components/Common/Componen
 
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToast } from "@/hooks/use-toast";
-import { useCollapsible } from "@/hooks/useCollapsible";
-import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { validateItemJSON } from "@/lib/minecraft/validation";
 import { 
   ComponentInstance, 
@@ -62,6 +60,7 @@ export default function ItemBuilder() {
   ]);
 
   // UI state
+  const [activeTab, setActiveTab] = useState('basic');
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [showComponentSelector, setShowComponentSelector] = useState(false);
   const [showComponentForm, setShowComponentForm] = useState(false);
@@ -297,8 +296,15 @@ export default function ItemBuilder() {
     };
   };
 
-  // Create collapsible tabs array
-  const collapsibleTabs: CollapsibleTab[] = [
+  // Tabs configuration
+  const getComponentsTabLabel = () => {
+    const enabledCount = components.filter(c => c.enabled).length;
+    return `Components (${enabledCount})`;
+  };
+
+  const getAdvancedTabLabel = () => "Advanced";
+
+  const tabsConfig = [
     {
       id: 'basic',
       title: 'Basic',
@@ -603,14 +609,58 @@ export default function ItemBuilder() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <CollapsibleTabsContainer
-                    tabs={collapsibleTabs}
-                    storageKey="item-builder-tabs"
-                    title="Item Builder"
-                    description="Build comprehensive Minecraft items with collapsible tabs"
-                    showGlobalControls={true}
-                    data-testid="item-builder-tabs"
-                  />
+                  <Tabs defaultValue="basic" className="space-y-4" data-testid="item-builder-tabs">
+                    <TabsList className="grid w-full grid-cols-3">
+                      <TabsTrigger value="basic" className="flex items-center gap-2">
+                        <Settings className="w-4 h-4" />
+                        Basic
+                      </TabsTrigger>
+                      <TabsTrigger value="components" className="flex items-center gap-2">
+                        <Box className="w-4 h-4" />
+                        {getComponentsTabLabel()}
+                      </TabsTrigger>
+                      <TabsTrigger value="advanced" className="flex items-center gap-2">
+                        <Cog className="w-4 h-4" />
+                        {getAdvancedTabLabel()}
+                      </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="basic" className="space-y-4">
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="item-identifier">Item Identifier *</Label>
+                          <Input
+                            id="item-identifier"
+                            value={identifier}
+                            onChange={(e) => setIdentifier(e.target.value)}
+                            placeholder="my_addon:custom_item"
+                            data-testid="input-identifier"
+                          />
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="components" className="space-y-4">
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-medium">{getComponentsTabLabel()}</h4>
+                          <Button 
+                            onClick={() => setShowComponentSelector(true)}
+                            data-testid="button-add-component"
+                          >
+                            Add Component
+                          </Button>
+                        </div>
+                        {renderComponentsByCategory()}
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="advanced" className="space-y-4">
+                      <div className="space-y-4">
+                        <ValidationStatus validation={validation} />
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </CardContent>
               </Card>
             </div>

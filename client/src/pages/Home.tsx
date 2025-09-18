@@ -26,6 +26,11 @@ type Section =
   | 'tutorial'
   | 'quick-start'
   | 'documentation'
+  | 'docs-concepts'
+  | 'docs-entities'
+  | 'docs-blocks'
+  | 'docs-items'
+  | 'docs-scripting'
   | 'builder-entity'
   | 'builder-client-entity'
   | 'builder-block'
@@ -72,6 +77,19 @@ export default function Home() {
         return <QuickStart onNavigate={handleNavigate} />;
       case 'documentation':
         return <Documentation onNavigate={handleNavigate} />;
+      
+      // Documentation-specific routing - map sidebar IDs to documentation tabs
+      case 'docs-concepts':
+        return <Documentation onNavigate={handleNavigate} initialTab="getting-started" />;
+      case 'docs-entities':
+        return <Documentation onNavigate={handleNavigate} initialTab="entity-development" />;
+      case 'docs-blocks':
+        return <Documentation onNavigate={handleNavigate} initialTab="block-development" />;
+      case 'docs-items':
+        return <Documentation onNavigate={handleNavigate} initialTab="item-development" />;
+      case 'docs-scripting':
+        return <Documentation onNavigate={handleNavigate} initialTab="scripting-apis" />;
+      
       case 'builder-entity':
         return <EntityBuilder />;
       case 'builder-client-entity':

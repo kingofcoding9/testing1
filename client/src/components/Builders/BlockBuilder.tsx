@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
-import { Package, Download, Copy, Save, RotateCcw, Info, Zap, AlertCircle, Settings, FileText, Layers } from "lucide-react";
+import { Package, Download, Copy, Save, RotateCcw, Info, Zap, AlertCircle, Settings, FileText, Layers, Box } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { CollapsibleTabsContainer, CollapsibleTab } from "@/components/ui/collapsible-tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -20,8 +20,6 @@ import ComponentForm, { ComponentDefinition } from "@/components/Common/Componen
 
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToast } from "@/hooks/use-toast";
-import { useCollapsible } from "@/hooks/useCollapsible";
-import { CollapsibleSection, CollapsibleGroup } from "@/components/ui/collapsible-section";
 import { validateBlockJSON } from "@/lib/minecraft/validation";
 import { 
   ComponentInstance, 
@@ -74,6 +72,7 @@ export default function BlockBuilder() {
   ]);
 
   // UI state
+  const [activeTab, setActiveTab] = useState('basic');
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [showComponentSelector, setShowComponentSelector] = useState(false);
   const [showComponentForm, setShowComponentForm] = useState(false);
@@ -282,6 +281,103 @@ export default function BlockBuilder() {
     });
   };
 
+  // Components display in categories
+  const renderComponentsByCategory = () => (
+    <div className="space-y-3">
+      {Object.entries(componentsByCategory).map(([category, categoryComponents]) => (
+        <Accordion key={category} type="single" collapsible>
+          <AccordionItem value={category}>
+            <AccordionTrigger className="text-sm">
+              <div className="flex items-center gap-2">
+                <Layers className="w-4 h-4" />
+                {category}
+                <Badge variant="outline">{categoryComponents.length}</Badge>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-2 pt-2">
+                {categoryComponents.map((component) => {
+                  const def = getComponentDefinition(component.name);
+                  return (
+                    <Card key={component.name} className="p-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Switch
+                              checked={component.enabled}
+                              onCheckedChange={() => toggleComponent(component.name)}
+                              data-testid={`switch-${component.name}`}
+                            />
+                            <span className="font-medium text-sm truncate">
+                              {component.name}
+                            </span>
+                            {def && (
+                              <Badge 
+                                variant="outline" 
+                                className={`text-xs ${
+                                  def.difficulty === 'beginner' ? 'border-green-500' :
+                                  def.difficulty === 'intermediate' ? 'border-yellow-500' :
+                                  'border-red-500'
+                                }`}
+                              >
+                                {def.difficulty}
+                              </Badge>
+                            )}
+                          </div>
+                          {def && (
+                            <p className="text-xs text-muted-foreground line-clamp-2">
+                              {def.description}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex gap-1">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => openComponentForm(component)}
+                                disabled={!component.enabled}
+                                data-testid={`button-configure-${component.name}`}
+                              >
+                                <Zap className="w-3 h-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Configure properties</TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeComponent(component.name)}
+                                data-testid={`button-remove-${component.name}`}
+                              >
+                                <AlertCircle className="w-3 h-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Remove component</TooltipContent>
+                          </Tooltip>
+                        </div>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      ))}
+    </div>
+  );
+
+  // Render tab badge counts
+  const getComponentsTabLabel = () => `Components${components.length > 0 ? ` (${components.length})` : ''}`;
+  const getAdvancedTabLabel = () => {
+    const errorCount = validation.errors?.length || 0;
+    return errorCount > 0 ? `Advanced (${errorCount})` : 'Advanced';
+  };
+
   const componentsByCategory = useMemo(() => {
     const grouped: Record<string, ComponentInstance[]> = {};
     components.forEach(comp => {
@@ -312,308 +408,6 @@ export default function BlockBuilder() {
     };
   };
 
-  // Create collapsible tabs array
-  const collapsibleTabs: CollapsibleTab[] = [
-    {
-      id: 'basic',
-      title: 'Basic',
-      icon: <Settings className="w-4 h-4" />,
-      description: 'Block identifier and basic settings',
-      content: (
-        <div className="space-y-4">
-          <div className="grid gap-4">
-            <div>
-              <Label htmlFor="block-identifier">Block Identifier *</Label>
-              <Input
-                id="block-identifier"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="my_addon:custom_block"
-                data-testid="input-identifier"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Must include namespace (e.g., my_addon:block_name)
-              </p>
-            </div>
-
-            <div>
-              <Label htmlFor="block-display-name">Display Name</Label>
-              <Input
-                id="block-display-name"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Custom Block"
-                data-testid="input-display-name"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="block-description">Description</Label>
-              <Input
-                id="block-description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="A custom block for my addon"
-                data-testid="input-description"
-              />
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="register-creative"
-                  checked={registerToCreative}
-                  onCheckedChange={setRegisterToCreative}
-                  data-testid="switch-creative"
-                />
-                <Label htmlFor="register-creative">Register to Creative Menu</Label>
-              </div>
-
-              {registerToCreative && (
-                <div>
-                  <Label htmlFor="creative-category">Creative Category</Label>
-                  <Select value={creativeCategory} onValueChange={setCreativeCategory}>
-                    <SelectTrigger data-testid="select-creative-category">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {creativeCategories.map(cat => (
-                        <SelectItem key={cat.value} value={cat.value}>
-                          {cat.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 'components',
-      title: 'Components',
-      badge: components.length,
-      icon: <Layers className="w-4 h-4" />,
-      description: 'Manage block components and their properties',
-      content: (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h4 className="font-medium">Block Components</h4>
-            <Button 
-              onClick={() => setShowComponentSelector(true)}
-              data-testid="button-add-component"
-            >
-              Add Component
-            </Button>
-          </div>
-
-          {recommendedComponents.length > 0 && (
-            <Alert>
-              <Info className="h-4 w-4" />
-              <AlertDescription>
-                <div className="space-y-2">
-                  <p className="font-medium">Recommended components:</p>
-                  <div className="flex flex-wrap gap-1">
-                    {recommendedComponents.map(comp => (
-                      <Button
-                        key={comp.name}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => addComponent(comp.name)}
-                        data-testid={`button-add-recommended-${comp.name}`}
-                      >
-                        {comp.name}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </AlertDescription>
-            </Alert>
-          )}
-
-          <ScrollArea className="h-[400px]">
-            <Accordion type="single" collapsible className="space-y-2">
-              {Object.entries(componentsByCategory).map(([category, categoryComponents]) => (
-                <AccordionItem key={category} value={category}>
-                  <AccordionTrigger className="text-sm" data-testid={`accordion-${category}`}>
-                    {category} ({categoryComponents.length})
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2">
-                      {categoryComponents.map((component) => {
-                        const def = getComponentDefinition(component.name);
-                        return (
-                          <Card key={component.name} className="p-3">
-                            <div className="flex items-start justify-between gap-2">
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <Switch
-                                    checked={component.enabled}
-                                    onCheckedChange={() => toggleComponent(component.name)}
-                                    data-testid={`switch-${component.name}`}
-                                  />
-                                  <span className="font-medium text-sm truncate">
-                                    {component.name}
-                                  </span>
-                                  {def && (
-                                    <Badge 
-                                      variant="outline" 
-                                      className={`text-xs ${
-                                        def.difficulty === 'beginner' ? 'border-green-500' :
-                                        def.difficulty === 'intermediate' ? 'border-yellow-500' :
-                                        'border-red-500'
-                                      }`}
-                                    >
-                                      {def.difficulty}
-                                    </Badge>
-                                  )}
-                                </div>
-                                {def && (
-                                  <p className="text-xs text-muted-foreground line-clamp-2">
-                                    {def.description}
-                                  </p>
-                                )}
-                              </div>
-                              <div className="flex gap-1">
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => openComponentForm(component)}
-                                      disabled={!component.enabled}
-                                      data-testid={`button-configure-${component.name}`}
-                                    >
-                                      <Settings className="w-3 h-3" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Configure properties</TooltipContent>
-                                </Tooltip>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => removeComponent(component.name)}
-                                      data-testid={`button-remove-${component.name}`}
-                                    >
-                                      <AlertCircle className="w-3 h-3" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Remove component</TooltipContent>
-                                </Tooltip>
-                              </div>
-                            </div>
-                          </Card>
-                        );
-                      })}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </ScrollArea>
-        </div>
-      ),
-    },
-    {
-      id: 'presets',
-      title: 'Presets',
-      icon: <Zap className="w-4 h-4" />,
-      description: 'Quick start with common block configurations',
-      content: (
-        <div className="space-y-4">
-          <div>
-            <h4 className="font-medium mb-3">Block Presets</h4>
-            <p className="text-sm text-muted-foreground mb-4">
-              Quick start with common block configurations
-            </p>
-            <div className="grid gap-3">
-              {Object.entries(BLOCK_PRESETS).map(([presetName, componentList]) => (
-                <Card key={presetName} className="p-4 cursor-pointer hover:bg-muted/50">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h5 className="font-medium capitalize">
-                        {presetName.replace(/_/g, ' ')}
-                      </h5>
-                      <p className="text-xs text-muted-foreground">
-                        {componentList.length} components
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {presetName === 'basic_block' && 'Simple destructible block'}
-                        {presetName === 'decorative_block' && 'Non-functional decorative block'}
-                        {presetName === 'interactive_block' && 'Block with player interaction'}
-                        {presetName === 'redstone_block' && 'Block with redstone capabilities'}
-                        {presetName === 'liquid_block' && 'Liquid or fluid block'}
-                      </p>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => applyBlockPreset(presetName)}
-                      data-testid={`button-preset-${presetName}`}
-                    >
-                      Apply
-                    </Button>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 'advanced',
-      title: 'Advanced',
-      icon: <FileText className="w-4 h-4" />,
-      description: 'Advanced configuration and statistics',
-      content: (
-        <div className="space-y-4">
-          <div>
-            <h4 className="font-medium mb-2">Actions</h4>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={resetBlock}
-                data-testid="button-reset"
-              >
-                <RotateCcw className="w-4 h-4 mr-2" />
-                Reset
-              </Button>
-              <Button
-                variant="outline"
-                onClick={exportToClipboard}
-                data-testid="button-export"
-              >
-                <Copy className="w-4 h-4 mr-2" />
-                Copy JSON
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <h4 className="font-medium">Component Statistics</h4>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="bg-muted p-3 rounded">
-                <div className="font-medium">Total Components</div>
-                <div className="text-2xl font-bold">{components.length}</div>
-              </div>
-              <div className="bg-muted p-3 rounded">
-                <div className="font-medium">Enabled Components</div>
-                <div className="text-2xl font-bold">{components.filter(c => c.enabled).length}</div>
-              </div>
-            </div>
-          </div>
-
-          <ValidationStatus validation={validation} />
-        </div>
-      ),
-    },
-  ];
-
   return (
     <TooltipProvider>
       <section className="p-6" data-testid="block-builder">
@@ -632,14 +426,212 @@ export default function BlockBuilder() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <CollapsibleTabsContainer
-                    tabs={collapsibleTabs}
-                    storageKey="block-builder-tabs"
-                    title="Block Builder"
-                    description="Build comprehensive Minecraft blocks with collapsible tabs"
-                    showGlobalControls={true}
-                    data-testid="block-builder-tabs"
-                  />
+                  <Tabs value={activeTab} onValueChange={setActiveTab}>
+                    <TabsList className="grid w-full grid-cols-4">
+                      <TabsTrigger value="basic" data-testid="tab-basic">Basic</TabsTrigger>
+                      <TabsTrigger value="components" data-testid="tab-components">
+                        {getComponentsTabLabel()}
+                      </TabsTrigger>
+                      <TabsTrigger value="presets" data-testid="tab-presets">Presets</TabsTrigger>
+                      <TabsTrigger value="advanced" data-testid="tab-advanced">
+                        {getAdvancedTabLabel()}
+                      </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="basic" className="space-y-4">
+                      <div className="grid gap-4">
+                        <div>
+                          <Label htmlFor="block-identifier">Block Identifier *</Label>
+                          <Input
+                            id="block-identifier"
+                            value={identifier}
+                            onChange={(e) => setIdentifier(e.target.value)}
+                            placeholder="my_addon:custom_block"
+                            data-testid="input-identifier"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Must include namespace (e.g., my_addon:block_name)
+                          </p>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="block-display-name">Display Name</Label>
+                          <Input
+                            id="block-display-name"
+                            value={displayName}
+                            onChange={(e) => setDisplayName(e.target.value)}
+                            placeholder="Custom Block"
+                            data-testid="input-display-name"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="block-description">Description</Label>
+                          <Input
+                            id="block-description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="A custom block for my addon"
+                            data-testid="input-description"
+                          />
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              id="register-creative"
+                              checked={registerToCreative}
+                              onCheckedChange={setRegisterToCreative}
+                              data-testid="switch-creative"
+                            />
+                            <Label htmlFor="register-creative">Register to Creative Menu</Label>
+                          </div>
+
+                          {registerToCreative && (
+                            <div>
+                              <Label htmlFor="creative-category">Creative Category</Label>
+                              <Select value={creativeCategory} onValueChange={setCreativeCategory}>
+                                <SelectTrigger data-testid="select-creative-category">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {creativeCategories.map(category => (
+                                    <SelectItem key={category.value} value={category.value}>
+                                      {category.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="components" className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium">Block Components</h4>
+                        <Button 
+                          onClick={() => setShowComponentSelector(true)}
+                          data-testid="button-add-component"
+                        >
+                          Add Component
+                        </Button>
+                      </div>
+
+                      {recommendedComponents.length > 0 && (
+                        <Alert>
+                          <Info className="h-4 w-4" />
+                          <AlertDescription>
+                            <div className="space-y-2">
+                              <p className="font-medium">Recommended components:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {recommendedComponents.slice(0, 3).map(comp => (
+                                  <Button
+                                    key={comp.name}
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => addComponent(comp.name)}
+                                    data-testid={`button-add-recommended-${comp.name}`}
+                                  >
+                                    {comp.name}
+                                  </Button>
+                                ))}
+                              </div>
+                            </div>
+                          </AlertDescription>
+                        </Alert>
+                      )}
+
+                      <ScrollArea className="h-[400px]">
+                        {renderComponentsByCategory()}
+                      </ScrollArea>
+                    </TabsContent>
+
+                    <TabsContent value="presets" className="space-y-4">
+                      <div>
+                        <h4 className="font-medium mb-3">Block Presets</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Quick start with common block configurations
+                        </p>
+                        <div className="grid gap-3">
+                          {Object.entries(BLOCK_PRESETS).map(([presetName, componentList]) => (
+                            <Card key={presetName} className="p-4 cursor-pointer hover:bg-muted/50">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h5 className="font-medium capitalize">
+                                    {presetName.replace(/_/g, ' ')}
+                                  </h5>
+                                  <p className="text-xs text-muted-foreground">
+                                    {componentList.length} components
+                                  </p>
+                                </div>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => applyBlockPreset(presetName)}
+                                  data-testid={`button-preset-${presetName}`}
+                                >
+                                  Apply
+                                </Button>
+                              </div>
+                            </Card>
+                          ))}
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="advanced" className="space-y-4">
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="font-medium mb-3">Block Actions</h4>
+                          <div className="flex gap-2 mb-3">
+                            <Button
+                              variant="outline"
+                              onClick={resetBlock}
+                              data-testid="button-reset"
+                            >
+                              <RotateCcw className="w-4 h-4 mr-2" />
+                              Reset Block
+                            </Button>
+                            <Button
+                              variant="outline"
+                              onClick={exportToClipboard}
+                              data-testid="button-export"
+                            >
+                              <Copy className="w-4 h-4 mr-2" />
+                              Copy JSON
+                            </Button>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Reset will clear all components and properties. Copy JSON exports the current block configuration.
+                          </p>
+                        </div>
+
+                        <div>
+                          <h4 className="font-medium mb-3">Validation Status</h4>
+                          <ValidationStatus validation={validation} />
+                        </div>
+
+                        <div>
+                          <h4 className="font-medium mb-3">Export Options</h4>
+                          <div className="grid grid-cols-2 gap-2 mb-3">
+                            <Button variant="outline" size="sm">
+                              <Download className="w-3 h-3 mr-2" />
+                              Download .json
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Save className="w-3 h-3 mr-2" />
+                              Save Template
+                            </Button>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Export your block as a .json file or save as a reusable template.
+                          </p>
+                        </div>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </CardContent>
               </Card>
             </div>
