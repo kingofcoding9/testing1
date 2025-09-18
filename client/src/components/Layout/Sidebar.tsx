@@ -1,4 +1,4 @@
-import { BookOpen, Box, Crown, Eye, Gem, Hammer, Mountain, MapPin, Shovel, PaintbrushVertical, Terminal, Archive, CheckCircle, Home, GraduationCap, Rocket, ExternalLink, Users, MessageCircle, Globe, ChevronDown, ChevronRight, Minimize2, Maximize2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Minimize2, Maximize2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect } from "react";
 import { useCollapsible } from "@/hooks/useCollapsible";
@@ -6,6 +6,8 @@ import { CollapsibleSection } from "@/components/ui/collapsible-section";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
+import { getIconPath, type IconName } from "@/assets/icons";
 
 interface SidebarProps {
   currentSection: string;
@@ -43,49 +45,49 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
     {
       title: "Getting Started",
       items: [
-        { id: 'welcome', icon: Home, label: 'Welcome' },
-        { id: 'tutorial', icon: GraduationCap, label: 'Interactive Tutorial' },
-        { id: 'quick-start', icon: Rocket, label: 'Quick Start Guide' },
+        { id: 'welcome', icon: 'omniScience', label: 'Welcome' },
+        { id: 'tutorial', icon: 'documentation', label: 'Interactive Tutorial' },
+        { id: 'quick-start', icon: 'documentation', label: 'Quick Start Guide' },
       ]
     },
     {
       title: "Documentation", 
       items: [
-        { id: 'docs-concepts', icon: BookOpen, label: 'Core Concepts' },
-        { id: 'docs-entities', icon: Crown, label: 'Entities' },
-        { id: 'docs-blocks', icon: Box, label: 'Blocks' },
-        { id: 'docs-items', icon: Gem, label: 'Items' },
-        { id: 'docs-scripting', icon: Terminal, label: 'Scripting APIs' },
+        { id: 'docs-concepts', icon: 'coreConcepts', label: 'Core Concepts' },
+        { id: 'docs-entities', icon: 'entityBuilder', label: 'Entities' },
+        { id: 'docs-blocks', icon: 'blockBuilder', label: 'Blocks' },
+        { id: 'docs-items', icon: 'itemBuilder', label: 'Items' },
+        { id: 'docs-scripting', icon: 'scriptStudio', label: 'Scripting APIs' },
       ]
     },
     {
       title: "Builders",
       items: [
-        { id: 'builder-entity', icon: Crown, label: 'Entity Builder' },
-        { id: 'builder-client-entity', icon: Eye, label: 'Client Entity' },
-        { id: 'builder-block', icon: Box, label: 'Block Builder' },
-        { id: 'builder-item', icon: Gem, label: 'Item Builder' },
-        { id: 'builder-recipe', icon: Hammer, label: 'Recipe Builder' },
-        { id: 'builder-loot', icon: Shovel, label: 'Loot Tables' },
-        { id: 'builder-biome', icon: Mountain, label: 'Biome Builder' },
-        { id: 'builder-spawn', icon: MapPin, label: 'Spawn Rules' },
+        { id: 'builder-entity', icon: 'entityBuilder', label: 'Entity Builder' },
+        { id: 'builder-client-entity', icon: 'entityBuilder', label: 'Client Entity' },
+        { id: 'builder-block', icon: 'blockBuilder', label: 'Block Builder' },
+        { id: 'builder-item', icon: 'itemBuilder', label: 'Item Builder' },
+        { id: 'builder-recipe', icon: 'recipeBuilder', label: 'Recipe Builder' },
+        { id: 'builder-loot', icon: 'lootBuilder', label: 'Loot Tables' },
+        { id: 'builder-biome', icon: 'biomeBuilder', label: 'Biome Builder' },
+        { id: 'builder-spawn', icon: 'spawnBuilder', label: 'Spawn Rules' },
       ]
     },
     {
       title: "Tools",
       items: [
-        { id: 'texture-creator', icon: PaintbrushVertical, label: 'Texture Creator' },
-        { id: 'script-studio', icon: Terminal, label: 'Script Studio' },
-        { id: 'addon-packager', icon: Archive, label: 'Addon Packager' },
-        { id: 'validator', icon: CheckCircle, label: 'JSON Validator' },
-        { id: 'external-tools', icon: ExternalLink, label: 'External Tools' },
+        { id: 'texture-creator', icon: 'textureCreator', label: 'Texture Creator' },
+        { id: 'script-studio', icon: 'scriptStudio', label: 'Script Studio' },
+        { id: 'addon-packager', icon: 'addonPackager', label: 'Addon Packager' },
+        { id: 'validator', icon: 'validator', label: 'JSON Validator' },
+        { id: 'external-tools', icon: 'externalTools', label: 'External Tools' },
       ]
     },
     {
       title: "Community",
       items: [
-        { id: 'community', icon: Users, label: 'Community Hub' },
-        { id: 'omni-science', icon: Globe, label: 'Omni-Science' },
+        { id: 'community', icon: 'community', label: 'Community Hub' },
+        { id: 'omni-science', icon: 'omniScience', label: 'Omni-Science' },
       ]
     }
   ];
@@ -115,7 +117,11 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Box className="text-primary-foreground text-sm" size={16} />
+              <Icon 
+                name={getIconPath('omniScience')} 
+                size="sm"
+                className="brightness-0 invert"
+              />
             </div>
             {(!collapsed || isMobile) && (
               <div className="nav-text">
@@ -202,7 +208,6 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
                 >
                   <ul className="space-y-1">
                     {section.items.map((item) => {
-                      const Icon = item.icon;
                       return (
                         <li key={item.id}>
                           <button
@@ -212,7 +217,11 @@ export default function Sidebar({ currentSection, onSectionChange, collapsed, on
                             onClick={() => handleSectionChange(item.id)}
                             data-testid={`nav-${item.id}`}
                           >
-                            <Icon size={18} className="w-5 flex-shrink-0" />
+                            <Icon 
+                              name={getIconPath(item.icon as IconName)} 
+                              size="sm"
+                              className="w-5 flex-shrink-0"
+                            />
                             {(!collapsed || isMobile) && <span className="nav-text">{item.label}</span>}
                           </button>
                         </li>
